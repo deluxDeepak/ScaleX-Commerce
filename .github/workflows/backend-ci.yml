@@ -16,7 +16,7 @@ jobs:
   Backend-Checks:
     # Project settings 
     name: Install-dependency
-    runs-on: ubutntu-latest
+    runs-on: ubuntu-latest
     # Steps in the job 
     steps:
       # 1.Checkout 
@@ -50,7 +50,7 @@ jobs:
       - name: Run test 
         run: |
           cd Backend
-          npm run test ----if-present
+          npm run test --if-present
 
       # 6.Build the project 
       - name: Build
