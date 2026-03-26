@@ -20,14 +20,19 @@ const isTestEnv = process.env.NODE_ENV === "test";
     =>global limiter
 */
 
-let store
+const createStore = (prefix) => {
+    if (isTestEnv) {
+        return undefined;
+    }
 
-if (!isTestEnv) {
-    const redis = getRedis();
-    store = new RedisStore({
-        sendCommand: (...args) => redis.call(...args),
+    return new RedisStore({
+        prefix,
+        sendCommand: (...args) => {
+            const redis = getRedis();
+            return redis.call(...args);
+        },
     });
-}
+};
 
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,   //15min
@@ -36,7 +41,7 @@ const globalLimiter = rateLimit({
     legacyHeaders: false,
 
     // yehan bhi store use karo (nahi to default me memory use karega )
-    store: store
+    store: createStore("rl:global:"),
 
 });
 // Custome key generator me (Logic likhte hai )
@@ -50,15 +55,7 @@ const apiLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,   //1min
     max: 5,
 
-    // Redis store configuration
-    // store: new RedisStore({
-    //     sendCommand: (...args) => {
-    //         const redis = getRedis();
-    //         return redis.call(...args);
-    //     },
-    // }),
-
-    store: store
+    store: createStore("rl:api:"),
 
 })
 
