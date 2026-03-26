@@ -4,6 +4,16 @@ const logger = require("../logger/logger");
 // To handle errors after initial connection was established, you should listen for error events on the connection. 
 const connectMongoDb = async () => {
     try {
+        if (config.NODE_ENV === "test") {
+            logger.warn("Skipping Mongo in test mode");
+            return;
+        }
+
+        if (!config.MONGO_URL) {
+            logger.warn("MongoUri not found Skipping Mongo");
+            return;
+        }
+
         await mongoose.connect(`${config.MONGO_URL}/E-commerce`);
         logger.info("MongoDb Connected");
     } catch (error) {

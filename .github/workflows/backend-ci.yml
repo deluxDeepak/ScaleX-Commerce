@@ -17,6 +17,8 @@ jobs:
     # Project settings 
     name: Install-dependency
     runs-on: ubuntu-latest
+    env:
+      NODE_ENV: test
     # Steps in the job 
     steps:
       # 1.Checkout 
