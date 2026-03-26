@@ -16,7 +16,7 @@ jobs:
   Backend-Checks:
     # Project settings 
     name: Install-dependency
-    runs-on: ubuntu-latest
+    runs-on: ubutntu-latest
     # Steps in the job 
     steps:
       # 1.Checkout 
