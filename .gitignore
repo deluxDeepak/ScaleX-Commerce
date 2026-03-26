@@ -1,0 +1,45 @@
+# node
+node_modules/
+npm-debug.log
+
+# env
+.env
+.env.*
+!.env.example
+
+# logs
+logs/
+*.log
+
+# monitoring
+monitoring/loki-data/
+monitoring/prometheus/
+monitoring/grafana/
+
+# build
+dist/
+build/
+
+# docker
+*.pid
+
+# vscode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# coverage
+coverage/
+
+# migrations cache
+migrations/*.log
+
+# frontend build
+Front-end/dist
+Front-end/node_modules
+
+# backend node
+Backend/node_modules
+Backend/dist

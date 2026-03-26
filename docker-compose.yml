@@ -1,0 +1,93 @@
+
+services:
+
+  # Nginix bana diye hai frontend se oska container use karna hai 
+  # nginx:
+  #   image: nginx
+  #   restart: always
+  #   ports:
+  #     - "80:80"
+
+  #   # yehan cache ka path config ke path rehna chiye 
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - nginx_cache:/data/cache/nginx
+  #   depends_on:
+  #     - backend
+
+  nginx:
+    build:
+      context: ./Front-end
+      dockerfile: Dockerfile.prod
+    ports:
+    - "80:80"
+    volumes:
+    - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    - nginx_cache:/data/cache/nginx
+    depends_on:
+    - backend
+  
+  mongo: 
+    image: mongo
+    container_name: Mongo-backend
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  minio: 
+    image: minio/minio
+    container_name: Minio-Backend
+    restart: always
+    command: server /data --console-address ":9001"
+    env_file: ./Backend/.env
+  
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  redis: 
+    image: redis
+    container_name: Redis-backend
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data/redis
+  
+  # Nginix serving frontend so no need for this container 
+  # frontend: 
+  #   build: 
+  #     context: ./Front-end
+  #     dockerfile: Dockerfile.prod
+  #   env_file: ./Front-end/.env
+  #   container_name: Ecommerce-Frontend
+
+    # Nginix use kar rehe hai to frontend port expose nahi karenge to chalge 
+    # ports:
+    #   - 3000:5173
+
+  backend:
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile
+    env_file: ./Backend/.env.docker
+    container_name: Ecommerce-backend
+    
+    # Optional if nginix use kar rehe hai to (whai port manage karega )
+    # ports:
+    #   - 4000:3000
+    depends_on: 
+      - mongo
+      - redis
+      - minio
+
+volumes:
+  mongo_data:
+  redis_data:
+  minio_data:
+  nginx_cache:
+

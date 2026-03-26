@@ -1,0 +1,50 @@
+const http = require("http");
+const createApp = require("./app");
+const logger = require("./core/logger/logger");
+
+let server;
+
+const startServer = async () => {
+    const app = await createApp();
+    server = http.createServer(app);
+
+    const port = process.env.PORT || 3000;
+
+    server.listen(port, "0.0.0.0", () => {
+        logger.info(`Server is running on port ${port}`);
+    });
+};
+
+const ShutDown = () => {
+    logger.info("Server closing...");
+
+    if (!server) {
+        logger.warn("Server not initialized");
+        process.exit(0);
+    }
+
+    // On closing also handle err 
+    server.close((err) => {
+
+        if (err) {
+            logger.error(err, "Error closing server");
+            process.exit(1);
+        }
+
+        logger.info("Server closed gracefully");
+        process.exit(0);
+    });
+
+    setTimeout(() => {
+        logger.error("Force shutdown");
+        process.exit(1);
+    }, 5000).unref();
+};
+
+process.on("SIGINT", ShutDown);
+process.on("SIGTERM", ShutDown);
+
+startServer().catch((err) => {
+    logger.error(err, "Error starting server");
+    process.exit(1);
+});

@@ -1,0 +1,84 @@
+# Backend ---
+# npm install
+# build
+# test
+# lint
+
+name: Backend ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  Backend-Checks:
+    # Project settings 
+    name: Install-dependency
+    runs-on: ubuntu-latest
+    # Steps in the job 
+    steps:
+      # 1.Checkout 
+      - name: Checkout Code 
+        uses: actions/checkout@v6
+
+      # 2.Setup Runtime (Build)
+      - name: Setup nodejs
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      
+      # Check the file actions
+      - name: Check list files 
+        run: |
+          ls -R
+
+      # 3.Install dependecies 
+      - name: Install deps
+        run: |
+          cd Backend
+          npm install
+
+      # 4.Lint test if persent 
+      - name: Lint
+        run: |
+          cd Backend
+          npm run lint --if-present
+      
+      # 5.Test the Project 
+      - name: Run test 
+        run: |
+          cd Backend
+          npm run test ----if-present
+
+      # 6.Build the project 
+      - name: Build
+        run: |
+          cd Backend
+          npm run build --if-present
+
+# jobs:
+
+#   backend:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v4
+
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: 20
+
+#       - run: cd Backend && npm ci
+#       - run: cd Backend && npm run lint --if-present
+#       - run: cd Backend && npm run test --if-present
+#       - run: cd Backend && npm run build --if-present
+        
+      
+      
+
+
+
+  
+

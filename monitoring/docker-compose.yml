@@ -1,0 +1,65 @@
+services:
+
+  # prometheus config use karna hai yehan pe 
+  prom-server: 
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus-config.yml:/etc/prometheus/prometheus.yml
+    networks: 
+      - monitor-net
+
+
+
+  # loki:
+  #   image: grafana/loki
+  #   ports:
+  #     - "3002:3100"
+  #   volumes:
+  #     - ./loki-config.yml:/etc/loki/config.yml
+  #     - ./loki-data:/loki
+  #   command: -config.file=/etc/loki/config.yml
+  loki:
+    image: grafana/loki:3.6.7
+    ports:
+    - "3002:3100"
+    volumes:
+    - ./loki-config.yml:/etc/loki/local-config.yaml   # ensure Loki reads this
+    - ./loki-data:/loki
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+    networks: 
+      - monitor-net
+
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml
+      # Docker logs use karo 
+      - /var/lib/docker/containers:/var/lib/docker/containers
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks: 
+      - monitor-net
+
+  # docker run -d -p 3001:3000 --name=grafana grafana/grafana-oss isko bhi yehi se start kar sakte hai 
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - "3000:3000"
+    depends_on: 
+      - loki
+      - prom-server
+    networks: 
+      - monitor-net
+
+networks:
+  monitor-net:
+    external: true
+    name: e-commerce_default
+      
+
+  

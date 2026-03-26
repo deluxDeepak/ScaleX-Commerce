@@ -1,0 +1,26 @@
+export const savedAddresses = [
+    {
+        id: 1,
+        type: "Home",
+        name: "Rahul Sharma",
+        phone: "+91 98765 43210",
+        line1: "B-204, Sunrise Apartments",
+        line2: "Andheri West, Near Infinity Mall",
+        city: "Mumbai",
+        state: "Maharashtra",
+        pincode: "400053",
+        default: true,
+    },
+    {
+        id: 2,
+        type: "Work",
+        name: "Rahul Sharma",
+        phone: "+91 98765 43210",
+        line1: "Unit 5, Tower C, Oberoi Commerz",
+        line2: "Goregaon East",
+        city: "Mumbai",
+        state: "Maharashtra",
+        pincode: "400063",
+        default: false,
+    },
+];

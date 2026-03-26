@@ -1,0 +1,57 @@
+name: "Hellow E-E-commerce"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hellowEcommerce-Project:
+    # Job settings and variable 
+    name: CI Pipeline - E-Commerce Application
+    runs-on: ubutntu-latest
+    env:
+      VARIABLE: E-Commerce Project
+    
+    # Steps in the job 
+    steps:
+      - name: Welcome Message
+        run: |
+          echo "CI Workflow started"
+          echo "Running checks for $PROJECT_NAME"
+
+      - name: Show Project Details
+        run: |
+          echo "This workflow verifies the project configuration"
+          echo "Branch triggered: $GITHUB_REF"
+          echo "Runner: ubuntu-latest"
+
+
+  # Job ke ander ka steps 
+  complete-job:
+    name: Completion Message
+    runs-on: ubuntu-latest
+
+    env:
+      PROJECT_NAME: E-Commerce Project
+
+    steps:
+
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Show Files
+        run: |
+          ls
+          whoami
+
+      - name: Display Project Name
+        run: |
+          echo "Project: $PROJECT_NAME"
+          echo "✅ Workflow completed successfully"
+
+
+
+
+

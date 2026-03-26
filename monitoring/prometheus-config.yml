@@ -1,0 +1,18 @@
+global:
+  # how many seconds me data scrap karna hai 
+  scrape_interval: 4s
+  # Rules kitne time me check karna 
+  evaluation_interval: 5s
+  
+
+scrape_configs:
+  # Multiple scrap config ho sakt hai 
+
+  - job_name: backend
+    # targets: list
+    metrics_path: /api/metrics 
+    static_configs:
+      # - host ip when backend running on host machine not in container 
+      # - targets: ["hostip:4000"]
+      # - targets: ["10.80.65.8:4000"] #local ke liye sahi hai but docker ke liye wrong 
+      - targets: ["backend:3000"]
