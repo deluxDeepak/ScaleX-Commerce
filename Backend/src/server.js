@@ -11,6 +11,7 @@ let server;
 const startServer = async () => {
     setupGlobalHandlers();
     // Initialize Sentry before Express is imported anywhere
+    // Skip all connection in test environment 
     if (config.NODE_ENV !== "test") {
         initSentry();
 
