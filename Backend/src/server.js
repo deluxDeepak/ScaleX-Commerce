@@ -1,11 +1,28 @@
 const http = require("http");
-const createApp = require("./app");
 const logger = require("./core/logger/logger");
+const setupGlobalHandlers = require("./core/monitoring/globalHandlers");
+const { initSentry, setupSentryErrorHandler } = require("./core/monitoring/sentry");
+const initStorage = require("./loaders/storage.loader");
+const loadDb = require("./loaders/db.loader");
+const config = require("./core/config/env.config");
 
 let server;
 
 const startServer = async () => {
+    setupGlobalHandlers();
+    // Initialize Sentry before Express is imported anywhere
+    if (config.NODE_ENV !== "test") {
+        initSentry();
+
+        // In test storage and db bhi skip kar do  =====
+        initStorage();
+        await loadDb(); //wait to make db connection
+    }
+
+
+    const createApp = require("./app");
     const app = await createApp();
+    setupSentryErrorHandler(app);
     server = http.createServer(app);
 
     const port = process.env.PORT || 3000;

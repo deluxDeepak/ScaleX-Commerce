@@ -5,20 +5,20 @@ const loadDb = require('./loaders/db.loader');
 const initStorage = require('./loaders/storage.loader');
 const globalErrorHandler = require('./middlewares/globalError.middleware');
 const notFundMiddleware = require('./middlewares/notFund.middleware');
-const { setupSentryErrorHandler } = require('./core/monitoring/sentry');
-const setupGlobalHandlers = require('./core/monitoring/globalHandlers');
+
 
 const createApp = async () => {
-    setupGlobalHandlers();
     
+    
+    // Jisko app ka jarurat hai wahi yehan rehega 
     const app = express();
-    initStorage();
-    await loadDb(); //Wait to make db connection
+    
+    
     loadApp(app);
     loadRoute(app);
 
     // Sentry error handler must be after routes to capture their errors
-    setupSentryErrorHandler(app);
+    // setupSentryErrorHandler(app);   //remove sentry also here 
 
     // 404 not found 
     app.use(notFundMiddleware)

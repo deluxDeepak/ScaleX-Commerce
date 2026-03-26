@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand --detectOpenHandles",
     "dev": "nodemon src/server.js",
     "build": "node src/server.js",
-    "seed":"node scripts/seed/seed.js"
+    "seed": "node scripts/seed/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -36,5 +36,9 @@
     "rate-limit-redis": "^4.3.1",
     "slugify": "^1.6.8",
     "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0",
+    "supertest": "^7.2.2"
   }
 }
