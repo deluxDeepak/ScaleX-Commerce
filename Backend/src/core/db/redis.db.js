@@ -1,6 +1,7 @@
 const Redis = require("ioredis");
 const config = require("../config/env.config");
 const logger = require("../logger/logger");
+const { DatabaseError } = require("../../shared/errors");
 
 // new Redis({
 //   port: 6379, // Redis port
@@ -10,13 +11,28 @@ const logger = require("../logger/logger");
 //   db: 0, // Defaults to 0
 // });
 
-const redis = new Redis(config.REDISH_URL);
+// Redish undefine ho sakta hai jab tak connect nahi hoga tab tak 
+let redis
+const connectRedisDb = async () => {
+    if (config.NODE_ENV === "test") {
+        return
+    }
 
-const connectRedisDb = async() => {
+    redis = new Redis(config.REDISH_URL)
+
     // Create a Redis instance.
     // By default, it will connect to localhost:6379.
     await redis.ping();
     logger.info("Redis connected");
-    redis.on("connection", () => logger.info("Connection established"));
+    redis.on("connect", () => logger.info("Connection established"));
+    redis.on("error", (err) => logger.error(err));
+    redis.on("close", () => logger.warn("Redis closed"));
+
 }
-module.exports = { connectRedisDb, redis };
+const getRedis = () => {
+    if (!redis) {
+        throw new DatabaseError("Redis not connected yet");
+    }
+    return redis
+};
+module.exports = { connectRedisDb, getRedis };

@@ -1,6 +1,16 @@
 const rateLimit = require("express-rate-limit");
 const { RedisStore } = require("rate-limit-redis");
-const { redis } = require("../db/redis.db");
+const { getRedis } = require("../db/redis.db");
+
+const isTestEnv = process.env.NODE_ENV === "test";
+
+// const redis = getRedis();   
+//yehan hum redis call nahi connect karne ka try kar rehe hai 
+// getRedis pehle call ho gaya
+// connectRedis baad me hua
+// → redis undefined
+
+
 /*
     =====limiting types 
     =>login limiter
@@ -10,6 +20,15 @@ const { redis } = require("../db/redis.db");
     =>global limiter
 */
 
+let store
+
+if (!isTestEnv) {
+    const redis = getRedis();
+    store = new RedisStore({
+        sendCommand: (...args) => redis.call(...args),
+    });
+}
+
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,   //15min
     max: 100,
@@ -17,10 +36,7 @@ const globalLimiter = rateLimit({
     legacyHeaders: false,
 
     // yehan bhi store use karo (nahi to default me memory use karega )
-    store: new RedisStore({
-        sendCommand: (...args) => redis.call(...args),
-    }),
-
+    store: store
 
 });
 // Custome key generator me (Logic likhte hai )
@@ -35,9 +51,14 @@ const apiLimiter = rateLimit({
     max: 5,
 
     // Redis store configuration
-    store: new RedisStore({
-        sendCommand: (...args) => redis.call(...args),
-    }),
+    // store: new RedisStore({
+    //     sendCommand: (...args) => {
+    //         const redis = getRedis();
+    //         return redis.call(...args);
+    //     },
+    // }),
+
+    store: store
 
 })
 
