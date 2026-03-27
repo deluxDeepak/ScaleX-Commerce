@@ -15,7 +15,7 @@ on:
 jobs:
   Backend-Checks:
     # Project settings 
-    name: Install-dependency
+    name: Backend CI interation
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test

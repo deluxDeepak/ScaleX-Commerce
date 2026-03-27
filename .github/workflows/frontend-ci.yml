@@ -1,0 +1,43 @@
+name: Frontend CI 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  StartFrontend:
+    name: Frontend Ci intgration
+    runs-on: ubuntu-latest
+    
+    steps: 
+      - name: Check out
+        uses: actions/checkout@v6
+      - name: Node env setup 
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: Front-end/package-lock.json
+      - name: Install dependecies
+        run: |
+          cd Front-end
+          npm ci
+      - name: Lint check 
+        run: |
+          cd Front-end
+          npm run lint --if-present
+      - name: Run test 
+        run: |
+          cd Front-end
+          npm run test --if-present
+      - name: Build Frontend Bundle
+        run: |
+          cd Front-end
+          npm run build --if-present
+
+        
+
