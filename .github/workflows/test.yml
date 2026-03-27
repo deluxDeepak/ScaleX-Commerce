@@ -19,6 +19,11 @@ name: Orchestration for Project E-commerce
 #   workflow_call:
 # ========================================
 
+# Github Environment ====================
+# - Environment secrets : Secrets are encrypted environment variables.
+# - Environment variables: Variables are used for non-sensitive configuration data. 
+# ==========================================
+
 on:
   push:
     branches:
@@ -39,6 +44,25 @@ jobs:
       - name: Check Out 
         uses: actions/checkout@v6
 
+      # Setup node env 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+
+      - name: Create .env.docker
+        run: |
+          mkdir -p Backend
+          echo "NODE_ENV=test" >> Backend/.env.docker
+          echo "CLIENT_URL=http://localhost:5173" >> Backend/.env.docker
+          echo "MONGO_URL=mongodb://mongo:27017" >> Backend/.env.docker
+          echo "REDISH_URL=redis://redis:6379" >> Backend/.env.docker
+          echo "MINIO_ENDPOINT=http://minio:9000" >> Backend/.env.docker
+          echo "MINIO_ACCESS=minioadmin" >> Backend/.env.docker
+          echo "MINIO_SECRET=minioadmin" >> Backend/.env.docker
+          echo "STORAGE_BUCKET=devbucket" >> Backend/.env.docker
+          echo "FILE_BASE_URL=http://minio:9000/devbucket" >> Backend/.env.docker
+          echo "JWT_ACCESS_SECRET=testsecret" >> Backend/.env.docker
+          echo "JWT_REFRESH_SECRET=testsecret" >> Backend/.env.docker
+
       - name: Check docker version
         run: docker --version
       
@@ -46,10 +70,14 @@ jobs:
         run: docker compose version
 
       - name: Start Docker Services
-        run: docker compose up -d
+        run: docker compose -f docker-compose.ci.yml up -d
 
       - name: Wait for service 
         run: sleep 10
+
+      # Install deps then run test 
+      - name: Install deps
+        run: npm ci
 
       # System check karega Network call karega (fetch and axios use karega real )
       - name: Run Integration Tests

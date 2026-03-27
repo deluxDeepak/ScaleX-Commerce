@@ -1,0 +1,37 @@
+
+
+# Only Ci ke liye (Minimal setup )
+# - external port expose karne ki jarurat nahi hai 
+# remove ports for internal services:
+# - Avoid container name in CI 
+# Volume ki bhi jarrat nahi hai 
+services:
+
+  mongo: 
+    image: mongo
+    restart: always
+
+  minio: 
+    image: minio/minio
+    restart: always
+    command: server /data --console-address ":9001"
+    env_file: ./Backend/.env.docker
+
+  redis: 
+    image: redis
+    restart: always
+  
+
+  backend:
+    build: 
+      context: ./Backend
+      dockerfile: Dockerfile
+    env_file: ./Backend/.env.docker
+    ports:
+      - 4000:3000
+    depends_on: 
+      - mongo
+      - redis
+      - minio
+
+
