@@ -9,7 +9,7 @@
     "test": "npm run test:backend && npm run test:frontend && npm run test:e2e",
     "test:backend": "npm --prefix Backend test",
     "test:frontend": "npm --prefix Front-end test",
-    "test:integration": "jest integration",
+    "test:integration": "jest tests/integration",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug"
