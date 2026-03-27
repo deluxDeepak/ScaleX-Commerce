@@ -6,11 +6,15 @@
 
 name: Backend ci
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+
+on: 
+  workflow_call:
+    
 
 jobs:
   Backend-Checks:
@@ -30,6 +34,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          cache-dependency-path: Backend/package-lock.json
       
       # Check the file actions
       - name: Check list files 

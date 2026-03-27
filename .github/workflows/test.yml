@@ -9,6 +9,16 @@
 # Backend → Frontend → Integration → E2E → Deploy
 name: Orchestration for Project E-commerce
 
+# =========Workflow types ================
+# Normal workflow(direct trigger hota hai (push pe run hota hai))
+# on:
+#   push:
+
+# Reusable workflow(dusre workflow se call hota hai)
+# on:
+#   workflow_call:
+# ========================================
+
 on:
   push:
     branches:
