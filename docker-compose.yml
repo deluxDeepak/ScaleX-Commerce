@@ -75,7 +75,6 @@ services:
       context: ./Backend
       dockerfile: Dockerfile
     env_file: ./Backend/.env.docker
-    container_name: Ecommerce-backend
     
     # Optional if nginix use kar rehe hai to (whai port manage karega )
     # ports:

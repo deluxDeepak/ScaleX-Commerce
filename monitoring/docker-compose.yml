@@ -59,7 +59,7 @@ services:
 networks:
   monitor-net:
     external: true
-    name: e-commerce_default
+    name: e-commerce-copy_default
       
 
   
