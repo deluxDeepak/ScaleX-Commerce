@@ -39,8 +39,17 @@ jobs:
       - name: Check Out 
         uses: actions/checkout@v6
 
+      - name: Check docker version
+        run: docker --version
+      
+      - name: Check docker Compose version
+        run: docker compose version
+
       - name: Start Docker Services
-        run: docker-compose up -d
+        run: docker compose up -d
+
+      - name: Wait for service 
+        run: sleep 10
 
       # System check karega Network call karega (fetch and axios use karega real )
       - name: Run Integration Tests
