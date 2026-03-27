@@ -7,7 +7,8 @@
     "test": "jest --runInBand --detectOpenHandles",
     "dev": "nodemon src/server.js",
     "build": "node --check src/server.js",
-    "seed": "node scripts/seed/seed.js"
+    "seed": "node scripts/seed/seed.js",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +42,7 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.1.0",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
     "jest": "^30.3.0",
     "supertest": "^7.2.2"
   }
