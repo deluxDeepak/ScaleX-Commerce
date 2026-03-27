@@ -47,6 +47,9 @@ jobs:
       # Setup node env 
       - name: Setup Node.js
         uses: actions/setup-node@v6
+        with: 
+          node-version: 24
+          cache: 'npm'
 
       - name: Create .env.docker
         run: |
@@ -75,10 +78,14 @@ jobs:
 
       - name: Wait for service 
         run: sleep 10
-
-      # Install deps then run test 
+     
+      # Install deps then run test (root deps install )
       - name: Install deps
         run: npm ci
+
+      # Ye backend run kar sakta hai (backend deps install)
+      - name: Install backend deps
+        run: npm ci --prefix Backend
 
       # System check karega Network call karega (fetch and axios use karega real )
       - name: Run Integration Tests
@@ -96,7 +103,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24 
+          node-version: 24
+          cache: 'npm' 
 
       - name: Create .env.docker
         run: |
@@ -117,9 +125,21 @@ jobs:
       - name: Start Docker
         run: docker compose -f docker-compose.ci.yml up -d
 
-      - name: Install deps 
+      # Install root deps 
+      - name: Install root deps
         run: npm ci
+
+      # Frontend deps and backend deps install 
+      - name: Install frontend deps
+        run: npm ci --prefix Front-end
       
+      - name: Install backend deps
+        run: npm ci --prefix Backend
+      
+      # Install browser for e2e test 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+    
       # Backend and frontend and integration test kar liye hai 
       # then only e2e test karo 
       - name: Run e2e test 

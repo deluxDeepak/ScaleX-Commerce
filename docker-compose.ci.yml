@@ -22,16 +22,17 @@ services:
     restart: always
   
 
-  backend:
-    build: 
-      context: ./Backend
-      dockerfile: Dockerfile
-    env_file: ./Backend/.env.docker
-    ports:
-      - 4000:3000
-    depends_on: 
-      - mongo
-      - redis
-      - minio
+  # Backend bhi hata sakte hai docker heavy  jayega is se 
+  # backend:
+  #   build: 
+  #     context: ./Backend
+  #     dockerfile: Dockerfile
+  #   env_file: ./Backend/.env.docker
+  #   ports:
+  #     - 4000:3000
+  #   depends_on: 
+  #     - mongo
+  #     - redis
+  #     - minio
 
 
