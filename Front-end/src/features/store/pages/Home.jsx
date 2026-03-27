@@ -257,9 +257,6 @@ const Home = () => {
     const trendingProducts = products?.filter((p) =>
         p.sections?.includes("trending")
     );
-    const recommendedProducts = products?.filter((p) =>
-        p.sections?.includes("featured")
-    );
 
 
 
@@ -293,7 +290,7 @@ const Home = () => {
                     <Link to="/products?section=Best Seller" className="text-sm font-semibold text-blue-600 hover:text-blue-700">See all →</Link>
                 </div>
                 <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-yellow-200 scrollbar-track-transparent pb-3">
-                    {bestSeller.map((p) => (
+                    {bestSeller?.map((p) => (
                         <div className="min-w-[220px] max-w-xs flex-shrink-0" key={p.id}>
                             <ProductCard products={p} />
                         </div>

@@ -30,8 +30,10 @@ build/
 .DS_Store
 Thumbs.db
 
-# coverage
+# coverage and testing
 coverage/
+playwright-report/
+test-results/
 
 # migrations cache
 migrations/*.log

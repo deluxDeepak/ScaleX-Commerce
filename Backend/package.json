@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles",
     "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
     "build": "node --check src/server.js",
     "seed": "node scripts/seed/seed.js",
     "prepare": "husky"
