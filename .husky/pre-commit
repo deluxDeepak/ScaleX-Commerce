@@ -1,1 +1,2 @@
-npm test
+npm run test:backend
+npm run test:frontend
