@@ -120,5 +120,7 @@ jobs:
       - name: Install deps 
         run: npm ci
       
+      # Backend and frontend and integration test kar liye hai 
+      # then only e2e test karo 
       - name: Run e2e test 
-        run: npm run test
+        run: npm run test:e2e
