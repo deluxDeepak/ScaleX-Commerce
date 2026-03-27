@@ -15,3 +15,5 @@
     "test:e2e": "npx playwright test"
   }
 }
+
+"test:integration": "jest integration"  only scan integration folder 

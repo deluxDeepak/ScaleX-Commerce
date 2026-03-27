@@ -25,7 +25,7 @@ jobs:
       - name: Install dependecies
         run: |
           cd Front-end
-          npm ci
+          npm install
       - name: Lint check 
         run: |
           cd Front-end

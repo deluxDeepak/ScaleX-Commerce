@@ -1,0 +1,37 @@
+# Test Orchestration kya hota hai?
+# Ek master workflow (test.yml) jo decide karta hai:
+# - kya pehle chalega
+# - kya baad me chalega
+# - kaun fail hua to aage rukna hai
+# ===========orchestration flow =================
+
+# Integration (Docker + services)--sun check karo api test ho reha hai ki nahi 
+# Backend → Frontend → Integration → E2E → Deploy
+name: Orchestration for Project E-commerce
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  backend:
+    uses: ./.github/workflows/backend-ci.yml
+
+  frontend:
+    uses: ./.github/workflows/frontend-ci.yml
+
+  integration:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Out 
+        uses: actions/checkout@v6
+
+      - name: Start Docker Services
+        run: docker-compose up -d
+
+      # System check karega Network call karega (fetch and axios use karega real )
+      - name: Run Integration Tests
+        run: npm run test:integration
