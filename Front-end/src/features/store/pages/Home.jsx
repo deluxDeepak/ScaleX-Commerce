@@ -237,9 +237,9 @@ const ProductSectons = ({ products }) => {
 
 const Home = () => {
     // Logic to show diffrent types of products in the Home page 
-    const { products } = useProduct();
+    const { products = [] } = useProduct();
     console.log("Product are from the backend", products);
-    const { category } = useCategory();
+    const { category = [] } = useCategory();
 
 
     const newProducts = products?.filter((p) =>
@@ -308,7 +308,7 @@ const Home = () => {
                     <Link to="/products?section=Flash Sales" className="text-sm font-semibold text-red-500 hover:text-red-600">See all →</Link>
                 </div>
                 <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-red-200 scrollbar-track-transparent pb-3">
-                    {flashSales.map((p) => (
+                    {flashSales.lenght > 0 && flashSales.map((p) => (
                         <div className="flex-shrink-0" key={p.id}>
                             <ProductCard key={p.id} products={p} />
                         </div>

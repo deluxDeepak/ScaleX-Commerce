@@ -90,10 +90,107 @@ To keep the project clean and modular, detailed documentation is separated:
 
 ---
 
-## 🐳 Run Locally (Docker)
+## 🐳 Getting Started
+
+### 1. Prerequisites
+
+- Docker & Docker Compose
+- Node.js (for local development and running tests)
+- Git
+
+---
+
+### 2. Quick start with Docker (recommended)
+
+This starts MongoDB, Redis, MinIO, the backend API and Nginx (serving the built frontend).
 
 ```bash
-docker-compose up --build
+# From project root
+
+# 1) Configure backend Docker environment
+cp Backend/.env.docker.example Backend/.env.docker
+# On Windows PowerShell:
+# Copy-Item Backend/.env.docker.example Backend/.env.docker
+
+# 2) Build and start the stack
+docker-compose up -d --build
+```
+
+#### Seed sample data (inside Docker backend container)
+
+```bash
+# From project root, after docker-compose is up
+docker compose exec backend npm run seed
+```
+
+Then:
+
+- App via Nginx: http://localhost
+- Backend health: http://localhost/api/health
+
+Example health check:
+
+```bash
+curl http://localhost/api/health
+# {"message":"Server is OK","uptime":38.84134693,"timestamp":"3/28/2026, 11:55:43 AM"}
+```
+
+---
+
+### 3. Backend development (local, without Docker)
+
+```bash
+cd Backend
+
+# Create local env file
+cp .env.example .env
+# On Windows PowerShell:
+# Copy-Item .env.example .env
+
+npm install
+
+# (Optional) Start dependencies with Docker
+docker run -p 27017:27017 -d mongo
+docker run -p 6379:6379 -d redis
+docker run -p 9000:9000 -p 9001:9001 -d minio/minio server /data
+
+# Seed sample data
+npm run seed
+
+# Start dev server
+npm run dev
+```
+
+Backend runs on: http://localhost:4000
+
+To run backend tests locally:
+
+```bash
+npm test
+```
+
+---
+
+### 4. Frontend development (local)
+
+```bash
+cd Front-end
+
+npm install
+
+# Create .env and set at least:
+# VITE_API_BASE_URL=http://localhost:4000
+# (or your Nginx URL if running via Docker)
+
+npm run dev
+```
+
+Frontend dev server runs on: http://localhost:5173
+
+To run frontend tests:
+
+```bash
+npm test
 ```
 
 ---

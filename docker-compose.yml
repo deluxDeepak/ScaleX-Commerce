@@ -41,7 +41,7 @@ services:
     container_name: Minio-Backend
     restart: always
     command: server /data --console-address ":9001"
-    env_file: ./Backend/.env
+    env_file: ./Backend/.env.docker
   
     ports:
       - "9000:9000"
