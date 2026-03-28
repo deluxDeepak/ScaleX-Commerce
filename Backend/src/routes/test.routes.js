@@ -21,7 +21,7 @@ const logger = require("../core/logger/logger");
 // })
 
 router.get("/heavy", async (req, res) => {
-    await new Promise(r => setTimeout(r, 50));
+    console.log("Handled by:", process.env.HOSTNAME);
 
     res.json({
         pid: process.pid,
