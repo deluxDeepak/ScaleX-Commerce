@@ -46,9 +46,9 @@ const Category = () => {
 
 
   return (
-    <div className="sm:px-4 py-6 md:py-4">
+    <div className="sm:px-4 py-1 md:py-4">
 
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex md:flex-row gap-2 md:gap-4">
 
         <aside>
           <CategorySidebar category={category} />
@@ -64,13 +64,13 @@ const Category = () => {
 
 
           <div
-            className={`grid grid-cols-4 gap-4 transition-all duration-300 ${loading ? "opacity-50" : "opacity-100"
+            className={`grid md:grid-cols-4 gap-4 transition-all duration-300 ${loading ? "opacity-50" : "opacity-100"
               }`}
           >
 
             {loading && <p>Loading...</p>}
 
-
+            
             {
               subCategoryId
                 ? subProducts?.map((p) => (

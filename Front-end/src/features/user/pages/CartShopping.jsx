@@ -7,7 +7,7 @@ import EmptyCart from '../components/EmptyCart';
 import { useNavigate } from 'react-router-dom';
 
 const Cartheader = ({ cartItems }) => (
-    <div className="mb-4">
+    <div className="lg:mb-4">
         <div className="flex items-center gap-3 mb-2">
             <div className="h-11 w-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm">
                 <CartIcon size={22} />
@@ -26,7 +26,7 @@ const Cartheader = ({ cartItems }) => (
     </div>
 )
 
-const OrderSummary = ({ cartItems }) => {
+const OrderSummary = () => {
 
     const { totalPrice } = useCart();
     console.log("total price is ", totalPrice);
@@ -167,7 +167,7 @@ const CartSummary = ({ cartItems }) => {
 }
 
 const ProductImage = ({ product }) => (
-    <div className="w-full sm:w-32 sm:h-32 h-40 bg-gray-50 rounded-xl flex items-center justify-center p-2 border border-gray-100">
+    <div className="w-full sm:w-32 sm:h-30 h-40 lg:bg-gray-50 rounded-xl flex items-center justify-center lg:p-2 border border-gray-100">
 
         <img
             src={product?.images[0]}
@@ -179,7 +179,7 @@ const ProductImage = ({ product }) => (
 );
 const ProductInfo = ({ product, quantity }) => {
     return (
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 lg:gap-4">
 
             <ProductImage product={product} />
 
@@ -189,7 +189,7 @@ const ProductInfo = ({ product, quantity }) => {
                     {product.category}
                 </span>
 
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 leading-snug">
+                <h3 className="text-base sm:text-lg font-semibold lg:font-bold text-gray-900 leading-snug">
                     {product.title}
                 </h3>
 
@@ -207,7 +207,7 @@ const ProductInfo = ({ product, quantity }) => {
 
             </div>
 
-            <div className="text-right text-xs text-gray-400 font-medium">
+            <div className=" hidden lg:flex text-right text-xs text-gray-400 font-medium">
                 <ProductPriceInd price={product.price} size="sm" /> /each
             </div>
 
@@ -230,7 +230,7 @@ const ActionButtons = ({ item }) => {
         >
 
             {/* Qty */}
-            <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+            <div className="flex justify-between border p-1 border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
 
                 <button
                     onClick={() =>
@@ -238,7 +238,7 @@ const ActionButtons = ({ item }) => {
                             quantity: - 1
                         })
                     }
-                    className="px-3 py-2 hover:bg-gray-100 transition"
+                    className="px-4 rounded-r-full hover:bg-blue-100 transition"
                 >
                     <Minus size={14} />
                 </button>
@@ -253,7 +253,7 @@ const ActionButtons = ({ item }) => {
                             quantity: 1
                         })
                     }
-                    className="px-3 py-2 hover:bg-gray-100 transition"
+                    className="px-4 py-2 rounded-l-full hover:bg-blue-100 transition"
                 >
                     <Plus size={14} />
                 </button>
@@ -262,16 +262,16 @@ const ActionButtons = ({ item }) => {
 
 
             {/* Buttons */}
-            <div className="flex gap-2">
+            <div className="justify-between flex lg:flex gap-2">
 
                 <button
                     onClick={() => removeFromCart(item._id)}
-                    className="px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg border border-red-100 hover:bg-red-100 transition"
+                    className="px-4 lg:px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg border border-red-100 hover:bg-red-100 transition"
                 >
                     Remove
                 </button>
 
-                <button className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 transition">
+                <button className="px-4 lg:px-3 py-2 text-sm bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 transition">
                     Buy Now
                 </button>
 
@@ -287,13 +287,13 @@ const CartShopping = () => {
     return (
         <div>
             {cartItems?.length && cartItems.length > 0 ? (
-                <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 py-8 px-3 sm:px-6">
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 py-1 lg:py-8 px-3 sm:px-6">
+                    <div className="lg:max-w-6xl lg:mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="lg:col-span-2">
 
                             <Cartheader cartItems={cartItems} />
 
-                            <div className="space-y-4 mt-4">
+                            <div className="space-y-4 ">
                                 {cartItems.map((p) => (
                                     <div
                                         key={p._id}

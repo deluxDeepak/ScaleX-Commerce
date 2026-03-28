@@ -17,7 +17,7 @@ const UserLayout = () => {
         <div className="flex">
 
             {/* Sidebar - normal flow, sticky */}
-            <div className="w-64 sticky top-16 h-[calc(100vh-4rem)] shrink-0">
+            <div className="w-10 lg:w-64 sticky top-16 h-[calc(100vh-4rem)] shrink-0">
                 <UserSidebar />
             </div>
 
@@ -30,16 +30,3 @@ const UserLayout = () => {
     );
 };
 export default UserLayout
-
-
-
-/*
-    | Element | height          |
-    | ------- | --------------- |
-    | root    | h-screen        |
-    | body    | flex-1          |
-    | sidebar | h-full          |
-    | main    | overflow-y-auto |
-    | footer  | normal flow     |
-
-*/

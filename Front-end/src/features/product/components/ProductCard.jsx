@@ -33,11 +33,11 @@ const ProductCard = ({ products }) => {
 
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full min-w-[220px] max-w-[260px] group overflow-hidden"
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col w-full min-w-[260px] max-w-[280px] group overflow-hidden"
     >
 
       {/* Product Image */}
-      <div className="relative w-full h-48 bg-gray-50 overflow-hidden cursor-pointer"
+      <div className="relative w-full h-30 lg:h-48 bg-gray-50 overflow-hidden cursor-pointer"
         onClick={handleNavigate}
       >
         <img
@@ -116,7 +116,7 @@ const ProductCard = ({ products }) => {
         {/* Action Button --1.Add to cart 2.Add to whislist */}
         {/* Add to cart button ko products bhej do wo add kar dega  */}
         <AddCartButton
-          className={`w-full mt-1 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+          className={`w-full mt-1 py-2 lg:py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
             ${added
               ? "bg-green-50 text-green-600 border border-green-200"
               : "bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-100 active:scale-95"

@@ -17,7 +17,7 @@ const Searchbar = ({
         }
     }
     return (
-        <div className={`flex items-center border border-pink-300 focus-within:border-pink-500 rounded-lg px-3 py-2 bg-white shadow gap-2 w-full max-w-md ${className}`}>
+        <div className={`flex items-center border border-pink-300 focus-within:border-pink-500 rounded-lg px-2 lg:px-3 py-1 lg:py-2 bg-white shadow gap-2 w-full max-w-md ${className}`}>
             <input
                 type="text"
                 name={name}
@@ -33,7 +33,7 @@ const Searchbar = ({
                 type="button"
                 aria-label="Search"
                 onClick={onSearch}
-                className="p-2 rounded-lg bg-pink-500 hover:bg-pink-600 focus:bg-pink-700 text-white transition-colors shadow-sm"
+                className="p-2 rounded-lg bg-blue-500 hover:bg-blue-800 focus:bg-pink-700 text-white transition-colors shadow-sm"
             >
                 <Search size={20} />
             </button>

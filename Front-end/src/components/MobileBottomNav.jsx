@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Heart, ShoppingCart, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
+// Mobile navigation 
 const MobileBottomNav = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -11,8 +12,9 @@ const MobileBottomNav = () => {
 
     const navItems = [
         { key: "home", label: "Home", icon: Home, path: "/" },
-        { key: "wishlist", label: "Wishlist", icon: Heart, path: "/user/wishlist/product" },
-        { key: "cart", label: "Cart", icon: ShoppingCart, path: "/products/cart", badge: cartCount },
+        { key: "category", label: "Category", icon: Heart, path: "/products" },
+        // Cart should go to the user cart route, not be treated as a productId under /products
+        { key: "cart", label: "Cart", icon: ShoppingCart, path: "/user/cart/product", badge: cartCount },
         { key: "account", label: "Account", icon: User, path: "/user" },
     ];
 
@@ -34,8 +36,8 @@ const MobileBottomNav = () => {
                         >
                             <div
                                 className={`relative w-11 h-11 rounded-2xl flex items-center justify-center border transition-all duration-200 ${active
-                                        ? "bg-blue-50 border-blue-100 shadow-sm text-blue-600"
-                                        : "bg-gray-50 border-gray-100 text-gray-600"
+                                    ? "bg-blue-50 border-blue-100 shadow-sm text-blue-600"
+                                    : "bg-gray-50 border-gray-100 text-gray-600"
                                     }`}
                             >
                                 <Icon size={20} />

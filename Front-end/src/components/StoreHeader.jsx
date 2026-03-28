@@ -170,7 +170,7 @@ const StoreHeader = () => {
             </div> */}
 
             {/* ===== Main Header Row ===== */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+            <div className="max-w-7xl mx-auto px-2 lg:px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
 
                 {/* Logo and Title */}
                 <div
@@ -225,7 +225,7 @@ const StoreHeader = () => {
                     </button>
 
                     {/* Cart with count badge */}
-                    <div className="relative">
+                    <div className="relative hidden sm:flex">
                         <button
                             onClick={handleNavigateCart}
                             className="flex items-center gap-1.5 p-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
