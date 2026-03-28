@@ -68,10 +68,10 @@ Flow summary: `Client → Nginx → Backend → Auth → Validation → Controll
 To keep the project clean and modular, detailed documentation is separated:
 
 * 🔧 **Backend (API + Business Logic)**
-  👉 [Backend README](./Backend/README.md)
+  👉 [Backend README](./Backend/readme.md)
 
 * 🎨 **Frontend (UI + Client Logic)**
-  👉 [Frontend README](./Front-end/README.md)
+  👉 [Frontend README](./Front-end/readme.md)
 
 ---
 
