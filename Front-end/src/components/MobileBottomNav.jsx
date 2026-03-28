@@ -1,19 +1,45 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Home, Heart, ShoppingCart, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
 
-// Mobile navigation 
 const MobileBottomNav = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { cartItems = [] } = useCart();
     const cartCount = cartItems.length || 0;
 
+    const [visible, setVisible] = useState(true);
+    const scrollTimeout = useRef(null);
+
+    // 👇 Scroll behavior
+    useEffect(() => {
+        const handleScroll = () => {
+            // hide while scrolling
+            setVisible(false);
+
+            // clear previous timeout
+            if (scrollTimeout.current) {
+                clearTimeout(scrollTimeout.current);
+            }
+
+            // show after scroll stops
+            scrollTimeout.current = setTimeout(() => {
+                setVisible(true);
+            }, 200); // 200ms after stop
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        };
+    }, []);
+
     const navItems = [
         { key: "home", label: "Home", icon: Home, path: "/" },
         { key: "category", label: "Category", icon: Heart, path: "/products" },
-        // Cart should go to the user cart route, not be treated as a productId under /products
         { key: "cart", label: "Cart", icon: ShoppingCart, path: "/user/cart/product", badge: cartCount },
         { key: "account", label: "Account", icon: User, path: "/user" },
     ];
@@ -22,7 +48,14 @@ const MobileBottomNav = () => {
         location.pathname === path || location.pathname.startsWith(`${path}/`);
 
     return (
-        <nav className="sm:hidden fixed inset-x-0 bottom-0 z-50 bg-white/90 backdrop-blur-lg border-t border-gray-200 shadow-[0_-6px_16px_rgba(15,23,42,0.08)]">
+        <nav
+            className={`sm:hidden fixed inset-x-0 bottom-0 z-50 
+            bg-white/90 backdrop-blur-lg border-t border-gray-200 
+            shadow-[0_-6px_16px_rgba(15,23,42,0.08)]
+            transition-transform duration-300
+            ${visible ? "translate-y-0" : "translate-y-full"}
+            `}
+        >
             <div className="max-w-3xl mx-auto px-3 py-2.5 pb-3 flex items-center justify-between gap-1.5">
                 {navItems.map(({ key, label, icon: Icon, path, badge }) => {
                     const active = isActive(path);
