@@ -28,7 +28,7 @@ This project goes beyond a basic CRUD backend. It demonstrates how real‑world 
 High‑level view of the platform:
 > Includes role-based access, authentication middleware, validation layer, caching, and observability pipeline.
 
-![System Architecture](Backend/docs/image.png)
+![System Architecture](docs/image.png)
 
 ---
 
