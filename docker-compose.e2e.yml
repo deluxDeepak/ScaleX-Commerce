@@ -1,0 +1,31 @@
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+
+  minio:
+    image: minio/minio
+    restart: always
+    command: server /data --console-addresss ":9001"
+    env_file: ./Backend/.env.docker
+  
+  redis:
+    image: redis
+    restart: always
+
+  backend:
+    build: ./Fornt-end
+    env_file: ./Backend/.env.docker
+    ports:
+      - "4000:4000"
+    depends_on: 
+      - mongo
+      - redis
+      - minio
+
+  frontend:
+    build: Dockerfile
+    depends_on:
+      - backend
+

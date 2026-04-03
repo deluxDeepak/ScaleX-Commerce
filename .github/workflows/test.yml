@@ -74,22 +74,29 @@ jobs:
 
       # Skip if limit cross of pulls 
       - name: Start Docker Services
-        run: docker compose -f docker-compose.ci.yml up -d
+        run: docker compose -f docker-compose.integration.yml up -d --build
 
-      - name: Wait for service 
-        run: sleep 10
+      # Check the route 
+      - name: Wait for Backend Check-route 
+        run: |
+          until curl -f http://localhost:4000/api/health; do sleep 2; done
      
       # Install deps then run test (root deps install )
       - name: Install deps
         run: npm ci
 
       # Ye backend run kar sakta hai (backend deps install)
-      - name: Install backend deps
-        run: npm ci --prefix Backend
+      # ---Backend docker kar reha hai to yehan install nahi karna hai oska deps
+      # - name: Install backend deps
+      #   run: npm ci --prefix Backend
 
       # System check karega Network call karega (fetch and axios use karega real )
       - name: Run Integration Tests
         run: npm run test:integration
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
 
   e2e:
     needs: integration
@@ -123,18 +130,26 @@ jobs:
 
       # e2e me bhi docker start karna parega (Backend and frontend dono run hona chiye ) tabhi playwright chalgea 
       - name: Start Docker
-        run: docker compose -f docker-compose.ci.yml up -d
+        run: docker compose -f docker-compose.e2e.yml up -d --build
 
       # Install root deps 
       - name: Install root deps
         run: npm ci
 
-      # Frontend deps and backend deps install 
-      - name: Install frontend deps
-        run: npm ci --prefix Front-end
+      # Wait for backend and frontend to react ============
+      - name: Wait for services
+        run: |
+          until curl -f http://localhost:4000/api/health; do sleep 2; done
+          until curl -f http://localhost:5173; do sleep 2; done
       
-      - name: Install backend deps
-        run: npm ci --prefix Backend
+      # Frontend deps and backend deps install (not need to install )
+      # - name: Install frontend deps
+      #   run: npm ci --prefix Front-end
+      
+      # - name: Install backend deps
+      #   run: npm ci --prefix Backend
+
+      
       
       # Install browser for e2e test 
       - name: Install Playwright browsers

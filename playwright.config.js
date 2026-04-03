@@ -42,7 +42,21 @@ module.exports = defineConfig({
     },
   ],
 
-  webServer: [
+  // Ye backend and fronend server run karta hai to run the test 
+  // isko skip karna prega in workflow docker jab run hota hai to 
+  // -- ci me skip karo 
+  // --- docker ko test nahi kar reha hai ye 
+  // locally test kar reha hai abhi 
+  // -- loally run karne ke liye db connect run hote rehna chiye 
+  // Ci is true in github action 
+
+  /*
+    GitHub Actions internally ek environment create karta hai:
+    CI=true
+    GITHUB_ACTIONS=true
+  */
+
+  webServer: process.env.CI ? undefined : [
     {
       command: 'npm run dev --prefix Front-end',
       port: 5173,
