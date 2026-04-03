@@ -15,6 +15,7 @@ RUN npm ci
 
 COPY . .
 
-EXPOSE 3000
+# EXPOSE 3000
+EXPOSE 4000
 
 CMD ["node", "src/server.js"]
