@@ -78,9 +78,7 @@ jobs:
 
       - name: Check logs
         run: |
-          docker ps 
-          docker ps -a
-          docker compose logs backend
+          docker logs scalex-commerce-backend-1
 
       # Check the route 
       - name: Wait for Backend Check-route 
@@ -138,11 +136,7 @@ jobs:
       - name: Start Docker
         run: docker compose -f docker-compose.e2e.yml up -d --build
     
-      - name: Check logs
-        run: |
-          docker ps 
-          docker ps -a
-          docker logs scalex-commerce-backend-1
+      
 
       # Install root deps 
       - name: Install root deps
