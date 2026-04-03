@@ -7,7 +7,7 @@ services:
   minio:
     image: minio/minio
     restart: always
-    command: server /data --console-addresss ":9001"
+    command: server /data --console-address ":9001"
     env_file: ./Backend/.env.docker
   
   redis:
