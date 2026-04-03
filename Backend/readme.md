@@ -1,4 +1,14 @@
 # 🛒 Production-Grade E-commerce Backend
+![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=node.js)
+![Express](https://img.shields.io/badge/Express.js-API-black?logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?logo=mongodb)
+![Redis](https://img.shields.io/badge/Redis-Cache-DC382D?logo=redis)
+![Nginx](https://img.shields.io/badge/Nginx-Load%20Balancer-009639?logo=nginx)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker)
+![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?logo=prometheus)
+![Sentry](https://img.shields.io/badge/Sentry-Error%20Tracking-362D59?logo=sentry)
+![Performance](https://img.shields.io/badge/Throughput-2880%20req%2Fs-brightgreen)
+![Status](https://img.shields.io/badge/Status-Production--Ready-success)
 
 A production-ready backend for an e-commerce platform, designed for **scalability, performance, and observability**.
 
