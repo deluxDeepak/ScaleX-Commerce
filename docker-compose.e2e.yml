@@ -25,7 +25,7 @@ services:
       - minio
 
   frontend:
-    build: Dockerfile
+    build: ./Front-end
     depends_on:
       - backend
 

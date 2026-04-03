@@ -143,10 +143,11 @@ jobs:
         run: npm ci
 
       # Wait for backend and frontend to react ============
-      - name: Wait for services
-        run: |
-          until curl -f http://localhost:4000/api/health; do sleep 2; done
-          until curl -f http://localhost:5173; do sleep 2; done
+      # - name: Wait for services
+      #   run: |
+      #     until curl -f http://localhost:4000/api/health; do sleep 2; done
+      #     until curl -f http://localhost:5173; do sleep 2; done
+      
       
       # Frontend deps and backend deps install (not need to install )
       # - name: Install frontend deps
