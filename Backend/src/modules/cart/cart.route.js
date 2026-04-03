@@ -1,7 +1,7 @@
 // All cart routes are here 
 const router = require("express").Router();
 const authenticate = require("../../middlewares/auth.middleware");
-const { getCartItemsAll, createCartItems, getCartItemsAllUser, addCartItems, updateCartItems, removeCartItems, getCartCount, clearCart, getCartTotalPrice, checkItemInCart } = require("./cart.controller");
+const { getCartItemsAll,  getCartItemsAllUser, addCartItems, updateCartItems, removeCartItems, getCartCount, clearCart, getCartTotalPrice, checkItemInCart } = require("./cart.controller");
 
 // -------->api/cart/cart-items
 // Har ek cart me auth middleware add kar denge 

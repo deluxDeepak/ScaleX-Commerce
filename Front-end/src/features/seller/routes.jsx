@@ -17,7 +17,7 @@ const sellerRoutes = {
         </RoleRoutes>
     ),
     children: [
-        { index: true, path: "dashboard", element: <SellerDashboard /> },
+        { path: "dashboard", element: <SellerDashboard /> },
         { path: "product", element: <SellerProducts /> },
         { path: "order", element: <SellerOrder /> },
         { path: "addProduct", element: <AddProduct /> },

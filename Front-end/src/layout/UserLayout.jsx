@@ -3,30 +3,24 @@ import { Outlet } from "react-router-dom";
 import UserSidebar from "../features/user/components/UserSidebar";
 import { useLayout } from "../context/useLayout";
 
-// Jab user layout mount tab hide kar do footer ko 
 const UserLayout = () => {
-    const { setShowFooter } = useLayout()
+    const { setShowFooter } = useLayout();
 
     useEffect(() => {
-        setShowFooter(false)         // mount pe hide
-        return () => setShowFooter(true)  // unmount pe wapas show
-    }, [])
-
+        setShowFooter(false);
+        return () => setShowFooter(true);
+    }, []);
 
     return (
-        <div className="flex">
+        <div className="min-h-screen bg-gray-50">
+            <UserSidebar />
 
-            {/* Sidebar - normal flow, sticky */}
-            <div className="w-10 lg:w-64 sticky top-16 h-[calc(100vh-4rem)] shrink-0">
-                <UserSidebar />
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 p-4 min-w-0">
+            {/* Offset content by sidebar width: 56px on mobile, 256px on lg */}
+            <main className="ml-14 lg:ml-64 p-4 min-h-screen">
                 <Outlet />
-            </div>
-
+            </main>
         </div>
     );
 };
-export default UserLayout
+
+export default UserLayout;

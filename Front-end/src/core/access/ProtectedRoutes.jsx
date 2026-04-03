@@ -12,8 +12,9 @@ const ProtectedRoutes = ({ children }) => {
 
     if (loading) return <p>Loading....</p>
     console.log("User from protected route ", user);
+
     // agr nahi hai to login or home page  ke pass bhej do 
-    if (!user) return <Navigate to="/auth/login"></Navigate>;
+    if (!user) return <Navigate to="/auth/login" replace />;
     // if user persent hai to childrean ko render kar do 
     return children;
 }

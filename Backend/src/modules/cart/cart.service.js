@@ -217,7 +217,7 @@ const getCartTotalPriceService = async (userId) => {
     // 1.Find the cart 
     const cartUser = await findCartByUser(userId);
     if (!cartUser) {
-        throw NotfoundError("Cart not found with User")
+        throw new NotfoundError("Cart not found with User")
     }
 
     // 2.Find the count in cart 

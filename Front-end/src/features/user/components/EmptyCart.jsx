@@ -5,10 +5,10 @@ import { ShoppingCart, ArrowRight, Tag, Truck, RotateCcw } from 'lucide-react';
 
 const EmptyCart = () => {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[70vh] w-full px-4  bg-gray-50">
+        <div className="flex flex-col items-center justify-center w-full px-4  bg-gray-50">
 
             {/* ===== Main Card ===== */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center px-8 sm:px-16 py-12 max-w-lg w-full text-center gap-6">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center px-8  py-12 max-w-lg w-full text-center gap-6">
 
                 {/* Illustration wrapper with decorative ring */}
                 <div className="relative flex items-center justify-center">
