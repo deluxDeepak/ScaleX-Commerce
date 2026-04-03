@@ -4,8 +4,6 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const morgan = require("morgan");       //http loger 
-const { globalLimiter } = require("../core/security/ratelimit");
-const { initSentry } = require("../core/monitoring/sentry");
 // const pinoHttp = require("pino-http")     //http loger
 // const httpLogger = require("../middlewares/httpLogger");
 // const { httpLogger } = require("../middlewares/httpLogger");
@@ -15,7 +13,6 @@ const { initSentry } = require("../core/monitoring/sentry");
 
 
 const loadApp = (app) => {
-    initSentry(app);
 
 
     // Security on top 

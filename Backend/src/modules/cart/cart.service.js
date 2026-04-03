@@ -6,8 +6,7 @@
 
 const logger = require("../../core/logger/logger");
 const { NotfoundError, DatabaseError, ValidationError } = require("../../shared/errors");
-const { getCartItemsAll } = require("./cart.controller");
-const { findItemAll, findCartByUser, createItem, findAndDeleteCart, findAndDeleteCartItem, findAndUpdateCartItem, clearCartByUser, updateCartByUser, UpdateCartItem } = require("./cart.repository");
+const { findItemAll, findCartByUser, createItem, findAndDeleteCartItem, clearCartByUser, updateCartByUser, UpdateCartItem } = require("./cart.repository");
 
 const getItemAllService = async () => {
 
@@ -22,7 +21,7 @@ const getItemAllService = async () => {
         return data;
 
     } catch (error) {
-        logger.error("Error in fetching from the Databse")
+        logger.error({ error }, "Error in fetching from the Databse")
         throw new DatabaseError("Error in fetching from the Databse");
     }
 }
@@ -42,7 +41,7 @@ const getItemAllUserService = async (userId) => {
         return data;
 
     } catch (error) {
-        logger.error("Error in fetching from the Databse")
+        logger.error({ error }, "Error in fetching from the Databse")
         throw new DatabaseError("Error in fetching from the Databse");
     }
 }
@@ -125,7 +124,7 @@ const removeCartItemsService = async (cartItemsId, userId) => {
     }
 
     // 2.Remove the particular user with the cart
-    const deletedCartItem = await findAndDeleteCartItem(userCart._id,cartItemsId);
+    const deletedCartItem = await findAndDeleteCartItem(userCart._id, cartItemsId);
     if (!deletedCartItem) {
         throw new NotfoundError("Cart items not persent in your Cart or Delted ")
     }

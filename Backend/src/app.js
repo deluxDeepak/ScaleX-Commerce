@@ -1,8 +1,6 @@
 const express = require('express');
 const loadApp = require('./loaders/app.loader');
 const loadRoute = require('./loaders/route.loader');
-const loadDb = require('./loaders/db.loader');
-const initStorage = require('./loaders/storage.loader');
 const globalErrorHandler = require('./middlewares/globalError.middleware');
 const notFundMiddleware = require('./middlewares/notFund.middleware');
 

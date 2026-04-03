@@ -5,9 +5,11 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles",
+    "test:coverage": "jest --runInBand --detectOpenHandles --coverage",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "build": "node --check src/server.js",
+    "lint": "eslint .",
     "seed": "node scripts/seed/seed.js",
     "prepare": "husky"
   },
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.1.0",
+    "eslint-plugin-jest": "^29.15.1",
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "jest": "^30.3.0",

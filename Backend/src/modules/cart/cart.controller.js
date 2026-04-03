@@ -5,12 +5,15 @@ const getCartItemsAll = async (req, res) => {
         const items = await getItemAllService();
         res.status(200).json({
             success: true,
-            data: items
+            data: items,
+            message: "Cart items fetched ."
         })
 
     } catch (error) {
         res.status(500).json({
-            message: "Something went wrong",
+            success: false,
+            message: error.message || "Something went wrong",
+
 
         })
 

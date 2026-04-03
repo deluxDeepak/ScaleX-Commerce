@@ -1,7 +1,7 @@
 const Sentry = require("@sentry/node");
 const config = require("../config/env.config");
 
-const initSentry = (app) => {
+const initSentry = () => {
     Sentry.init({
         dsn: config.SENTRY_DSN,
         sendDefaultPii: true,
