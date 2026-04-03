@@ -76,6 +76,9 @@ jobs:
       - name: Start Docker Services
         run: docker compose -f docker-compose.integration.yml up -d --build
 
+      - name: Check logs
+        run: docker compose logs backend
+
       # Check the route 
       - name: Wait for Backend Check-route 
         run: |
