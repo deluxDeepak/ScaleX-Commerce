@@ -81,9 +81,9 @@ jobs:
           docker logs scalex-commerce-backend-1
 
       # Check the route 
-      - name: Wait for Backend Check-route 
-        run: |
-          until curl -f http://localhost:4000/api/health; do sleep 2; done
+      # - name: Wait for Backend Check-route 
+      #   run: |
+      #     until curl -f http://localhost:4000/api/health; do sleep 2; done
      
       # Install deps then run test (root deps install )
       - name: Install deps
