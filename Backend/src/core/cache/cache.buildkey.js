@@ -1,4 +1,6 @@
 
-export const buildkey=(req,prefix)=>{
+const buildkey = (req, prefix) => {
     return `${prefix}:${req.originalUrl}`
 }
+
+module.exports = buildkey

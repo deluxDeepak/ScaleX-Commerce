@@ -1,5 +1,5 @@
 
 // Optional 
-const checkPermission=(permissions)=>{
+// const checkPermission=(permissions)=>{
 
-}
+// }

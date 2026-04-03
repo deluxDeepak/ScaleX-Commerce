@@ -9,6 +9,7 @@
 */
 
 const config = require("../core/config/env.config");
+const logger = require("../core/logger/logger");
 
 // Dev me response error jayda bhejte hai jayda information 
 const devError = (err, req, res) => {
@@ -40,7 +41,9 @@ const prodError = (err, req, res) => {
 }
 
 
-const globalErrorHandler = (err, req, res, next) => {
+const globalErrorHandler = (err, req, res) => {
+    logger.error({ err }, "Error from middleware");
+    
     err.statusCode = err.statusCode || 500;
     err.status = err.status || "error";
 
@@ -49,6 +52,10 @@ const globalErrorHandler = (err, req, res, next) => {
     } else {
         prodError(err, req, res);
     }
+
+    // Agar response send kar diya → return karo
+    // Response ke baad next() → kabhi nahi
+    // next();
 }
 
 module.exports = globalErrorHandler;

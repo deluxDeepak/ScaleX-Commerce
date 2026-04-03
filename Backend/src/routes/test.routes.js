@@ -30,7 +30,8 @@ router.get("/heavy", async (req, res) => {
 });
 
 // Test--sentry setup===============
-router.get("/debug-sentry", function mainHandler(req, res) {
+router.get("/debug-sentry", (req) => {
+    console.log("Sentry error with req headers", req.headers);
     throw new Error("My first Sentry error!");
 });
 

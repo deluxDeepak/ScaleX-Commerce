@@ -17,11 +17,11 @@ const upload = multer({
         //     return cb(new Error("Only images are allowed"), false);
         // }
 
-        const allowedTypes = [
-            "image/png",
-            "image/jpeg",
-            "image/webp"
-        ];
+        // const allowedTypes = [
+        //     "image/png",
+        //     "image/jpeg",
+        //     "image/webp"
+        // ];
 
         if (!file.mimetype.startsWith("image/")) {
             return cb(new Error("Only images are allowed"), false);

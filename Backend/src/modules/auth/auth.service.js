@@ -1,11 +1,11 @@
 
 const logger = require("../../core/logger/logger");
 const generateTokenService = require("../../core/token/token.service");
-const { ValidationError, DatabaseError, AuthError, NotfoundError } = require("../../shared/errors");
+const { ValidationError,  NotfoundError } = require("../../shared/errors");
 const { compareHashPassword } = require("../../shared/utils/password.utils");
 const { hashToken } = require("../../shared/utils/token.utils");
 const { findByEmail, updateUserRefreshToken, findUserById } = require("../user/user.repository");
-const { createUserService, findUserBasicService, findUserProfileService } = require("../user/user.service");
+const { createUserService, findUserBasicService } = require("../user/user.service");
 const { createUserSession, deleteUserSession, findUserSession, updateUserSession } = require("./auth.repository");
 
 const registerUserService = async (data, sessionMeta) => {

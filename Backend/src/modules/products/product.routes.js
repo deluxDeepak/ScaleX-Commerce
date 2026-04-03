@@ -3,7 +3,7 @@ const router = require("express").Router();
 const upload = require("../../core/upload/upload.middleware");
 const authenticate = require("../../middlewares/auth.middleware");
 const checkRole = require("../../middlewares/role.middleware");
-const checkProductOwner = require("./product.middleware");
+// const checkProductOwner = require("./product.middleware");
 
 const {
   getProducts,
@@ -68,27 +68,27 @@ router.get(
   "/admin/products",
   authenticate,
   checkRole("admin"),
-  (req, res) => { }
+  () => { }
 );
 
 router.patch(
   "/admin/products/:id",
   authenticate,
   checkRole("admin"),
-  (req, res) => { }
+  () => { }
 );
 
 router.delete(
   "/admin/products/:id",
   authenticate,
   checkRole("admin"),
-  (req, res) => { }
+  () => { }
 );
 
 
 // ===== IMAGES =====
 
-router.get("/products/:id/images", (req, res) => { });
+router.get("/products/:id/images", () => { });
 
 router.post(
   "/:id/images",

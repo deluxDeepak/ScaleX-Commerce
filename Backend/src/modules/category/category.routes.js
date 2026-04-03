@@ -1,4 +1,4 @@
-const { getAllCategory, createCategory, deleteCategory, updateCategoryList, getAllSUbCategoryService, getAllSubCategory, getAllSubCategoryByCategoryId, getProductByCatId, getProductByCatIDSubcategory } = require("./category.controller");
+const { getAllCategory, createCategory, deleteCategory, updateCategoryList, getAllSubCategory, getAllSubCategoryByCategoryId, getProductByCatId, getProductByCatIDSubcategory } = require("./category.controller");
 const upload = require("../../core/upload/upload.middleware")
 
 const router = require("express").Router();

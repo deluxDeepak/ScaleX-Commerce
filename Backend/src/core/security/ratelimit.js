@@ -76,6 +76,7 @@ module.exports = {
 
 
 
+/*
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
@@ -84,6 +85,7 @@ const limiter = rateLimit({
     ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
     // store: ... , // Redis, Memcached, etc. See below.
 })
+*/
 
 // Apply the rate limiting middleware to all requests.
 // app.use(limiter)

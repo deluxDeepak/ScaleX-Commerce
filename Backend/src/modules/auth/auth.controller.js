@@ -1,6 +1,5 @@
 const logger = require("../../core/logger/logger");
 const { verifyRefreshToken } = require("../../shared/utils/token.utils");
-const { deleteOne } = require("../user/user.model");
 const { loginByEmailService, logoutService, registerUserService, getMeBasicUserService, getProfileUserService, refreshTokenService } = require("./auth.service");
 
 // -email 
@@ -9,7 +8,7 @@ const { loginByEmailService, logoutService, registerUserService, getMeBasicUserS
 const register = async (req, res) => {
     try {
         // const { email, password, name } = req.body; //temp edit role add from here 
-        const { email, password, name,role } = req.body;  
+        const { email, password, name, role } = req.body;
 
         if (!email || !password || !name) {
             return res.status(400).json({
@@ -25,7 +24,7 @@ const register = async (req, res) => {
         logger.info("RegisterSchema called")
         // register + login
         const { token, user } = await registerUserService(
-            { email, password, name ,role },
+            { email, password, name, role },
             sessionMeta
         );
 
@@ -110,7 +109,7 @@ const logout = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Error in logout",
+            message: error.message && "Error in logout",
         })
     }
 }
@@ -129,7 +128,7 @@ const getMe = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Error in fetching",
+            message: error.message && "Error in fetching",
         })
 
     }
@@ -149,7 +148,7 @@ const getUserProfile = async (req, res) => {
     } catch (error) {
         res.status(400).json({
             success: false,
-            message: "Error in fetching",
+            message: error.message && "Error in fetching",
         })
 
     }
@@ -198,13 +197,13 @@ const refreshToken = async (req, res) => {
 }
 
 // Social login routes =========================
-const googleLogin = async (req, res) => {
+const googleLogin = async () => {
 
 }
-const githubLogin = async (req, res) => {
+const githubLogin = async () => {
 
 }
-const facebookLogin = async (req, res) => {
+const facebookLogin = async () => {
 
 }
 

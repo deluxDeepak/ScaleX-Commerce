@@ -1,8 +1,8 @@
 const logger = require("../logger/logger");
-const { buildkey } = require("./cache.buildkey")
+const buildkey = require("./cache.buildkey")
 const { getCache, setCache } = require("./cache.service")
 
-const cacheMiddleware = (prefix, ttl=3600) => {
+const cacheMiddleware = (prefix, ttl = 3600) => {
     return async (req, res, next) => {
 
         // Build key dynamic 

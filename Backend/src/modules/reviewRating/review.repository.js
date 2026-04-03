@@ -10,6 +10,9 @@ const createReview = async (data) => {
 const findReviewsByProductId = (productId) => {
     return Review.find({ product: productId });
 };
+const findReviewsByUserId = (userId) => {
+    return Review.find({ user: userId });
+};
 // updatecontent 
 const findByIdAndUpdateReview = (reviewId, data) => {
     return Review.findByIdAndUpdate(reviewId, data, { new: true });
@@ -33,6 +36,7 @@ module.exports = {
     findReviewById,
     createReview,
     findReviewsByProductId,
+    findReviewsByUserId,
     findByIdAndUpdateReview,
 
     // Image 

@@ -1,7 +1,7 @@
 const http = require("http");
 const logger = require("./core/logger/logger");
 const setupGlobalHandlers = require("./core/monitoring/globalHandlers");
-const { initSentry, setupSentryErrorHandler } = require("./core/monitoring/sentry");
+const { initSentry } = require("./core/monitoring/sentry");
 const initStorage = require("./loaders/storage.loader");
 const loadDb = require("./loaders/db.loader");
 const config = require("./core/config/env.config");
@@ -23,7 +23,6 @@ const startServer = async () => {
 
     const createApp = require("./app");
     const app = await createApp();
-    setupSentryErrorHandler(app);
     server = http.createServer(app);
 
     const port = process.env.PORT || 3000;

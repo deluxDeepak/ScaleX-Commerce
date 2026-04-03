@@ -2,7 +2,7 @@ const logger = require("../../core/logger/logger");
 const { uploadObjectService, deleteObjectService } = require("../../core/storage/storage.services");
 const { generateKey, getKeyFromUrl } = require("../../shared/utils/genKeys.utils");
 const { findByIdAndUpdateReviewImg, findByIdAndDeleteReviewImg } = require("./review.repository");
-const { createReviewService, getProductReviewServices, updateReviewServices, deleteReviewServices, findReviewService } = require("./review.service");
+const { createReviewService, getProductReviewServices, updateReviewServices, deleteReviewServices, findReviewService, getMyReviewsService } = require("./review.service");
 
 const createReview = async (req, res) => {
     try {
@@ -12,7 +12,7 @@ const createReview = async (req, res) => {
         if (!files) {
             return res.status(400).json({
                 success: false,
-                message: error.message || "Provide atleast one file"
+                message: "Provide atleast one file"
 
             })
         }
@@ -92,6 +92,24 @@ const getProductReviews = async (req, res) => {
     }
 
 }
+const getMyReviews = async (req, res) => {
+    try {
+        const userId = req.user?.id || req.user?._id;
+        const reviews = await getMyReviewsService(userId);
+
+        res.status(200).json({
+            success: true,
+            reviews,
+            message: "My reviews fetched successfully",
+        });
+    } catch (error) {
+        logger.error({ error }, "Error in fetching user reviews");
+        res.status(400).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 const updateReview = async (req, res) => {
     const reviewId = req.params.reviewId;
     console.log("Product id is", reviewId);
@@ -137,12 +155,12 @@ const deleteReview = async (req, res) => {
 
 const updateReviewImage = async (req, res) => {
     const files = req.files
-    const userId = req.user.id;
+    // const userId = req.user.id;
     const reviewId = req.params.reviewId;
     if (!files) {
         return res.status(400).json({
             success: false,
-            message: error.message || "Provide atleast one file"
+            message: "Provide atleast one file"
 
         })
     }
@@ -215,15 +233,12 @@ const deleteReviewImage = async (req, res) => {
     }
 
 }
-const getMyReviews = async (req, res) => {
-
-}
 module.exports = {
     createReview,
     updateReview,
-    getMyReviews,
     deleteReview,
     getProductReviews,
+    getMyReviews,
 
     updateReviewImage,
     deleteReviewImage,

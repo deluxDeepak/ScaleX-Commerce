@@ -1,6 +1,7 @@
+const logger = require("../../core/logger/logger");
 const { getAllSectionService, createSectionService, updateSectionService, deleteSectionService } = require("./section.service");
 
-const getAllSection = async () => {
+const getAllSection = async (req, res) => {
     try {
         const section = await getAllSectionService();
         res.status(200).json({
@@ -36,7 +37,7 @@ const createSection = async (req, res) => {
 
     }
 }
-const updateSection = async () => {
+const updateSection = async (req, res) => {
     try {
         const sectionId = req.params.id;
         const data = req.body;
@@ -55,7 +56,7 @@ const updateSection = async () => {
 
     }
 }
-const deleteSection = async () => {
+const deleteSection = async (req, res) => {
     try {
         const sectionId = req.params.id;
         const section = await deleteSectionService(sectionId);

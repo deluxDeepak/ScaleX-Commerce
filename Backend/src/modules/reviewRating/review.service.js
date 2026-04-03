@@ -5,6 +5,7 @@ const { updateProductById } = require("../products/product.repository");
 const {
     createReview,
     findReviewsByProductId,
+    findReviewsByUserId,
     findByIdAndUpdateReview,
     findByIdAndDeleteReview,
     findByIdAndUpdateReviewImg,
@@ -96,6 +97,18 @@ const getProductReviewServices = async (productId) => {
     return products;
 
 }
+const getMyReviewsService = async (userId) => {
+    if (!userId) {
+        throw new ValidationError("User id is required");
+    }
+
+    const reviews = await findReviewsByUserId(userId);
+    if (!reviews || reviews.length === 0) {
+        return [];
+    }
+
+    return reviews;
+};
 const updateReviewServices = async (reviewId, data) => {
     if (!reviewId) {
         throw new DatabaseError("Product id is required");
@@ -114,7 +127,7 @@ const deleteReviewServices = async (reviewId) => {
     if (!reviewId) {
         throw new DatabaseError("Product id is required");
     }
-    const products = await findByIdAndDeleteReview(reviewId, data);
+    const products = await findByIdAndDeleteReview(reviewId);
     if (!products || products.length === 0) {
         return [];
     }
@@ -156,6 +169,7 @@ module.exports = {
     createReviewService,
     recalcProductRating,
     getProductReviewServices,
+    getMyReviewsService,
     findReviewService,
     updateReviewServices,
     deleteReviewServices,

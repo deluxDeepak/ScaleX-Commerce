@@ -21,16 +21,13 @@ const authenticate = async (req, res, next) => {
         throw new AuthError("You are not Authorize");
     }
 
-    try {
-        const decodeUser = await verifyToken(token);
-        logger.info({ decodeUser }, "Decode data:");
-        req.user = decodeUser;
 
-        next();
-    } catch (error) {
-        throw error;
+    const decodeUser = await verifyToken(token);
+    logger.info({ decodeUser }, "Decode data:");
+    req.user = decodeUser;
 
-    }
+    next();
+
 
 }
 

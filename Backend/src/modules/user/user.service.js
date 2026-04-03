@@ -55,30 +55,27 @@ const createUserService = async (data) => {
         throw new ValidationError("Password is required");
     }
 
-    try {
-        let user = await findByEmail(data.email);
-        if (user) {
-            throw new DatabaseError("User already exist");
-        }
-
-        // if user exist nahi krta hai tab user create karenge 
-        // Pssword hash yehi hota hai 
-        const hashedPassword = await hashPassword(data.password);
-        const userCreate = {
-            name: data.name,
-            email: data.email,
-            password: hashedPassword,
-            role: data.role
-        };
-        user = await createUser(userCreate);
-        if (!user) {
-            throw new DatabaseError("Error in user creation");
-        }
-        return user;
-
-    } catch (err) {
-        throw err;
+    let user = await findByEmail(data.email);
+    if (user) {
+        throw new DatabaseError("User already exist");
     }
+
+    // if user exist nahi krta hai tab user create karenge 
+    // Pssword hash yehi hota hai 
+    const hashedPassword = await hashPassword(data.password);
+    const userCreate = {
+        name: data.name,
+        email: data.email,
+        password: hashedPassword,
+        role: data.role
+    };
+    user = await createUser(userCreate);
+    if (!user) {
+        throw new DatabaseError("Error in user creation");
+    }
+    return user;
+
+
 };
 
 const findUserBasicService = async (id) => {
@@ -134,12 +131,12 @@ const updateUserProfileService = async (id, data) => {
     return user;
 };
 
-const updateProfileImgService=async(id,url)=>{
-    if(!url){
+const updateProfileImgService = async (id, url) => {
+    if (!url) {
         throw new ValidationError("Provide user Id");
     }
-    const user=await findandUpdateUserProfileImg(id,url);
-    if(!user){
+    const user = await findandUpdateUserProfileImg(id, url);
+    if (!user) {
         throw new NotfoundError("User not found || Image not updated");
     }
 

@@ -1,5 +1,5 @@
 
-const { PutObjectCommand, DeleteBucketCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const config = require("../config/env.config");
 const storageClient = require("./s3.client");
 // Object pass karna parega Kya upload karna hai kya rehega kya type rehega 

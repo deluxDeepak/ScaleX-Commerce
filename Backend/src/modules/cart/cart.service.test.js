@@ -29,7 +29,7 @@ jest.mock("../../core/logger/logger", () => ({
 jest.mock("./cart.repository");
 
 const logger = require("../../core/logger/logger");
-const { DatabaseError, ValidationError } = require("../../shared/errors");
+const { DatabaseError } = require("../../shared/errors");
 const { getItemAllService, getItemAllUserService } = require("../cart/cart.service");
 const { findItemAll, findCartByUser } = require("./cart.repository");
 
