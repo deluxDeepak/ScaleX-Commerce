@@ -1,17 +1,35 @@
 const Category = require("../../src/modules/category/category.model");
+const SubCategory = require("../../src/modules/category/subCategory.model");
 const categoryData = require("./data/dataCategory");
 
-const seedCategory = async () => {
+const createCategoryWithSubs = async (dataArray) => {
     await Category.deleteMany();
 
-    const cats = await Category.create(categoryData);
+    const results = [];
 
-    cats.map((cat) => {
+    for (const data of dataArray) {
+        const { name, slug, icon, subCategories } = data;
 
-        console.log("Category created", cat._id);
-    })
+        const createdSubs = await SubCategory.insertMany(subCategories);
 
-    console.log("Category seeded ");
+        const category = await Category.create({
+            name,
+            slug,
+            icon,
+            subCategories: createdSubs.map(s => s._id),
+        });
+
+        results.push(category);
+    }
+
+    return results;
+};
+
+
+const seedCategory = async () => {
+    const cats = await createCategoryWithSubs(categoryData);
+
+    console.log("Category seeded with Subcategory");
     return cats
 };
 

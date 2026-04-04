@@ -19,7 +19,7 @@ const ProductDetails = ({ product, reviews }) => {
             {/* Category badge */}
             <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold uppercase tracking-wider bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full">
-                    {product.subCategory || product.category}
+                    {product.subCategory.name || product.category.name}
                 </span>
                 {product.section && (
                     <span className="text-xs font-semibold uppercase tracking-wider bg-orange-50 text-orange-500 px-2.5 py-1 rounded-full">
@@ -136,12 +136,12 @@ const ProductHeightlight = ({ product }) => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1">
                     <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Category</span>
-                    <span className="text-sm text-gray-700 font-medium">{product.category}</span>
+                    <span className="text-sm text-gray-700 font-medium">{product.category.name}</span>
                 </div>
                 {product.subCategory && (
                     <div className="flex flex-col gap-1">
                         <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Sub-Category</span>
-                        <span className="text-sm text-gray-700 font-medium">{product.subCategory}</span>
+                        <span className="text-sm text-gray-700 font-medium">{product.subCategory.name}</span>
                     </div>
                 )}
                 <div className="flex flex-col gap-1">
@@ -208,7 +208,7 @@ const Product = () => {
             <nav className="flex items-center gap-2 text-sm text-gray-500">
                 <a href="/" className="hover:text-gray-800 transition-colors">Home</a>
                 <span>/</span>
-                <a href="/products" className="hover:text-gray-800 transition-colors">{product.category}</a>
+                <a href="/products" className="hover:text-gray-800 transition-colors">{product.category.name}</a>
                 <span>/</span>
                 <span className="text-gray-800 font-medium truncate max-w-[200px]">{product.title}</span>
             </nav>

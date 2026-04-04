@@ -29,6 +29,7 @@ const ProductSchema = new mongoose.Schema(
     },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId, // points to subdoc inside Category
+      ref:"SubCategory",
       required: true,
     },
 

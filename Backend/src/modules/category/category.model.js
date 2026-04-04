@@ -10,18 +10,22 @@ const mongoose = require("mongoose");
 
     npm install slugify to generate unique slug 
 */
-const SubCategorySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    slug: {
-        type: String,        // "mobile-phones" → used in URLs
-        lowercase: true,
-    },
-    icon: String
-});
+
+
+// const SubCategorySchema = new mongoose.Schema({
+//     name: {
+//         type: String,
+//         required: true,
+//         trim: true,
+//     },
+//     slug: {
+//         type: String,        // "mobile-phones" → used in URLs
+//         lowercase: true,
+//     },
+//     icon: String
+// });
+
+
 
 const CategorySchema = new mongoose.Schema(
     {
@@ -41,7 +45,11 @@ const CategorySchema = new mongoose.Schema(
             type: Boolean,
             default: true,       // admin can disable a category
         },
-        subCategories: [SubCategorySchema],  // embedded inside category
+        // subCategories: [SubCategorySchema],  // embedded inside category
+        subCategories: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SubCategory"
+        }],  
     },
     { timestamps: true }
 );

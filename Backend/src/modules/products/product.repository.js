@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const pagination = require("../../shared/utils/pagination.utils");
 const Product = require("./product.model");
 const Apifeature = require("../../shared/utils/ApiFetures");
+require("../category/subCategory.model");
 
 // Pagination laga ke bhej sakte hai pura product bhej denge load bharega db pe 
 const findAllProduct = async (query) => {
@@ -18,7 +19,7 @@ const findFilterProduct = async (queryParams) => {
 }
 const findProductSuggestion = async (keyword) => {
     // if keyword nahi rehega to pura document return ho jayega 
-    if(!keyword) return [];
+    if (!keyword) return [];
 
 
     // means case insensitive options -i 
@@ -30,7 +31,9 @@ const findProductSuggestion = async (keyword) => {
 }
 
 const findProductByid = async (id) => {
-    return await Product.findById(id).lean();
+    // .populate() tabhi kaam karta hai jab field me ref defined ho.
+
+    return await Product.findById(id).populate("category subCategory").lean();
 }
 
 // All can be done by single api also 
