@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { category5 } from '../../../assets'
-// import { products } from '../../product/data/products'
-// import { category } from '../../product/data/category'
 import ProductCard from '../../product/components/ProductCard'
 import { useProduct } from '../../../context/useProduct'
 import { useCategory } from '../../../context/useCategory'

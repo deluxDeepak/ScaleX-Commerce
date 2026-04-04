@@ -1,6 +1,6 @@
 const { ValidationError, DatabaseError, NotfoundError } = require("../../shared/errors");
 const { hashPassword } = require("../../shared/utils/password.utils");
-const { createUser, findByEmail, findUserById, findUserBasicById, findUserProfileById, findandUpdateUserProfileById, findAllUser, updateUser, deleteUser, getMyAddress, addAddress, updateAddress, delteAddress, updateDefaultAddress, findandUpdateUserProfileImg } = require("./user.repository")
+const { createUser, findByEmail, findUserById, findUserBasicById, findUserProfileById, findandUpdateUserProfileById, findAllUser, updateUser, deleteUser, getMyAddress, addAddress, updateAddress, delteAddress, updateDefaultAddress, findandUpdateUserProfileImg, findAddress } = require("./user.repository")
 
 const getAllUserService = async () => {
     const users = await findAllUser();
@@ -162,12 +162,20 @@ const addAddressService = async (userId, address) => {
     // 1.FInd the user 
     // 2.Update the user with adress
     if (!address) {
-        throw new ValidationError("Provide adress with reuired feild");
+        throw new ValidationError("Provide adress with required feild");
     }
-    console.log("Address is", address);
-    // if(!fullName){
-    //     throw new ValidationError("Name is required");
-    // }
+    const {  line1, pincode } = address;
+    const data = {
+        line1,
+        pincode
+    }
+
+    // findAddress tru or false return karega 
+    const existAddress = await findAddress(userId, data);
+    if(existAddress){
+        throw new ValidationError("Duplicate address not allowed");
+    }
+
     const user = await addAddress(userId, address);
     if (!user) {
         throw new DatabaseError("Error in adding adress Users");

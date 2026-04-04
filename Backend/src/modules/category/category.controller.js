@@ -5,9 +5,7 @@ const { getAllCategoryService, createCategoryService, deleteCategoryService, upd
 
 const getAllCategory = async (req, res) => {
     try {
-        console.log("Enter in geall");
         const category = await getAllCategoryService();
-        console.log("Category", category);
 
         res.status(200).json({
             success: true,
@@ -75,9 +73,7 @@ const getProductByCatIDSubcategory = async (req, res) => {
 }
 const getAllSubCategory = async (req, res) => {
     try {
-        console.log("Enter in geall");
         const subCategory = await getAllSUbCategoryService();
-        console.log("Category", subCategory);
 
         res.status(200).json({
             success: true,

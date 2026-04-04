@@ -67,6 +67,7 @@ const login = async (req, res) => {
         // login ---se token return karke de rehe hai 
         const { token, user } = await loginByEmailService(email, password, sessionMeta);
 
+        // Send response me cookies 
         res.cookie("refreshToken", token.refreshToken, {
             httpOnly: true,
             secure: false,

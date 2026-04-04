@@ -52,10 +52,18 @@ const findandUpdateUserProfileImg = async (id, url) => {
 // Adress User 
 const getMyAddress = async (userId) => {
     const user = await User.findById(userId).select("addresses").lean();
-    console.log("User address my address", user);
     return user.addresses || [];
 }
 
+
+const findAddress = async (userId, data) => {
+    const user = await User.findById(userId);
+
+    return user.addresses?.some((addr) =>
+        addr.line1 === data.line1 && addr.pincode === data.pincode
+    );
+
+}
 // ye user hi return karega address push karna parega array me
 const addAddress = async (userId, address) => {
     return await User.findByIdAndUpdate(
@@ -146,6 +154,7 @@ module.exports = {
     findandUpdateUserProfileImg,
 
     // adress 
+    findAddress,
     getMyAddress,
     addAddress,
     updateAddress,

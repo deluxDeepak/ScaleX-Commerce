@@ -7,7 +7,7 @@ require("../category/subCategory.model");
 // Pagination laga ke bhej sakte hai pura product bhej denge load bharega db pe 
 const findAllProduct = async (query) => {
     // filter apply kar sakte hai 
-    const mongoQuery = Product.find().lean()    //performance better 
+    const mongoQuery = Product.find().populate("category").lean()    //performance better 
     // const mongoQuery = Product.find(filter).lean()    //performance better 
     return await pagination(mongoQuery, query);
 }

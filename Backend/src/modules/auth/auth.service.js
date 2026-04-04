@@ -65,18 +65,6 @@ const loginByEmailService = async (email, password, sessionMeta) => {
     logger.info({ result }, "SessionData created");
     return { token, user: updatedUser };
 }
-// const generateTokenService=(user)=>{
-//     const accessToken=generateAccessToken(user);
-//     const refreshToken=generateRefreshToken(user);
-//     const hasRefreshToken=hashToken(refreshToken);
-
-//     return {
-//         accessToken,
-//         refreshToken,
-//         hasRefreshToken
-//     }
-
-// }
 
 // logout me compare nahi karte hai token 
 const logoutService = async (refreshToken,) => {
@@ -109,7 +97,6 @@ const refreshTokenService = async (userId, refreshToken) => {
     }
     // 1.match the token first and verify the token 
     const hashed = hashToken(refreshToken);
-    console.log("hased refresh token ", hashed);
     // 2.FindSession of that refresh token 
 
     // 3e583f8fe69f013e48a3bb43e109e07a0ee5aa012fc00c8c4f3b57861d241625
@@ -123,7 +110,6 @@ const refreshTokenService = async (userId, refreshToken) => {
     if (!user) {
         throw new NotfoundError("User not found");
     }
-    console.log("User is from auth refresh ", user);
 
     // 4.Generate refresh and accessToken 
     const token = generateTokenService(user);

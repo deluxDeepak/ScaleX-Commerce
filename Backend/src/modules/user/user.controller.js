@@ -59,7 +59,6 @@ const createUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     // const id = req.user.id  //Authentication 
     const { id } = req.params;
-    console.log("User id ", id);
     try {
         const users = await deleteUserService(id);
         return res.status(200).json({
@@ -149,13 +148,11 @@ const uploadProfileImage = async (req, res) => {
 
     try {
         const key = generateKey("userImg", file.originalname);
-        console.log("Key generated is ", key);
         const uploadRes = await uploadObjectService({
             key: key,
             body: file.buffer,
             contentType: file.mimetype
         });
-        console.log("User prfile url and key is ", uploadRes);
         // Reponse me jo url ayega wahi yehan update karenge 
         const user = await updateProfileImgService(id, uploadRes.url);
 

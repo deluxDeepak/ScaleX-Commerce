@@ -2,7 +2,6 @@ import AddCartButton from "./AddCartButton";
 import Rating from "../../../components/Rating";
 import { useNavigate } from "react-router-dom";
 import ProductPrice from "./ProductPrice";
-import { useCart } from "../../../context/CartContext";
 import { useState } from "react";
 
 // Important bhut jayda ========================================
@@ -71,7 +70,7 @@ const ProductCard = ({ products }) => {
 
         {/* Category */}
         <span className="text-xs font-semibold text-blue-500 tracking-wider uppercase">
-          {products.subCategory || products.category}
+          {products.subCategory.name || products.category.name}
         </span>
 
         {/* Title */}
@@ -83,10 +82,13 @@ const ProductCard = ({ products }) => {
         </h2>
 
         {/* Rating */}
-        <div className="flex items-center gap-1.5">
-          <Rating rating={products.rating} />
-          <span className="text-xs text-gray-400">({products.rating})</span>
-        </div>
+        {products.rating > 0 &&
+          <div className="flex items-center gap-1.5">
+            <Rating rating={products.rating} />
+            <span className="text-xs text-gray-400">({products.rating})</span>
+          </div>
+        }
+
 
         {/* Price + Rating */}
         <div className="flex items-center gap-2 mt-auto">

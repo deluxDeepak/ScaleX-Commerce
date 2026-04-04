@@ -15,13 +15,12 @@ const AuthError = require("../errors/AuthError");
     }
 */
 const generateAccessToken = (data) => {
-    console.log("Secret is ", config.JWT_ACCESS_SECRET)
     return jwt.sign({
         id: data._id,
         role: data.role,
         name: data.name
     }, config.JWT_ACCESS_SECRET, {
-        expiresIn: "60m",
+        expiresIn: "15m",
     })
 
 

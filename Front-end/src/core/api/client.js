@@ -6,8 +6,6 @@ export const api = axios.create({
     timeout: 1500,
     withCredentials: true,
 });
-console.log("url abckend is", import.meta.env.VITE_BASE_URL);
-
 
 // ✅ REQUEST INTERCEPTOR (token header me set lagega)
 api.interceptors.request.use(
@@ -117,7 +115,7 @@ api.interceptors.response.use(
     async function (error) {
         // Any status codes that fall outside the range of 2xx cause this function to trigger
         if (error.response?.status === 401) {
-            // Call refresh Token 
+            // Call refresh Token
             await api.get("/auth/refresh");
 
             return api(error.config);
@@ -132,9 +130,9 @@ api.interceptors.response.use(
 
 
 // ========================Interceptors==========================
-// Intercepter banate hai yehi 
-//1. Request configuration 
-//2. Response configuration 
+// Intercepter banate hai yehi
+//1. Request configuration
+//2. Response configuration
 
 /**
     // Add a request interceptor
@@ -166,28 +164,28 @@ api.interceptors.response.use(
  */
 
 
-const response =
-{
-    // `data` is the response that was provided by the server
-    data: {},
+// const response =
+// {
+//     // `data` is the response that was provided by the server
+//     data: {},
 
-    // `status` is the HTTP status code from the server response
-    status: 200,
+//     // `status` is the HTTP status code from the server response
+//     status: 200,
 
-    // `statusText` is the HTTP status message from the server response
-    statusText: 'OK',
+//     // `statusText` is the HTTP status message from the server response
+//     statusText: 'OK',
 
-    // `headers` the HTTP headers that the server responded with
-    // All header names are lowercase and can be accessed using the bracket notation.
-    // Example: `response.headers['content-type']`
-    headers: {},
+//     // `headers` the HTTP headers that the server responded with
+//     // All header names are lowercase and can be accessed using the bracket notation.
+//     // Example: `response.headers['content-type']`
+//     headers: {},
 
-    // `config` is the config that was provided to `axios` for the request
-    config: {},
+//     // `config` is the config that was provided to `axios` for the request
+//     config: {},
 
-    // `request` is the request that generated this response
-    // It is the last ClientRequest instance in node.js (in redirects)
-    // and an XMLHttpRequest instance in the browser
-    request: {}
+//     // `request` is the request that generated this response
+//     // It is the last ClientRequest instance in node.js (in redirects)
+//     // and an XMLHttpRequest instance in the browser
+//     request: {}
 
-}
+// }
