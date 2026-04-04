@@ -1,6 +1,6 @@
 import {
     LayoutDashboard,
-    Package,
+    Heart,
     ShoppingBag,
     MapPin,
     ShoppingCart
@@ -9,7 +9,7 @@ import { NavLink } from "react-router-dom";
 
 const sidebar = [
     { name: "Dashboard", link: "/user/dashboard", icon: LayoutDashboard },
-    { name: "Wishlist", link: "/user/wishlist/product", icon: Package },
+    { name: "Wishlist", link: "/user/wishlist/product", icon: Heart },
     { name: "Orders", link: "/user/orders/product", icon: ShoppingBag },
     { name: "Saved Address", link: "/user/saveAdress", icon: MapPin },
     { name: "Cart", link: "/user/cart/product", icon: ShoppingCart },
@@ -17,8 +17,8 @@ const sidebar = [
 
 const UserSidebar = () => {
     return (
-        <aside className="fixed top-0 left-0 h-screen w-14 lg:w-64 bg-white z-40 flex flex-col">
-            <nav className="flex flex-col gap-1 p-2 lg:p-4 mt-16">
+        <aside className="fixed top-0 left-0 h-screen w-16 lg:w-64 bg-white border-r border-gray-100 z-40 flex flex-col shadow-sm">
+            <nav className="flex flex-col gap-4 lg:gap-1 p-2 lg:p-4 mt-32 lg:mt-20">
                 {sidebar.map((s) => {
                     const Icon = s.icon;
                     return (
@@ -26,17 +26,15 @@ const UserSidebar = () => {
                             key={s.link}
                             to={s.link}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 p-3 rounded-lg text-sm transition-colors
+                                `flex items-center justify-center lg:justify-start gap-3 p-3 lg:px-4 lg:py-3 rounded-xl text-sm font-medium transition-all duration-200
                                 ${isActive
-                                    ? "bg-blue-100 text-blue-600"
-                                    : "text-gray-600 hover:bg-gray-100"
+                                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200"
+                                    : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"
                                 }`
                             }
                         >
-                            <div className="flex-rows lg:flex  ">
-                                <Icon size={18} className="shrink-0" />
-                                <span className=" lg:block truncate">{s.name}</span>
-                            </div>
+                            <Icon size={20} className="shrink-0" />
+                            <span className="hidden lg:block truncate">{s.name}</span>
                         </NavLink>
                     );
                 })}

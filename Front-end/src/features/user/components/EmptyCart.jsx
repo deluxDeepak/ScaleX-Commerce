@@ -5,67 +5,73 @@ import { ShoppingCart, ArrowRight, Tag, Truck, RotateCcw } from 'lucide-react';
 
 const EmptyCart = () => {
     return (
-        <div className="flex flex-col items-center justify-center w-full px-4  bg-gray-50">
+        <div className="flex flex-col items-center justify-center w-full min-h-[80vh] bg-gradient-to-b from-gray-50 to-white lg:px-4">
 
             {/* ===== Main Card ===== */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col items-center px-8  py-12 max-w-lg w-full text-center gap-6">
+            <div className="relative bg-white/80 backdrop-blur-xl border border-gray-100 shadow-xl rounded-3xl flex flex-col items-center px-8 py-12 w-full max-w-xl text-center gap-6">
 
-                {/* Illustration wrapper with decorative ring */}
-                <div className="relative flex items-center justify-center">
-                    {/* Outer soft ring */}
-                    <div className="absolute w-52 h-52 rounded-full bg-blue-50 border border-blue-100" />
-                    {/* Inner glow */}
-                    <div className="absolute w-36 h-36 rounded-full bg-blue-100/60" />
+                {/* Glow background */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-50 via-transparent to-purple-50 opacity-40" />
+
+                {/* ===== Illustration ===== */}
+                <div className="relative flex items-center justify-center z-10">
+                    <div className="absolute w-56 h-56 rounded-full bg-blue-100/40 blur-2xl" />
+                    
                     <img
                         src={category5}
                         alt="Empty Cart"
-                        className="relative z-10 w-40 h-40 sm:w-48 sm:h-48 object-contain drop-shadow-md"
+                        className="relative z-10 w-44 h-44 object-contain drop-shadow-xl"
                     />
-                    {/* Floating cart icon badge */}
-                    <div className="absolute z-20 -top-1 -right-1 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-200">
+
+                    {/* Floating icon */}
+                    <div className="absolute -top-2 -right-2 w-11 h-11 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg">
                         <ShoppingCart size={18} className="text-white" />
                     </div>
                 </div>
 
-                {/* Text */}
-                <div className="flex flex-col gap-2">
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
-                        Your cart is empty
+                {/* ===== Text ===== */}
+                <div className="flex flex-col gap-2 z-10">
+                    <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                        Your cart feels lonely 🛒
                     </h2>
-                    <p className="text-gray-500 text-sm sm:text-base leading-relaxed">
-                        Looks like you haven't added anything yet. Browse our latest products and find something you'll love!
+                    <p className="text-gray-500 text-sm sm:text-base max-w-md">
+                        You haven’t added anything yet. Start exploring and fill it with amazing products.
                     </p>
                 </div>
 
-                {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-3 w-full">
+                {/* ===== CTA ===== */}
+                <div className="flex flex-col sm:flex-row gap-3 w-full z-10">
                     <Link
                         to="/"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md shadow-blue-100 transition-all duration-200 active:scale-95"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-sm shadow-lg transition active:scale-95"
                     >
-                        Shop Now <ArrowRight size={16} />
+                        Start Shopping <ArrowRight size={16} />
                     </Link>
+
                     <Link
                         to="/products"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-gray-200 hover:border-blue-200 hover:bg-blue-50 text-gray-700 hover:text-blue-600 font-bold text-sm transition-all duration-200"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-700 hover:text-blue-600 font-semibold text-sm transition"
                     >
-                        Browse Products
+                        Explore Products
                     </Link>
                 </div>
             </div>
 
-            {/* ===== Why Shop With Us — trust strip ===== */}
-            <div className="mt-8 w-full max-w-lg grid grid-cols-3 gap-3">
+            {/* ===== Trust Section ===== */}
+            <div className="mt-10 w-full max-w-xl grid grid-cols-3 gap-4">
                 {[
-                    { icon: Truck, label: "Free Delivery", sub: "Above ₹499", color: "text-blue-500" },
-                    { icon: Tag, label: "Best Prices", sub: "Guaranteed", color: "text-green-500" },
+                    { icon: Truck, label: "Free Delivery", sub: "Above ₹499", color: "text-blue-600" },
+                    { icon: Tag, label: "Best Prices", sub: "Guaranteed", color: "text-green-600" },
                     { icon: RotateCcw, label: "Easy Returns", sub: "10-day policy", color: "text-orange-500" },
                 ].map(({ icon: Icon, label, sub, color }) => (
-                    <div key={label} className="bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col items-center gap-1.5 py-4 px-2 text-center">
-                        <div className={`w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center ${color}`}>
+                    <div
+                        key={label}
+                        className="bg-white/70 backdrop-blur-md rounded-2xl border border-gray-100 shadow-md flex flex-col items-center gap-2 py-5 px-3 text-center hover:shadow-lg transition"
+                    >
+                        <div className={`w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center ${color}`}>
                             <Icon size={18} />
                         </div>
-                        <p className="text-xs font-bold text-gray-800">{label}</p>
+                        <p className="text-sm font-semibold text-gray-800">{label}</p>
                         <p className="text-xs text-gray-400">{sub}</p>
                     </div>
                 ))}

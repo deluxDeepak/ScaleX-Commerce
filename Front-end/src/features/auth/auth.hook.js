@@ -15,7 +15,8 @@ import { loginService, registerUserService } from "./authService";
 
 export const useAuthAction = () => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [loginError, setLoginError] = useState("");
+    const [registerError, setRegisterError] = useState("");
     /*
         Hook loading kis liye hota hai
 
@@ -29,7 +30,7 @@ export const useAuthAction = () => {
     const login = async (form) => {
         try {
             setLoading(true);
-            setError("");
+            setLoginError("");
 
             // 1.login service 
             const user = await loginService(form);
@@ -39,7 +40,7 @@ export const useAuthAction = () => {
             return user;
 
         } catch (error) {
-            setError(error.message);
+            setLoginError(error.message);
             return null;
 
         } finally {
@@ -50,14 +51,14 @@ export const useAuthAction = () => {
     const register = async (form) => {
         try {
             setLoading(true);
-            setError("");
+            setRegisterError("");
             const response = await registerUserService(form);
             localStorage.setItem("token", response.accessToken);
             console.log("AccessToken", response.accessToken);
 
             return response;
         } catch (error) {
-            setError(error.message);
+            setRegisterError(error.message);
 
             return null;
 
@@ -70,7 +71,8 @@ export const useAuthAction = () => {
         login,
         register,
         loading,
-        error,
+        loginError,
+        registerError
     }
 
 }

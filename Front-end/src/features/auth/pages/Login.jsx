@@ -190,113 +190,114 @@ const Login = () => {
   // -logout,
   // -setUser
 
-  const { login, register, error,loading } = useAuthAction();
+  const { login, register, loginError, registerError, loading } = useAuthAction();
 
   // Context loading = button ke liye nahi
   // Hook loading = global ke liye nahi
   // Context loading → app
   // Hook loading → action
 
-// State change karna hai to hook
+  // State change karna hai to hook
 
-const [isCreatingAccount, setIsCreatingAccount] = useState(false);
-const [isForgetPassword, SetIsForgetPassword] = useState(false);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [isForgetPassword, SetIsForgetPassword] = useState(false);
 
-function handleChange(e) {
-  const { name, value } = e.target;
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-  setForm((prev) => ({
-    ...prev,
-    [name]: value,
-  }))
-}
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
-// only login 
-// ->name/email
-// ->password
-async function onLogin(e) {
-  e.preventDefault();
+  // only login 
+  // ->name/email
+  // ->password
+  async function onLogin(e) {
+    e.preventDefault();
 
-  // Clear flied 
-  const ok = await login(form);  //api call ke await lagana parega 
-  setForm({
-    password: "",
-    email: ""
-  });
-  if (!ok) return;   //Error happen 
-  navigate("/");
+    // Clear flied 
+    const ok = await login(form);  //api call ke await lagana parega 
+    setForm({
+      password: "",
+      email: ""
+    });
+    if (!ok) return;   //Error happen 
+    navigate("/");
 
-}
+  }
 
-// Create Account
-// ->name
-// ->email
-// ->password
-async function onCreate(e) {
-  e.preventDefault();
+  // Create Account
+  // ->name
+  // ->email
+  // ->password
+  async function onCreate(e) {
+    e.preventDefault();
 
-  // Clear flied 
-  const ok = await register(form);  //api call ke await lagana parega 
-  setForm({
-    name: "",
-    password: "",
-    email: ""
-  });
-  if (!ok) return;
-  navigate("/");
-}
+    // Clear flied 
+    const ok = await register(form);  //api call ke await lagana parega 
+    setForm({
+      name: "",
+      password: "",
+      email: ""
+    });
+    if (!ok) return;
+    navigate("/");
+  }
 
-function onSubmit(e) {
-  e.preventDefault();
-  console.log("Send Otp to the backend")
-  setForm({
-    email: ""
-  });
+  function onSubmit(e) {
+    e.preventDefault();
+    console.log("Send Otp to the backend")
+    setForm({
+      email: ""
+    });
 
-}
+  }
 
 
-return (
+  return (
 
-  // Yehan do ui state render kar rehe hai 
-  // ->Three Ui states hai 
-  // ->CreateUser
-  // ->LoginUser
-  // ->ForgetPassword
+    // Yehan do ui state render kar rehe hai 
+    // ->Three Ui states hai 
+    // ->CreateUser
+    // ->LoginUser
+    // ->ForgetPassword
 
-  <div className='min-h-screen flex items-center justify-center bg-gray-100 '>
+    <div className='min-h-screen flex items-center justify-center bg-gray-100 '>
 
-    {
-      isForgetPassword ? (
-        <ForgetPassword
-          onSubmit={onSubmit}
-          user={form}
-          handleChange={handleChange}
-          SetIsForgetPassword={SetIsForgetPassword}
-        />
-      ) :
-        isCreatingAccount ? (
-          <CreateUser
+      {
+        isForgetPassword ? (
+          <ForgetPassword
+            onSubmit={onSubmit}
             user={form}
-            setIsCreatingAccount={setIsCreatingAccount}
-            onSubmit={onCreate}
-            handleChange={handleChange}
-          />
-        ) : (
-          <LoginComp
-            user={form}
-            setIsCreatingAccount={setIsCreatingAccount}
-            onSubmit={onLogin}
             handleChange={handleChange}
             SetIsForgetPassword={SetIsForgetPassword}
-            loading={loading}
-            error={error}
           />
-        )
-    }
+        ) :
+          isCreatingAccount ? (
+            <CreateUser
+              user={form}
+              setIsCreatingAccount={setIsCreatingAccount}
+              onSubmit={onCreate}
+              handleChange={handleChange}
+              error={registerError}
+            />
+          ) : (
+            <LoginComp
+              user={form}
+              setIsCreatingAccount={setIsCreatingAccount}
+              onSubmit={onLogin}
+              handleChange={handleChange}
+              SetIsForgetPassword={SetIsForgetPassword}
+              loading={loading}
+              error={loginError}
+            />
+          )
+      }
 
-  </div>
-)
+    </div>
+  )
 }
 
 export default Login

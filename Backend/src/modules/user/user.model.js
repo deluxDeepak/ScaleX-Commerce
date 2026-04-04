@@ -11,6 +11,14 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  line1:{
+    type:String,
+    required:true
+  },
+  line2:{
+    type:String,
+  },
+  
   phone: {
     type: String,
     required: true,

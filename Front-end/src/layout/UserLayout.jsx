@@ -12,11 +12,11 @@ const UserLayout = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
             <UserSidebar />
 
-            {/* Offset content by sidebar width: 56px on mobile, 256px on lg */}
-            <main className="ml-14 lg:ml-64 p-4 min-h-screen">
+            {/* Offset content by sidebar width: 64px on mobile, 256px on lg */}
+            <main className="ml-16 lg:ml-64 p-3 sm:p-4 lg:p-6 min-h-screen">
                 <Outlet />
             </main>
         </div>

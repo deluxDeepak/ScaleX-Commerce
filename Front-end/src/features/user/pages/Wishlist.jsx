@@ -7,20 +7,20 @@ import Button from '../../../components/ui/Button'
 
 // ── Empty state ───────────────────────────────────────────
 const ShowEmpty = () => (
-  <div className="flex flex-col items-center justify-center py-16 px-6 gap-4 text-center">
-    <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
-      <Heart size={24} className="text-gray-300" />
+  <div className="flex flex-col items-center justify-center py-12 sm:py-16 px-4 sm:px-6 gap-3 sm:gap-4 text-center bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-sm">
+    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center">
+      <Heart size={28} className="text-red-300" />
     </div>
     <div>
-      <p className="text-base font-semibold text-gray-800 mb-1">Your wishlist is empty</p>
-      <p className="text-sm text-gray-400">Save items you love — they'll show up here.</p>
+      <p className="text-base sm:text-lg font-bold text-gray-800 mb-1">Your wishlist is empty</p>
+      <p className="text-xs sm:text-sm text-gray-500">Save items you love — they'll show up here.</p>
     </div>
     <Link
-      className="mt-1 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900
-      text-white text-sm font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all"
+      className="mt-2 flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-blue-700
+      text-white text-xs sm:text-sm font-semibold hover:shadow-lg hover:scale-105 active:scale-95 transition-all"
       to="/"
     >
-      <ShoppingBag size={14} />
+      <ShoppingBag size={16} />
       Browse products
     </Link>
   </div>
@@ -33,22 +33,22 @@ const Wishlist = () => {
   const visibleProduct = showAll ? wishlistProduct : wishlistProduct.slice(0, 4)
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-gray-100 shadow-sm">
         <div>
-          <h2 className="text-base font-bold text-gray-900">My wishlist</h2>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <h2 className="text-base sm:text-lg font-bold text-gray-900">My wishlist</h2>
+          <p className="text-xs text-gray-500 mt-0.5">
             {wishlistProduct.length > 0
               ? `${wishlistProduct.length} item${wishlistProduct.length > 1 ? 's' : ''} saved`
               : 'No items saved yet'}
           </p>
         </div>
         {wishlistProduct.length > 0 && (
-          <span className="flex items-center gap-1.5 text-xs font-medium text-red-400">
-            <Heart size={13} className="fill-red-400" />
-            Wishlist
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-red-500 bg-red-50 px-3 py-1.5 rounded-full">
+            <Heart size={13} className="fill-red-500" />
+            <span className="hidden sm:inline">Wishlist</span>
           </span>
         )}
       </div>
@@ -58,7 +58,7 @@ const Wishlist = () => {
         ? <ShowEmpty />
         : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
               {/* ✅ Fixed: use visibleProduct instead of wishlistProduct */}
               {visibleProduct.map((p) => (
                 <ProductCard key={p.id} products={p} />
@@ -69,16 +69,16 @@ const Wishlist = () => {
             {wishlistProduct.length > 4 && (
               <button
                 onClick={() => setShowAll((prev) => !prev)}
-                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-700 active:scale-[0.98] transition-all duration-150"
+                className="w-full flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-semibold hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
               >
                 {showAll ? (
                   <>
-                    Show less <ChevronUp />
+                    Show less <ChevronUp size={18} />
                   </>
                 ) : (
                   <>
                     View all {wishlistProduct.length} items
-                    <ChevronDown />
+                    <ChevronDown size={18} />
                   </>
                 )}
               </button>
