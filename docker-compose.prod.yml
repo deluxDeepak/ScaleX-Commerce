@@ -17,7 +17,7 @@
 services:
 
   nginx:
-    image: deluxdeepak/scalex-frontend:latest
+    image: ${FRONTEND_IMAGE}
     ports:
       - "80:80"
     depends_on:
@@ -27,8 +27,9 @@ services:
       - nginx_cache:/var/cache/nginx
 
   backend:
-    image: deluxdeepak/scalex-backend:latest
-    env_file: ./Backend/.env.docker
+    # image: deluxdeepak/scalex-backend:latest
+    image: ${BACKEND_IMAGE}
+    env_file: .env
     depends_on:
       - mongo
       - redis
@@ -40,9 +41,9 @@ services:
     restart: always
     volumes:
       - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: strongpassword
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: admin
+    #   MONGO_INITDB_ROOT_PASSWORD: strongpassword
 
   redis:
     image: redis
@@ -55,7 +56,7 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
-    env_file: ./minio.env
+    env_file: .env
     restart: always
 
 volumes:
