@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./Backend
-          dockerfile: Dockerfile.prod
+          file: ./Backend/Dockerfile.prod
           push: true
           tags: ${{env.BACKEND_IMAGE}}
 
@@ -60,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./Front-end
-          dockerfile: Dockerfile.prod
+          file: ./Front-end/Dockerfile.prod
           push: true
           tags: ${{env.FRONTEND_IMAGE}}
 
@@ -101,7 +101,7 @@ jobs:
             cd app
 
             echo "Injecting TAG=${{ github.sha }}"
-            
+
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
 
