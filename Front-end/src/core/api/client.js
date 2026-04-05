@@ -3,7 +3,7 @@ import { refreshService } from "../../features/auth/authService";
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
-    timeout: 1500,
+    timeout: 5000,
     withCredentials: true,
 });
 

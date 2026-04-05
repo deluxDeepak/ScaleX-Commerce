@@ -50,6 +50,7 @@ router.get("/test-headers", (req, res) => {
     );
 
     res.status(200).json({
+        host:req.host,
         headers: req.headers,
         user: req.user,
         cookies: req.cookies,
