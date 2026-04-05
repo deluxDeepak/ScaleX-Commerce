@@ -94,6 +94,9 @@ jobs:
           #   docker compose down
           #   docker compose up -d
           script: |
+            ls
+            cd /app
+            ls
             cd /app
 
             docker compose pull
