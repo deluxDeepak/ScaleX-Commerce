@@ -57,7 +57,7 @@ jobs:
 
       # 6.Frontend image with Nginix binding 
       - name: Build and push Front-end
-        uses: docker/docker/build-push-action@v7
+        uses: docker/build-push-action@v7
         with:
           context: ./Front-end
           dockerfile: Dockerfile.prod
@@ -98,7 +98,7 @@ jobs:
 
             docker compose pull
             docker compose up -d
-            
+
             sleep 10
             curl -f http://localhost/api/health
 
