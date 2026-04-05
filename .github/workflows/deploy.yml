@@ -93,14 +93,14 @@ jobs:
           #   docker pull $FRONTEND_IMAGE
           #   docker compose down
           #   docker compose up -d
+          # export TAG=${{ github.sha }} treat this as literal string
           script: |
             ls
             cd app
             ls
 
             echo "Using TAG=${{ github.sha }}"
-
-            export TAG=${{ github.sha }}
+            echo "TAG=${{ github.sha }}" > .env
 
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
