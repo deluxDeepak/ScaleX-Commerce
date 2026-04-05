@@ -97,13 +97,18 @@ jobs:
           # >> append 
           # > overwrite kar sakta hai 
           script: |
-            ls
             cd app
-            ls
 
-            echo "Using TAG=${{ github.sha }}"
+            echo "Injecting TAG=${{ github.sha }}"
+
+            # Remove old TAG entries
+            sed -i '/^TAG=/d' .env
+
+            # Add fresh TAG
             echo "TAG=${{ github.sha }}" >> .env
-            echo "Using TAG=$(cat .env)"
+
+            echo "Final .env content:"
+            cat .env
 
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
