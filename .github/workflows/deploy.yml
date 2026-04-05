@@ -98,8 +98,10 @@ jobs:
             cd app
             ls
 
-            docker compose -f docker-compose.yml pull
-            docker compose -f docker-compose.yml up -d
+            echo "Using TAG=${{ github.sha }}"
+
+            TAG=${{ github.sha }} docker compose -f docker-compose.yml pull
+            TAG=${{ github.sha }} docker compose -f docker-compose.yml up -d
 
             sleep 10
             curl -f http://localhost/api/health
