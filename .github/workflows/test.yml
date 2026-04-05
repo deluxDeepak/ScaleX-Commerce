@@ -55,6 +55,7 @@ jobs:
         run: |
           mkdir -p Backend
           echo "NODE_ENV=test" >> Backend/.env.docker
+          echo "PORT=4000" >> Backend/.env.docker
           echo "CLIENT_URL=http://localhost:5173" >> Backend/.env.docker
           echo "MONGO_URL=mongodb://mongo:27017" >> Backend/.env.docker
           echo "REDISH_URL=redis://redis:6379" >> Backend/.env.docker
