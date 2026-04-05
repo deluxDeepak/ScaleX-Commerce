@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     #env for global image (Dynamic versioning)
     env:
-      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:${{ github.sha }}
-      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:${{ github.sha }}
+      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:prod
+      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:prod
     
     steps:
       # 1.Checkout out the git repo 
@@ -69,8 +69,9 @@ jobs:
     name: DeployMent to Ec2
     runs-on: ubuntu-latest
     env:
-      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:${{ github.sha }}
-      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:${{ github.sha }}
+      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:prod
+      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:prod
+
     needs: build-Image
 
     steps:
@@ -100,16 +101,7 @@ jobs:
             cd app
 
             echo "Injecting TAG=${{ github.sha }}"
-
-            # Remove old TAG entries
-            sed -i '/^TAG=/d' .env
-
-            # Add fresh TAG
-            echo "TAG=${{ github.sha }}" >> .env
-
-            echo "Final .env content:"
-            cat .env
-
+            
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
 

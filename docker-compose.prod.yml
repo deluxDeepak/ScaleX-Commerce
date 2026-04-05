@@ -17,7 +17,7 @@
 services:
 
   nginx:
-    image: deluxdeepak/scalex-frontend:${TAG}
+    image: deluxdeepak/scalex-frontend:prod
     ports:
       - "80:80"
     depends_on:
@@ -27,7 +27,7 @@ services:
       - nginx_cache:/var/cache/nginx
 
   backend:
-    image: deluxdeepak/scalex-backend:${TAG}
+    image: deluxdeepak/scalex-backend:prod
     depends_on:
       - mongo
       - redis
