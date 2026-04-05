@@ -1,0 +1,66 @@
+
+#========== Dev environment ======================
+#   - build from source code
+#   - live changes possible
+#   - ports exposed (mongo, redis etc.)
+#   - local env files
+#   - debugging friendly
+# =============Production environment ===============
+# - pre-built Docker images
+# - no source code
+# - minimal ports exposed
+# - secure env handling
+# - optimized performance
+
+# Compose se pull hoga but locally jo rehega wahi run hote rehega new image nahi ayega 
+
+services:
+
+  nginx:
+    image: deluxdeepak/scalex-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+    volumes:
+      - nginx_cache:/var/cache/nginx
+
+  backend:
+    image: deluxdeepak/scalex-backend:latest
+    env_file: ./Backend/.env.docker
+    depends_on:
+      - mongo
+      - redis
+      - minio
+    restart: always
+
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: strongpassword
+
+  redis:
+    image: redis
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    env_file: ./minio.env
+    restart: always
+
+volumes:
+  mongo_data:
+  redis_data:
+  minio_data:
+  nginx_cache:
+

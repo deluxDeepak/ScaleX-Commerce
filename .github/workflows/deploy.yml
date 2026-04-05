@@ -1,0 +1,113 @@
+# Cd continious deployment 
+
+# - Build and push image
+# - deploy to VPS 
+#   - login 
+#   - pull image 
+#   - run image in vps 
+# - check health status 
+
+name: Deploy-VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-Image:
+    name: Build-Docker image
+    runs-on: ubuntu-latest
+    #env for global image (Dynamic versioning)
+    env:
+      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:${{ github.sha }}
+      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:${{ github.sha }}
+    
+    steps:
+      # 1.Checkout out the git repo 
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+      # 2.Optional step 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+      # 3.Setup docker buildx
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v4
+      # See the local path 
+      - name: See the folder path
+        run: |
+          pwd
+          ls
+      # 4.Docker login for push
+      - name: Login DockerHUb
+        uses: docker/login-action@v4
+        # Use docker creadential to login
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      # 5.Push backend image to the DockerHub
+      - name: BUild and Push 
+        uses: docker/build-push-action@v7
+        with:
+          context: ./Backend
+          dockerfile: Dockerfile.prod
+          push: true
+          tags: ${{env.BACKEND_IMAGE}}
+
+      # 6.Frontend image with Nginix binding 
+      - name: Build and push Front-end
+        uses: docker/docker/build-push-action@v7
+        with:
+          context: ./Front-end
+          dockerfile: Dockerfile.prod
+          push: true
+          tags: ${{env.FRONTEND_IMAGE}}
+
+  # After build and push 
+  Deploy-VPS:
+    name: DeployMent to Ec2
+    runs-on: ubuntu-latest
+    env:
+      BACKEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-backend:${{ github.sha }}
+      FRONTEND_IMAGE: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:${{ github.sha }}
+    needs: build-Image
+
+    steps:
+      - name: Deploy via SSH 
+        uses: appleboy/ssh-action@v1
+        with:
+          # 1.login with credential 
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+
+          # 2.Run image through scripts 
+            # - Pull the Image In VPS 
+            # - Docker compose file persent rehna chiye VPS pe 
+            # - Docker compose Up 
+            # - Old container remove before starting new container
+            # docker pull $BACKEND_IMAGE && docker pull FRONTEND_IMAGE 
+          # scripts: |
+          #   docker pull $BACKEND_IMAGE
+          #   docker pull $FRONTEND_IMAGE
+          #   docker compose down
+          #   docker compose up -d
+          script: |
+            cd /app
+
+            docker compose pull
+            docker compose up -d
+            
+            sleep 10
+            curl -f http://localhost/api/health
+
+      # Health check karo wahi pe 
+      - name: Health check
+        run: curl -f http://your-domain/api/health
+
+
+
+
+        
+  
