@@ -94,13 +94,16 @@ jobs:
           #   docker compose down
           #   docker compose up -d
           # export TAG=${{ github.sha }} treat this as literal string
+          # >> append 
+          # > overwrite kar sakta hai 
           script: |
             ls
             cd app
             ls
 
             echo "Using TAG=${{ github.sha }}"
-            echo "TAG=${{ github.sha }}" > .env
+            echo "TAG=${{ github.sha }}" >> .env
+            echo "Using TAG=$(cat .env)"
 
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
