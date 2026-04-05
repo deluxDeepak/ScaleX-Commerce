@@ -95,12 +95,11 @@ jobs:
           #   docker compose up -d
           script: |
             ls
-            cd /app
+            cd app
             ls
-            cd /app
 
-            docker compose pull
-            docker compose up -d
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d
 
             sleep 10
             curl -f http://localhost/api/health
