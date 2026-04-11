@@ -128,9 +128,10 @@ const updateDefaultAddress = async (userId, addressId) => {
 
 // pull use kar sakte hai 
 const delteAddress = async (userId, addressId) => {
-    return await User.findOneAndDelete(
+    return await User.findByIdAndUpdate(
         userId,
-        { $pull: { addresses: { _id: addressId } } }
+        { $pull: { addresses: { _id: addressId } } },
+        { new: true }
     )
 
 }

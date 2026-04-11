@@ -191,6 +191,7 @@ const Login = () => {
   // -setUser
 
   const { login, register, loginError, registerError, loading } = useAuthAction();
+  // console.log("Login error is ", loginError);  //Every key press calling 
 
   // Context loading = button ke liye nahi
   // Hook loading = global ke liye nahi

@@ -11,6 +11,10 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  street: {
+    type: String,
+    required: true,
+  },
   line1:{
     type:String,
     required:true
@@ -23,10 +27,7 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  street: {
-    type: String,
-    required: true,
-  },
+  
   city: {
     type: String,
     required: true,

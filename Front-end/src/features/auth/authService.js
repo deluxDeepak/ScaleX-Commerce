@@ -36,14 +36,11 @@ import { getMeApi, loginApi, logoutAPi, refreshApi, registerUserApi } from "./au
 // ====Api call handle karne ka logic rehna chiye (Error and response) ============
 // Only logic here 
 export const loginService = async (data) => {
-    try {
+    
         const res = await loginApi(data);
         return res.data;
 
-    } catch (error) {
-        throw new Error("Error fromaxios is", error);
-
-    }
+    
 }
 export const registerUserService = async (data) => {
     const res = await registerUserApi(data);

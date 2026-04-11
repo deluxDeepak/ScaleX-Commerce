@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getMeService, logoutService } from "../features/auth/authService";
+import { getMeService, logoutService, refreshService } from "../features/auth/authService";
 
 export const AuthContext = createContext();
 
@@ -39,25 +39,41 @@ const AuthProvider = ({ children }) => {
 
         // User getme rquest karega autmatically (State change )
         const loadUser = async () => {
-            const token = localStorage.getItem("token");
-            console.log("Token found", token);
-            if (!token) {
-                setLoading(false);
-                return;
-            }
             try {
+                let token = localStorage.getItem("token");
+                console.log("Token found", token);
+
+                // If access token is missing but refresh cookie exists, restore a new access token.
+                if (!token) {
+                    try {
+                        const refreshRes = await refreshService();
+                        token = refreshRes?.accessToken;
+                        if (token) {
+                            localStorage.setItem("token", token);
+                        }
+                    } catch (refreshErr) {
+                        console.log("Refresh failed during startup:", refreshErr);
+                        // If refresh fails, just proceed without token
+                        setLoading(false);
+                        return;
+                    }
+                }
+
+                if (!token) {
+                    setLoading(false);
+                    return;
+                }
 
                 console.log("Calling /me");
                 const res = await getMeService();
                 console.log("Me response", res);
                 setUser(res.user);
                 setLoading(false);
-                
+
             } catch (err) {
                 console.log("Me error", err);
                 localStorage.removeItem("token");
                 setUser(null);
-            } finally {
                 setLoading(false);
             }
         };

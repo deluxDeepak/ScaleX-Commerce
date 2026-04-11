@@ -1,7 +1,7 @@
 
 const logger = require("../../core/logger/logger");
 const generateTokenService = require("../../core/token/token.service");
-const { ValidationError,  NotfoundError } = require("../../shared/errors");
+const { ValidationError, NotfoundError } = require("../../shared/errors");
 const { compareHashPassword } = require("../../shared/utils/password.utils");
 const { hashToken } = require("../../shared/utils/token.utils");
 const { findByEmail, updateUserRefreshToken, findUserById } = require("../user/user.repository");
@@ -105,10 +105,15 @@ const refreshTokenService = async (userId, refreshToken) => {
         throw new ValidationError("Session not Valid or Persent");
     }
     console.log("Session is ", session);
+
+    if (!session.user) {
+        throw new ValidationError("Session user missing");
+    }
+
     // 3.User find karo 
-    const user = await findUserById(userId);
+    const user = await findUserById(session.user);
     if (!user) {
-        throw new NotfoundError("User not found");
+        throw new NotfoundError("User not found for this session");
     }
 
     // 4.Generate refresh and accessToken 

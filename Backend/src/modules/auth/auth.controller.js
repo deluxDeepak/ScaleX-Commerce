@@ -158,22 +158,31 @@ const getUserProfile = async (req, res) => {
 
 }
 const refreshToken = async (req, res) => {
-    const refreshToken = req.cookies.refreshToken;
-    // const refreshToken = req.cookies.refreshToken;
-    console.log("Refresh token", req.cookies);
+    const refreshTokenCookie = req.cookies?.refreshToken;
+    logger.info({
+        cookieKeys: Object.keys(req.cookies || {}),
+        hasRefreshToken: Boolean(refreshTokenCookie),
+    }, "Refresh token request received");
 
     //authenticate yehan kam nahi karega (refresh expire hai )
     // const userId = req.user.id;     
     // console.log("User id is ",userId);
     try {
+        if (!refreshTokenCookie) {
+            return res.status(401).json({
+                success: false,
+                message: "Refresh token missing",
+            });
+        }
+
         // 1.hash karke match 
 
         // const hashTokenUser=
-        const decode = await verifyRefreshToken(refreshToken);
+        const decode = await verifyRefreshToken(refreshTokenCookie);
         console.log("Decode user ", decode);
         const { id } = decode
 
-        const token = await refreshTokenService(id, refreshToken);
+        const token = await refreshTokenService(id, refreshTokenCookie);
         res.cookie("refreshToken", token.refreshToken, {
             httpOnly: true,
             secure: false,
@@ -190,9 +199,10 @@ const refreshToken = async (req, res) => {
             accessToken: token.accessToken
         })
     } catch (error) {
-        res.status(400).json({
+        logger.error({ error }, "Refresh token flow failed");
+        res.status(error?.statusCode || 401).json({
             success: false,
-            message: error?.message || "Error in logging",
+            message: error?.message || "Refresh failed",
         })
     }
 }

@@ -12,8 +12,10 @@
 
 import { useState } from "react";
 import { loginService, registerUserService } from "./authService";
+import { useAuth } from "../../context/useAuth";
 
 export const useAuthAction = () => {
+    const { setUser } = useAuth();
     const [loading, setLoading] = useState(false);
     const [loginError, setLoginError] = useState("");
     const [registerError, setRegisterError] = useState("");
@@ -35,7 +37,8 @@ export const useAuthAction = () => {
             // 1.login service 
             const user = await loginService(form);
             localStorage.setItem("token", user.accessToken);
-            // 2.Get me save the user 
+            // 2.Immediately set user in context so ProtectedRoutes doesn't redirect
+            setUser(user.user);
 
             return user;
 
@@ -55,6 +58,8 @@ export const useAuthAction = () => {
             const response = await registerUserService(form);
             localStorage.setItem("token", response.accessToken);
             console.log("AccessToken", response.accessToken);
+            // Set user in context immediately after register
+            setUser(response.user);
 
             return response;
         } catch (error) {

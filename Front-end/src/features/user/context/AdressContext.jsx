@@ -7,6 +7,7 @@ export const AddressProvider = ({ children }) => {
     const [userAddress, setUserAddress] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [addAddressError, setAddAddressError] = useState("");
     const [delteAddressError, setDeleteAddressError] = useState("");
 
     const fetchAddress = async () => {
@@ -29,8 +30,10 @@ export const AddressProvider = ({ children }) => {
             setLoading(true);
             await addAddressService(data);
             await fetchAddress();
+            return true
         } catch (err) {
-            setError(err.message);
+            setAddAddressError(err.message);
+            return false
         } finally {
             setLoading(false);
         }
@@ -68,6 +71,7 @@ export const AddressProvider = ({ children }) => {
         <AddressContext.Provider value={{
             userAddress,
             addAddress,
+            addAddressError,
 
             setDefaultAddress,
             deleteAddress,
