@@ -108,9 +108,9 @@ jobs:
             sleep 10
             curl -f http://localhost/api/health
 
-      # Health check karo wahi pe 
-      - name: Health check
-        run: curl -f http://your-domain/api/health
+      # Deployment completion message 
+      - name: Completion message 
+        run: echo Deployed to VPS sucessful😊✅
 
 
 
