@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useProfile } from '../hooks/user.hook'
 
 // ── DATA ────────────────────────────────────────────────
 const stats = [
@@ -110,28 +111,55 @@ const QuickAction = () => {
   )
 }
 
+const EditProfile = () => {
+  return (
+    <div>
+      {['Name'].map((inp) => (
+        <div key={inp}>
+          <input type="text" placeholder={inp} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ── MAIN COMPONENT ───────────────────────────────────────
 const UserDashboard = () => {
+
+  const { userProfile, loading, error } = useProfile();
+
+  console.log("User from dashboard is ", userProfile)
+  console.log("User error drd is ", error);
+
+  const [showEdit, setShowEdit] = useState(false);
+
+  const handleEdit = () => {
+    setShowEdit((prev) => !prev);
+
+  }
+
   return (
     <div className="min-h-screen font-sans">
       <div className="mx-auto flex flex-col gap-3 sm:gap-4 lg:gap-5">
 
         {/* ── Profile Header ── */}
         <div className="bg-gradient-to-r from-blue-50 via-blue-100 to-purple-50 border border-blue-100 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-          {/* Avatar */}
+          {/* Avatar If profile img persent then show imag otherwise show two letters */}
           <div className="relative shrink-0">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600
               flex items-center justify-center text-white text-lg sm:text-xl font-bold tracking-tight select-none shadow-lg">
-              RK
+              {userProfile?.profileImg ? userProfile?.profileImg : userProfile?.name.slice(0, 2)}
             </div>
             <span className="absolute bottom-0 right-0 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-green-500
               rounded-full border-2 border-white shadow-sm" />
           </div>
 
-          {/* Info */}
+
+
+          {/* Info  Membership details yehi show kar sakte hai */}
           <div className="flex-1 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-gray-900">Rahul Kumar</h2>
-            <p className="text-xs sm:text-sm text-gray-600">rahul.kumar@email.com</p>
+            <h2 className="text-base sm:text-lg font-bold text-gray-900">{userProfile?.name}</h2>
+            <p className="text-xs sm:text-sm text-gray-600">{userProfile?.email}</p>
             <div className="flex flex-wrap gap-2 sm:gap-3 mt-1 sm:mt-1.5">
               {['📍 Patna, Bihar', '🎯 Premium Member', '📅 Since Jan 2023'].map(m => (
                 <span key={m} className="text-[10px] sm:text-[11px] font-semibold text-gray-500">{m}</span>
@@ -140,11 +168,14 @@ const UserDashboard = () => {
           </div>
 
           {/* Edit button */}
-          <button className="shrink-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-semibold
-            px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center gap-1.5 hover:shadow-lg hover:scale-105 transition-all">
+          <button
+            className="shrink-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center gap-1.5 hover:shadow-lg hover:scale-105 transition-all"
+            onClick={handleEdit}
+          >
             ✏️ <span className="hidden sm:inline">Edit Profile</span><span className="sm:hidden">Edit</span>
           </button>
         </div>
+        {showEdit&&  <EditProfile/>}
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">

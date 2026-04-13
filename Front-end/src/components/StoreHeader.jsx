@@ -160,6 +160,9 @@ const StoreHeader = () => {
     const handleNavigateWishlist = () => {
         navigate("/user/wishlist/product");
     }
+    const handleNavigateUser = () => {
+        navigate("/user/dashboard");
+    }
 
     return (
         <header className="bg-white w-full shadow-sm sticky top-0 z-50 border-b border-gray-100">
@@ -245,6 +248,7 @@ const StoreHeader = () => {
                     <button
                         className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors group"
                         aria-label="Profile"
+                        onClick={handleNavigateUser}
                     >
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-sm">
                             <User size={14} className="text-white" />
