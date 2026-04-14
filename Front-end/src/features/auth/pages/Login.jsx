@@ -3,6 +3,7 @@ import Input from '../components/Input';
 import { useNavigate } from 'react-router-dom';
 import ErrorMessage from '../../../components/ErrorMessage';
 import { useAuthAction } from '../auth.hook';
+import LoginBanner from '../components/LoginBanner';
 
 
 const CreateUser = ({
@@ -21,7 +22,7 @@ const CreateUser = ({
   ];
 
   return (
-    <div className='w-full max-w-md mx-auto bg-white shadow-lg rounded-xl p-6'>
+    <div className='w-full max-w-md mx-auto bg-[#111] border border-gray-800 shadow-xl rounded-xl p-6 text-white'>
 
       <h2 className="text-xl font-semibold text-center mb-4">
         Create Account
@@ -38,14 +39,14 @@ const CreateUser = ({
             value={user[field.name]}
             placeholder={field.placeholder}
             onChange={handleChange}
-            className='p-2 w-full border rounded-md focus:ring-2 focus:ring-blue-400 outline-none'
+            className='bg-black border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-green-500 outline-none'
           />
         ))}
 
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-gray-800 text-white p-2 w-full"
+          className="rounded-md bg-green-500 hover:bg-green-600 text-black font-medium p-2"
         >
           {loading ? "Creating..." : "Create account"}
         </button>
@@ -70,7 +71,7 @@ const CreateUser = ({
 const ForgetPassword = ({
   onSubmit, user, handleChange, SetIsForgetPassword
 }) => (
-  <div className='w-full max-w-md mx-auto bg-white shadow-lg rounded-xl p-6'>
+  <div className='w-full max-w-md mx-auto bg-[#111] border border-gray-800 shadow-xl rounded-xl p-6 text-white'>
 
     <h2 className="text-xl font-semibold text-center mb-4">
       Send OTP to verify password
@@ -84,12 +85,12 @@ const ForgetPassword = ({
         value={user.email}
         placeholder='Enter email'
         onChange={handleChange}
-        className='p-2 w-full border rounded-md focus:ring-2 focus:ring-blue-400 outline-none'
+        className='p-2 bg-black border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-green-500 outline-none'
       />
 
       <button
         type='submit'
-        className='rounded-md bg-gray-800 text-white p-2 w-full hover:bg-gray-900 transition'
+        className="rounded-md bg-green-500 hover:bg-green-600 text-black font-medium p-2"
       >
         Send OTP
       </button>
@@ -119,8 +120,7 @@ const LoginComp = ({
   error,
 }) => (
 
-  <div className='w-full max-w-md mx-auto bg-white shadow-lg rounded-xl p-6'>
-
+  <div className='w-full max-w-md mx-auto bg-[#111] border border-gray-800 shadow-xl rounded-xl p-6 text-white'>
     <h2 className="text-xl font-semibold text-center mb-4">Login</h2>
 
     <form action="" onSubmit={onSubmit} className='flex flex-col gap-3'>
@@ -132,7 +132,7 @@ const LoginComp = ({
         value={user.email}
         placeholder='Enter email'
         onChange={handleChange}
-        className='p-2 w-full border rounded-md focus:ring-2 focus:ring-blue-400 outline-none'
+        className='p-2 bg-black border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-green-500 outline-none'
       />
 
       <input
@@ -141,7 +141,7 @@ const LoginComp = ({
         value={user.password}
         placeholder='Enter password'
         onChange={handleChange}
-        className='p-2 w-full border rounded-md focus:ring-2 focus:ring-blue-400 outline-none'
+        className='p-2 bg-black border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-green-500 outline-none'
       />
 
       <p
@@ -154,7 +154,7 @@ const LoginComp = ({
       <button
         type="submit"
         disabled={loading}
-        className="rounded-md bg-gray-800 text-white p-2 w-full"
+        className="rounded-md bg-green-500 hover:bg-green-600 text-black font-medium p-2"
       >
         {loading ? "Loading..." : "Login"}
       </button>
@@ -256,49 +256,60 @@ const Login = () => {
 
   }
 
+  // Yehan do ui state render kar rehe hai 
+  // ->Three Ui states hai 
+  // ->CreateUser
+  // ->LoginUser
+  // ->ForgetPassword
 
   return (
+    <div className="min-h-screen flex bg-black text-white">
 
-    // Yehan do ui state render kar rehe hai 
-    // ->Three Ui states hai 
-    // ->CreateUser
-    // ->LoginUser
-    // ->ForgetPassword
+      {/* LEFT: Banner */}
+      <div className="hidden lg:block w-1/2 border-r border-gray-800">
+        <LoginBanner />
+      </div>
 
-    <div className='min-h-screen flex items-center justify-center bg-gray-100 '>
+      {/* RIGHT: Auth Section */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center">
 
-      {
-        isForgetPassword ? (
-          <ForgetPassword
-            onSubmit={onSubmit}
-            user={form}
-            handleChange={handleChange}
-            SetIsForgetPassword={SetIsForgetPassword}
-          />
-        ) :
-          isCreatingAccount ? (
-            <CreateUser
-              user={form}
-              setIsCreatingAccount={setIsCreatingAccount}
-              onSubmit={onCreate}
-              handleChange={handleChange}
-              error={registerError}
-            />
-          ) : (
-            <LoginComp
-              user={form}
-              setIsCreatingAccount={setIsCreatingAccount}
-              onSubmit={onLogin}
-              handleChange={handleChange}
-              SetIsForgetPassword={SetIsForgetPassword}
-              loading={loading}
-              error={loginError}
-            />
-          )
-      }
+        {/* Forms */}
+        <div className="w-full">
+          {
+            isForgetPassword ? (
+              <ForgetPassword
+                onSubmit={onSubmit}
+                user={form}
+                handleChange={handleChange}
+                SetIsForgetPassword={SetIsForgetPassword}
+              />
+            ) : isCreatingAccount ? (
+              <CreateUser
+                user={form}
+                setIsCreatingAccount={setIsCreatingAccount}
+                onSubmit={onCreate}
+                handleChange={handleChange}
+                error={registerError}
+              />
+            ) : (
+              <LoginComp
+                user={form}
+                setIsCreatingAccount={setIsCreatingAccount}
+                onSubmit={onLogin}
+                handleChange={handleChange}
+                SetIsForgetPassword={SetIsForgetPassword}
+                loading={loading}
+                error={loginError}
+              />
+            )
+          }
+        </div>
+
+
+      </div>
 
     </div>
-  )
+  );
 }
 
 export default Login

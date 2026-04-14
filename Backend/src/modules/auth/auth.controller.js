@@ -130,8 +130,8 @@ const logout = async (req, res) => {
 const getMe = async (req, res) => {
     const userId = req.user.id;       //decode auth se ayega 
     try {
+        // - profileimg send to show in dashboard login time 
         const user = await getMeBasicUserService(userId);
-        console.log("User is ", user);
 
         res.status(200).json({
             success: true,

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Searchbar from './Searchbar';
 
-import { User, Heart, ShoppingCart, ChevronDown, Menu, X } from 'lucide-react';
+import { User, Heart, ShoppingCart, ChevronDown, Menu, X, User2 } from 'lucide-react';
 import logo from '../assets/icons/logo.png'
 import { useNavigate } from 'react-router-dom';
 
 import { useCart } from '../context/CartContext';
-import { products } from '../features/product/data/products';
 import { getProductSuggestionservice } from '../features/product/product.service';
+import { useAuth } from '../context/useAuth';
+import { getInitials } from '../utils/getInitialName';
 
 
 // products-category 
@@ -90,14 +91,6 @@ const StoreHeader = () => {
     })
     console.log("Debounce value is ", debounceValue);
 
-    /*
-        ===Khud navigate kar dega =================
-        useEffect(() => {
-            if (!debounceValue.trim()) return;
-            navigate(`/products/search?search=${debounceValue}`)
-
-        })
-    */
 
 
     useEffect(() => {
@@ -146,14 +139,21 @@ const StoreHeader = () => {
     // Mobile menu toggle
     const [mobileOpen, setMobileOpen] = useState(false);
 
-    // update the cart count here 
+    // update the cart count here  and get user also to show the profile 
     const { countCart } = useCart();
-    console.log("Count of cart is ", countCart);
-
     const cartCount = countCart || 0
+    // Profile ke jagah light db call use kar sakte hai jaise login karte time hi profileme from auth se lennge 
+    // const { userProfiles } = useProfile(); 
+    // console.log("Userprofile header is ", userProfiles);
+    const { user } = useAuth();
+
+
 
 
     // Navigate to correct pages 
+    const handleNavigateLogin = () => {
+        navigate("/auth/login");
+    }
     const handleNavigateCart = () => {
         navigate("/user/cart/product");
     }
@@ -244,18 +244,47 @@ const StoreHeader = () => {
                         </button>
                     </div>
 
-                    {/* Profile */}
-                    <button
-                        className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors group"
-                        aria-label="Profile"
-                        onClick={handleNavigateUser}
-                    >
-                        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-sm">
-                            <User size={14} className="text-white" />
-                        </div>
-                        <span className="hidden md:block text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">Account</span>
-                        <ChevronDown size={13} className="hidden md:block text-gray-400" />
-                    </button>
+                    {user ? (
+                        <button
+                            onClick={handleNavigateUser}
+                            aria-label="Profile"
+                            className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors group"
+                        >
+                            {/* Avatar */}
+                            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-sm">
+
+                                {user.profileImg ? (
+                                    <img
+                                        src={user.profileImg}
+                                        alt="profile"
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <span className="text-white text-sm font-semibold">
+                                        {getInitials(user.name)}
+                                    </span>
+                                )}
+
+                            </div>
+
+                            {/* Text */}
+                            <span className="hidden md:block text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors">
+                                Account
+                            </span>
+
+                            <ChevronDown size={14} className="hidden md:block text-gray-400" />
+                        </button>
+                    ) : (
+                        <button
+                            className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors"
+                            onClick={handleNavigateLogin}
+
+                        >
+                            <User2 className="text-gray-600" />
+                            <span className="text-sm font-medium">Login</span>
+                        </button>
+                    )}
+
 
                     {/* Mobile menu toggle */}
                     <button

@@ -26,7 +26,7 @@ const createUser = async (data) => {
 
 
 const findUserBasicById = async (id) => {
-    return await User.findById(id).select("name email role avatar")
+    return await User.findById(id).select("name email role profileImg")
 }
 const findUserProfileById = async (id) => {
     return await User.findById(id).select(
