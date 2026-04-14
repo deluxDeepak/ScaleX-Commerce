@@ -180,6 +180,7 @@ Sentry error trace captured :
 * Proxy: Nginx
 * Monitoring: Prometheus, Grafana, Loki, Sentry
 * Testing: Autocannon
+npm install geoip-lite
 
 ---
 

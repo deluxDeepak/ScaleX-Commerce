@@ -2,6 +2,8 @@ const logger = require("../../core/logger/logger");
 const { verifyRefreshToken } = require("../../shared/utils/token.utils");
 const { loginByEmailService, logoutService, registerUserService, getMeBasicUserService, getProfileUserService, refreshTokenService } = require("./auth.service");
 
+// const geoip = require("geoip-lite");
+
 // -email 
 // -password
 // - name
@@ -51,12 +53,22 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("headers is ", req.headers);
+
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
                 message: "Email and password are required",
             });
         }
+
+        // geolocation can be added in session data 
+        // 10->start is private ip not expose on the internet
+        // const geoPrivate = geoip.lookup('10.80.65.144');
+        // console.log("geolocation is ", geoPrivate);
+
+        // const geoPublic = geoip.lookup('122.252.249.114');
+        // console.log("geolocation is ", geoPublic);
 
         // 4.Create session based login (session model)
         const sessionMeta = {
@@ -159,6 +171,9 @@ const getUserProfile = async (req, res) => {
 }
 const refreshToken = async (req, res) => {
     const refreshTokenCookie = req.cookies?.refreshToken;
+    console.log("Cookies are ", req.cookies);
+    console.log("Refresh token is ", refreshTokenCookie);
+
     logger.info({
         cookieKeys: Object.keys(req.cookies || {}),
         hasRefreshToken: Boolean(refreshTokenCookie),
