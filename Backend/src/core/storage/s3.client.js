@@ -5,11 +5,11 @@ const config = require("../config/env.config");
 const logger = require("../logger/logger");
 
 const storageClient=new S3Client({
-    endpoint:config.MINIO_ENDPOINT,
+    endpoint:config.STORAGE_ENDPOINT ,
     region:"us-east-1",
     credentials:{
-        accessKeyId:config.MINIO_ACCESS,
-        secretAccessKey:config.MINIO_SECRET
+        accessKeyId:config.STORAGE_ACCESS,
+        secretAccessKey:config.STORAGE_SECRET
     },
     // Required for minio 
     forcePathStyle:true

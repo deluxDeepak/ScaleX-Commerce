@@ -16,7 +16,7 @@ const startServer = async () => {
         initSentry();
 
         // In test storage and db bhi skip kar do  =====
-        initStorage();
+        await initStorage();
         await loadDb(); //wait to make db connection
     }
 
