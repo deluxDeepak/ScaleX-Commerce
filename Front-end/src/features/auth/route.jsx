@@ -1,4 +1,6 @@
-import Login from "./pages/Login";
+import { lazy } from "react";
+
+const Login = lazy(() => import("./pages/Login"));
 
 const authRoutes = {
     path: "/auth",

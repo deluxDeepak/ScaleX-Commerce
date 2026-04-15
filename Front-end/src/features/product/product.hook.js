@@ -62,7 +62,7 @@ export const useProductsFilter = (keyword, sort) => {
             }
         }
         load();
-    }, [keyword,sort])
+    }, [keyword, sort])
 
     return {
         loading,
@@ -83,9 +83,9 @@ export const useProductId = (id) => {
     useEffect(() => {
         console.log("id from useEffect ", id)
 
-        if (!id) return; // ✅ prevent invalid call
+        if (!id) return;
 
-        let isMounted = true; // ✅ prevent state update after unmount
+        let isMounted = true;
 
         const loadProduct = async () => {
             try {
@@ -121,7 +121,7 @@ export const useProductId = (id) => {
         loadProduct();
 
         return () => {
-            isMounted = false; // ✅ cleanup
+            isMounted = false;
         };
 
     }, [id]);
@@ -209,20 +209,26 @@ export const useCategoryProduct = (catId, subId) => {
     const [error, setError] = useState("");
 
     const load = async () => {
-        if (!catId) return;
-
         try {
             setLoading(true);
             setError("")
-            if (catId) {
-                const res = await getProductsByCatIdService(catId);
-                setProducts(res.products);
+
+            if (!catId) {
+                const res = await getProductService();
+                setProducts(res.products || []);
+                setSubProducts([]);
+                return;
             }
 
             if (subId) {
                 const res = await getProductsByCatSubIdService(catId, subId);
                 console.log("Sub category hook is ", res);
                 setSubProducts(res.products);
+                setProducts([]);
+            } else {
+                const res = await getProductsByCatIdService(catId);
+                setProducts(res.products || []);
+                setSubProducts([]);
             }
 
 

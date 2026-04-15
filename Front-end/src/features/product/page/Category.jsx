@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import CategorySidebar from '../components/CategorySidebar';
 import ProductCard from '../components/ProductCard';
@@ -20,29 +20,29 @@ const Category = () => {
 
 
   // ===== find category object =====
-  const selectedCategory = category.find(
-    (c) => c.name === categoryget
-  );
+  // Every render find chalega so performance degrade ho sakta hai 
+  const selectedCategory = useMemo(() => {
+    return category.find((c) => c.name === categoryget)
 
+  }, [category, categoryget]);
   const categoryId = selectedCategory?._id;
 
 
   // ===== find subcategory object ==
-  let subCategoryId = null;
+  const subCategoryId = useMemo(() => {
+    if (!selectedCategory || !subCategoryget) return null
 
-  if (selectedCategory && subCategoryget) {
-
-    const sub = selectedCategory.subCategories.find(
+    const sub = selectedCategory.subCategories?.find(
       (s) => s.name === subCategoryget
     );
 
-    subCategoryId = sub?._id;
-  }
-  // ===== hook call =====
-  const { products, subProducts, loading } =
-    useCategoryProduct(categoryId, subCategoryId);
+    return sub?._id;
+  }, [selectedCategory, subCategoryget]);
 
-  console.log("Products subcategory", subProducts);
+
+
+  // ===== hook call =====
+  const { products, subProducts, loading } = useCategoryProduct(categoryId, subCategoryId);
 
 
   return (
@@ -57,25 +57,21 @@ const Category = () => {
         <main className="flex-1">
 
           <h2>
-            {categoryget
-              ? `Category: ${categoryget}`
-              : "All Products"}
+            {categoryget ? `Category: ${categoryget}` : "All Products"}
           </h2>
 
 
           <div
-            className={`grid md:grid-cols-4 gap-4 transition-all duration-300 ${loading ? "opacity-50" : "opacity-100"
-              }`}
+            className={`grid md:grid-cols-4 gap-4 transition-all duration-300 ${loading ? "opacity-50" : "opacity-100"}`}
           >
 
             {loading && <p>Loading...</p>}
 
-            
+
             {
-              subCategoryId
-                ? subProducts?.map((p) => (
-                  <ProductCard key={p._id} products={p} />
-                ))
+              subCategoryId ? subProducts?.map((p) => (
+                <ProductCard key={p._id} products={p} />
+              ))
                 : products?.map((p) => (
                   <ProductCard key={p._id} products={p} />
                 ))

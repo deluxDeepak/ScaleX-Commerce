@@ -1,8 +1,8 @@
 import { lazy } from "react";
 import SellerLayout from "../../layout/SellerLayout";
 import RoleRoutes from "../../core/access/RoleRoutes";
-import AddProduct from "./pages/AddProduct";
 
+const AddProduct =lazy(()=>import("./pages/AddProduct"));
 const SellerDashboard = lazy(() => import("./pages/SellerDashboard"));
 const SellerProducts = lazy(() => import("./pages/SellerProducts"));
 const SellerOrder = lazy(() => import("./pages/SellerOrder"));

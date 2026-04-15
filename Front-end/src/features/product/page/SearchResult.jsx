@@ -1,10 +1,9 @@
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { useProductsFilter } from '../product.hook';
 
 // =================Pure Search Products ===================
-const SearchHeader = ({ query, products }) => {
+const SearchHeader = ({ query }) => {
     return (
         <div className=" border-b border-gray-200 px-6 md:px-12 py-4">
 

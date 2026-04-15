@@ -1,7 +1,9 @@
+import { lazy } from "react";
 import ProtectedRoutes from "../../core/access/ProtectedRoutes";
 import MainLayout from "../../layout/MainLayout";
-import AddReview from "./page/AddReview";
-import MyReview from "./page/MyReview";
+
+const AddReview = lazy(() => import("./page/AddReview"));
+const MyReview=lazy(()=>import("./page/MyReview"));
 
 const reviewRoute = {
     element: (

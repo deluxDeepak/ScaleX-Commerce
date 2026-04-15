@@ -2,7 +2,7 @@ import AddCartButton from "./AddCartButton";
 import Rating from "../../../components/Rating";
 import { useNavigate } from "react-router-dom";
 import ProductPrice from "./ProductPrice";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // Important bhut jayda ========================================
 const ProductCard = ({ products }) => {
@@ -135,4 +135,5 @@ const ProductCard = ({ products }) => {
   );
 };
 
-export default ProductCard;
+// parent re-render kab hoga ---jab parent me koi props change hoga tab ye pura re-render ho sakta hai 
+export default React.memo(ProductCard);

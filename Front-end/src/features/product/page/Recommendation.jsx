@@ -3,11 +3,7 @@ import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { products } from '../data/products';
 
-const HeaderSearch = ({ }) => (
-    <div>
-        Search for this product { }
-    </div>
-)
+
 const Recommendation = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 

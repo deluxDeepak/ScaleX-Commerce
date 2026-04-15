@@ -1,15 +1,15 @@
 import { lazy } from "react";
 import UserLayout from "../../layout/UserLayout";
 import MainLayout from "../../layout/MainLayout";
+import ProtectedRoutes from "../../core/access/ProtectedRoutes";
 
 
 const Wishlist = lazy(() => import("./pages/Wishlist"));
-import UserDashboard from "./pages/UserDashboard";
-import Order from "./pages/Order";
-import SaveAddress from "./pages/SaveAddress";
-import ProtectedRoutes from "../../core/access/ProtectedRoutes";
-import CartShopping from "./pages/CartShopping";
-import Checkout from "./pages/Checkout";
+const UserDashboard = lazy(() => import("./pages/UserDashboard"));
+const Order = lazy(() => import("./pages/Order"));
+const SaveAddress = lazy(() => import("./pages/SaveAddress"));
+const CartShopping = lazy(() => import("./pages/CartShopping"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 // const UserDashboard = lazy(() => import("./pages/UserDashboard"));
 const userRoutes = {

@@ -81,11 +81,11 @@ const CategorySidebar = ({ category }) => {
                                 <img src={cat.icon} alt="" className="w-20 h-12" />
                                 <button
 
-                                    className={`flex justify-between items-center w-full p-2 md:p-3 rounded-xl text-sm font-semibold transition ${isActive ? "text-blue-500  " : "hover:bg-gray-50 text-gray-700"}
+                                    className={`flex justify-between items-center w-full p-1 mt-1 lg:mt-0 md:p-3 rounded-xl text-[12px] lg:text-sm font-semibold transition ${isActive ? "text-blue-500  " : "hover:bg-gray-50 text-gray-700"}
 
                                 `}
                                 >
-                                    <span>{cat.name}</span>
+                                    <span >{cat.name}</span>
                                     {isOpen
                                         ? <ChevronUp size={16} />
                                         : <ChevronDown size={16} />
@@ -100,7 +100,7 @@ const CategorySidebar = ({ category }) => {
                                 className={`overflow-hidden transition-all duration-300 hidden md:flex ${isOpen ? "max-h-96" : "max-h-0"}`}
                             >
 
-                                <div className="pl-3 pb-2">
+                                <div >
                                     {cat.subCategories.map((sub) => {
 
                                         const isSubActive =
@@ -118,12 +118,7 @@ const CategorySidebar = ({ category }) => {
                                                 }
                                                 className={`block w-full text-left px-3 py-2 rounded-lg text-sm
 
-                                                ${isSubActive
-                                                        ? "bg-blue-50 text-blue-600 font-semibold"
-                                                        : "text-gray-600 hover:bg-gray-50"
-                                                    }
-
-                                                `}
+                                                ${isSubActive ? "bg-blue-50 text-blue-600 font-semibold" : "text-gray-600 hover:bg-gray-50"}`}
                                             >
                                                 {sub.name}
                                             </button>
