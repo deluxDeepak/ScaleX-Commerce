@@ -15,13 +15,32 @@ const { DatabaseError } = require("../../shared/errors");
 let redis
 const connectRedisDb = async () => {
     if (config.NODE_ENV === "test") {
+        logger.warn("Skipping redis Connection due to Test env")
         return
     }
+    // For local =================
+    if (config.REDIS_URL) {
+        redis = new Redis(config.REDIS_URL);
+    }
+    // For production ============
+    else if (config.DB_REDIS_HOST && config.DB_REDIS_PORT) {
+        redis = new Redis({
+            port: Number(config.DB_REDIS_PORT),
+            host: config.DB_REDIS_HOST,
+            username: config.DB_REDIS_USERNAME,
+            password: config.DB_REDIS_PASSWORD,
+            db: 0, // Defaults to 0
+        });
 
-    redis = new Redis(config.REDISH_URL)
+    }
+    else {
+        logger.error("Redis configuration is missing ")
 
-    // Create a Redis instance.
-    // By default, it will connect to localhost:6379.
+    }
+    
+    // redis = new Redis(config.REDIS_URL)
+    // - If url is not persent then it will fallback to localredis 
+
     await redis.ping();
     logger.info("Redis connected");
     redis.on("connect", () => logger.info("Connection established"));

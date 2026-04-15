@@ -7,6 +7,7 @@ networks:
 
 services:
   
+      
   nginx:
     image: nginx:latest
     ports:
@@ -19,6 +20,7 @@ services:
       - backend
     networks:
       - app-network
+  
   redis:
     image: redis:7
     container_name: redis

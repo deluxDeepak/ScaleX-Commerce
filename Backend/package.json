@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest --runInBand --detectOpenHandles",
+    "dev": "cross-env NODE_ENV=devlopment nodemon src/server.js",
+    "prod": "cross-env NODE_ENV=production node src/server.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand --detectOpenHandles",
     "test:coverage": "jest --runInBand --detectOpenHandles --coverage",
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
     "build": "node --check src/server.js",
     "lint": "eslint .",
     "seed": "node scripts/seed/seed.js",
@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "cross-env": "^10.1.0",
     "eslint": "^10.1.0",
     "eslint-plugin-jest": "^29.15.1",
     "globals": "^17.4.0",

@@ -14,13 +14,19 @@ const loadDb = async () => {
         if (!config.MONGO_URL) {
             logger.warn("MongoUri not found Skipping Mongo")
         }
-        if (!config.REDISH_URL) {
-            logger.warn("RedisUri not found Skipping Redis")
+
+        const hasRedisConfig = Boolean(config.REDIS_URL || (config.DB_REDIS_HOST && config.DB_REDIS_PORT));
+        const hasMongoConfig = Boolean(config.MONGO_URL);
+
+        if (hasRedisConfig && hasMongoConfig) {
+            await Promise.all([
+                connectMongoDb(),
+                connectRedisDb()
+            ])
+        } else {
+            logger.warn("Redis configuration is not provided ")
         }
-        await Promise.all([
-            connectMongoDb(),
-            connectRedisDb()
-        ])
+
         logger.info("Db connected successfuly");
     } catch (error) {
         logger.error(error, "Db connection fails");
