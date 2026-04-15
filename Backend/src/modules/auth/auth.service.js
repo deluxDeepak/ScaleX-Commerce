@@ -1,10 +1,11 @@
 
+const config = require("../../core/config/env.config");
 const logger = require("../../core/logger/logger");
 const generateTokenService = require("../../core/token/token.service");
-const { ValidationError, NotfoundError } = require("../../shared/errors");
-const { compareHashPassword } = require("../../shared/utils/password.utils");
-const { hashToken } = require("../../shared/utils/token.utils");
-const { findByEmail, updateUserRefreshToken, findUserById } = require("../user/user.repository");
+const { ValidationError, NotfoundError, AuthError } = require("../../shared/errors");
+const { compareHashPassword, hashPassword } = require("../../shared/utils/password.utils");
+const { hashToken, generateRandomToken } = require("../../shared/utils/token.utils");
+const { updateUserRefreshToken, findUserById, findUserByEmail, updateUserPasswordToken, findAndCheckTokenExpiry, updateUserPassword } = require("../user/user.repository");
 const { createUserService, findUserBasicService } = require("../user/user.service");
 const { createUserSession, deleteUserSession, findUserSession, updateUserSession } = require("./auth.repository");
 
@@ -40,7 +41,7 @@ const loginByEmailService = async (email, password, sessionMeta) => {
     if (!email || !password) {
         throw new ValidationError("User or Password is required");
     }
-    const user = await findByEmail(email);
+    const user = await findUserByEmail(email);
     if (!user) {
         throw new ValidationError("Email or pasword is wrong")
     }
@@ -130,10 +131,90 @@ const refreshTokenService = async (userId, refreshToken) => {
 
 }
 
+const sendEmailService = async (email, message) => {
+    console.log("Email is ", email);
+    console.log("Message is ", message);
+    return {
+        email,
+        message,
+        success: "Set mail sucess"
+    }
+}
+
+const forgotPasswordService = async (email) => {
+    const user = await findUserByEmail(email);
+    if (!user) {
+        throw new NotfoundError("User with this email does not exist | Verify email again");
+
+    }
+
+    // RandomToken generate 
+    const resetToken = generateRandomToken();
+    const resetTokenExpiry = Date.now() + 15 * 60 * 1000 //15min
+    // User update 
+    // token and token ka expiry 
+    const userResult = await updateUserPasswordToken(email, resetToken, resetTokenExpiry);
+
+    logger.info({ userResult }, "User after update token in Db is ");
+
+    // for testing in backend  use frontend url 
+    const resetLink = `${config.RESET_PASSWORD_LINK}:${config.PORT}/api/auth/reset-password/${resetToken}`
+
+    // 1.frontend link send to user 
+    // 2.User click the link of frontend 
+    // 3.On that page route fronend hit the backend route reset password (same step on reset route )
+    
+    // const resetLink = `${config.FRONTEND_URL}/reset-password/${resetToken}`;
+
+
+    console.log("Reset link is ", resetLink);
+
+    //Send the reset link to the User email
+    const resultEmail = await sendEmailService(email, "Reset link is send");
+
+    return {
+        resultEmail,
+        resetLink,
+        userResult
+    }
+
+
+}
+
+const resetPasswordService = async (resetToken, newPassword) => {
+    if (!resetToken) {
+        throw new ValidationError("ResetToken is not provided ");
+    }
+    if (!newPassword) {
+        throw new ValidationError("Provide password");
+    }
+    // 1.Check the token(find user with token) 
+    const resultUser = await findAndCheckTokenExpiry(resetToken);
+
+    if (!resultUser) {
+        throw new AuthError("Invalid or Expired token")
+    }
+    // Hash the password 
+    const hashedPassword = await hashPassword(newPassword);
+
+    // 2.Save new password 
+    const updatedUser = await updateUserPassword(resultUser._id, hashedPassword);
+    logger.info({ updatedUser }, "Password updated successsfully ")
+
+    // 3.Clear new token 
+    const tokenUpdated = await updateUserPasswordToken(resultUser.email, null, null);
+    logger.info({ tokenUpdated }, "Token updated set to null again");
+
+
+    return { updatedUser, tokenUpdated };
+
+}
 module.exports = {
     loginByEmailService,
     logoutService,
     registerUserService,
     getMeBasicUserService,
     refreshTokenService,
+    forgotPasswordService,
+    resetPasswordService,
 }

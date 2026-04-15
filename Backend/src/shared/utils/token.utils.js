@@ -71,11 +71,16 @@ const compareHashToken = async (token, encyptedToken) => {
     }
 }
 
+const generateRandomToken=()=>{
+    return crypto.randomBytes(32).toString("hex");
+}
+
 module.exports = {
     generateAccessToken,
     generateRefreshToken,
     verifyToken,
     verifyRefreshToken,
     hashToken,
+    generateRandomToken,
     compareHashToken
 }

@@ -1,5 +1,5 @@
 const authenticate = require("../../middlewares/auth.middleware");
-const { login, logout, register, getMe, refreshToken } = require("./auth.controller");
+const { login, logout, register, getMe, refreshToken, forgotPassword, resetPassword } = require("./auth.controller");
 
 const router = require("express").Router();
 
@@ -13,8 +13,8 @@ router.get("/me", authenticate, getMe);     //done
 // router.get("/profile", authenticate, getUserProfile);    //user route me dena chiye 
 
 // Password related routes ==========================
-// router.post("/forgot-password", forgotPassword);
-// router.post("/reset-password", resetPassword);
+router.post("/forgot-password", forgotPassword);    //send reset lint
+router.post("/reset-password/:token", resetPassword);
 // router.patch("/change-password", auth, changePassword);
 
 // Email and otp verification ======================

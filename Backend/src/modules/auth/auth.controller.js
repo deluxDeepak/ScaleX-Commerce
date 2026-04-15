@@ -1,6 +1,6 @@
 const logger = require("../../core/logger/logger");
 const { verifyRefreshToken } = require("../../shared/utils/token.utils");
-const { loginByEmailService, logoutService, registerUserService, getMeBasicUserService, getProfileUserService, refreshTokenService } = require("./auth.service");
+const { loginByEmailService, logoutService, registerUserService, getMeBasicUserService, getProfileUserService, refreshTokenService, forgotPasswordService, resetPasswordService } = require("./auth.service");
 
 // const geoip = require("geoip-lite");
 
@@ -222,6 +222,67 @@ const refreshToken = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    // User not logged in so userId nahi ayega 
+    // const userId=req.user.id
+    console.log("Email is ", email);
+
+    if (!email) {
+        return res.status(400).json({
+            success: false,
+            message: "Email is required",
+        });
+    }
+
+    try {
+        const result = await forgotPasswordService(email);
+
+        res.status(200).json({
+            success: true,
+            data: result,
+            message: "Sent link on Email to rest the Password | don't sahre the link with others "
+        });
+
+    } catch (error) {
+        console.error("Forgot password failed:", error);
+
+        res.status(error?.statusCode || 400).json({
+            success: false,
+            message: error?.message || "Error in ForgotPassword",
+        })
+
+    }
+
+
+}
+
+// Public available hoga hi nahi 
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    // 1.Token find in db and check the expiry also 
+    try {
+        const result = await resetPasswordService(token, newPassword);
+        res.status(200).json({
+            success: true,
+            data: result,
+            message: "Password updated Success fully "
+        });
+
+    } catch (error) {
+        console.error("Reset password failed:", error);
+
+        res.status(error?.statusCode || 400).json({
+            success: false,
+            message: error?.message || "Error in Passowrd reset",
+        })
+
+    }
+
+}
+
 // Social login routes =========================
 const googleLogin = async () => {
 
@@ -239,7 +300,10 @@ module.exports = {
     logout,
     getMe,
     getUserProfile,
+
     refreshToken,
+    forgotPassword,
+    resetPassword,
 
     //==== Social login =============
     googleLogin,

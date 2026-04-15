@@ -1,4 +1,3 @@
- 
 # 🚀 Scalable E‑Commerce System
 
 ![Build](https://img.shields.io/badge/Build-Passing-brightgreen)
@@ -22,27 +21,63 @@ This project goes beyond a basic CRUD backend. It demonstrates how real‑world 
 * 🛡️ Rate limiting & advanced Node.js security (global + per‑API limits)
 
 ---
+## 🚀 Core Features
+
+A complete breakdown of user flows, seller workflows, and system-level capabilities is documented separately for better readability.
+
+👉 📄 **[View Detailed Features](./FEATURE.md)**
+
+Includes:
+- User, Seller, and Admin workflows
+- Product management, search, cart, wishlist
+- Scalable backend architecture (cache, rate limiting, RBAC)
+- System design-level features and future improvements
 
 ## 🏗️ System Architecture
 
-High‑level view of the platform:
-> Includes role-based access, authentication middleware, validation layer, caching, and observability pipeline.
+This system is designed with a strong focus on **scalability, performance, and fault tolerance**.  
+Key design challenges and the solutions implemented (caching, load balancing, service separation) are documented in detail.
+
+👉 📄 **[View System Design Details](./SYSTEM_DESIGN.md)**
+
+High-level architecture includes:
+- Role-based access control (RBAC)
+- Authentication & authorization middleware
+- Request validation layer
+- Layered architecture (Controller → Service → Repository)
+- Redis caching layer
+- Observability pipeline (Prometheus, Grafana, Loki)
 
 ![System Architecture](docs/image.png)
 
 ---
 
+## 🧩 Module Design
+
+Each module in the system is designed with **separation of concerns and scalability in mind**.  
+
+👉 📄 **[View Module Design Documentation](./MODULE_DESIGN.md)**
+
+Covers:
+- Module responsibilities and boundaries
+- Design decisions and trade-offs
+- Scalability considerations per module
+- Reasoning behind architecture choices
+
 ## 🔄 Request Flow
 
-1. 🌐 Client sends HTTP request
-2. 🧭 Nginx forwards request to a backend instance (load balancing)
-3. 🛡️ Auth middleware verifies JWT / roles
+1. 🌐 Client sends HTTP request ->Frontend
+2. 🧭 Nginx (Caching some response mostly visited only ) forwards request to a backend instance 
+
+3. 🛡️ Auth middleware Authnticate users --> / roles(Admin/iser/seller)
 4. ✅ Validation layer checks request body / params
-5. 🧠 Controller executes business logic
+5. 🧠 Controller handle  req,res only 
+6. Service do business login
+7.Repository to interact with db only 
 6. ⚡ Checks Redis cache; if miss, hits MongoDB
 7. 📦 Response is returned back through Nginx to the client
 
-Flow summary: `Client → Nginx → Backend → Auth → Validation → Controller → Cache/DB → Response`
+Flow summary: `Client → Nginx → Backend → Auth → Validation → Controller -> service -> Repository→ Cache/DB → Response`
 
 ---
 

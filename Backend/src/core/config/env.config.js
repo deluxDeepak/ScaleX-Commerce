@@ -24,6 +24,8 @@ const config = {
     JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
 
+    RESET_PASSWORD_LINK:process.env.RESET_PASSWORD_LINK,
+
     // Monitoring 
     SENTRY_DSN: process.env.SENTRY_DSN,
 }

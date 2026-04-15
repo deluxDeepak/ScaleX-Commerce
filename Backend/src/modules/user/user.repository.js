@@ -15,9 +15,17 @@ const updateUser = async (id, data) => {
     return await User.findByIdAndUpdate(id, data, { new: true });
 }
 
+const updateUserPassword = async (id, newPassword) => {
+    return await User.findByIdAndUpdate(
+        id,
+        { $set: { password: newPassword } },
+        { new: true }
+    )
+}
 
 
-const findByEmail = async (email) => {
+
+const findUserByEmail = async (email) => {
     return await User.findOne({ email })
 }
 const createUser = async (data) => {
@@ -81,6 +89,30 @@ const updateUserRefreshToken = async (userId, refreshToken) => {
         { new: true }
     )
 }
+
+const updateUserPasswordToken = async (email, resetToken, resetTokenExpiry) => {
+
+    return await User.findOneAndUpdate(
+        { email },
+        { $set: { passwordResetToken: resetToken, passwordResetExpiry: resetTokenExpiry } },
+        { new: true }
+
+
+    )
+
+}
+const findAndCheckTokenExpiry = async (resetToken) => {
+    // expiry is greateer then dont include the user 
+    return await User.findOne(
+        {
+            passwordResetToken: resetToken,
+            passwordResetExpiry: { $gt: Date.now() }
+        }
+
+    )
+}
+
+
 /*
 const updateAddress = async (userId, addressId, data) => {
     return await User.findOneAndUpdate(
@@ -146,7 +178,7 @@ module.exports = {
 
 
     createUser,
-    findByEmail,
+    findUserByEmail,
     findUserBasicById,
 
     // User profile 
@@ -159,7 +191,12 @@ module.exports = {
     getMyAddress,
     addAddress,
     updateAddress,
+
     updateUserRefreshToken,
+    updateUserPasswordToken,
+    findAndCheckTokenExpiry,
+    updateUserPassword,
+
     delteAddress,
     updateDefaultAddress,
 }

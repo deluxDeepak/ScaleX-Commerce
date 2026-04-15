@@ -1,6 +1,6 @@
 const { ValidationError, DatabaseError, NotfoundError } = require("../../shared/errors");
 const { hashPassword } = require("../../shared/utils/password.utils");
-const { createUser, findByEmail, findUserById, findUserBasicById, findUserProfileById, findandUpdateUserProfileById, findAllUser, updateUser, deleteUser, getMyAddress, addAddress, updateAddress, delteAddress, updateDefaultAddress, findandUpdateUserProfileImg, findAddress } = require("./user.repository")
+const { createUser, findUserByEmail, findUserById, findUserBasicById, findUserProfileById, findandUpdateUserProfileById, findAllUser, updateUser, deleteUser, getMyAddress, addAddress, updateAddress, delteAddress, updateDefaultAddress, findandUpdateUserProfileImg, findAddress } = require("./user.repository")
 
 const getAllUserService = async () => {
     const users = await findAllUser();
@@ -55,7 +55,7 @@ const createUserService = async (data) => {
         throw new ValidationError("Password is required");
     }
 
-    let user = await findByEmail(data.email);
+    let user = await findUserByEmail(data.email);
     if (user) {
         throw new DatabaseError("User already exist");
     }
