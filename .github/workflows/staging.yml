@@ -1,6 +1,6 @@
 # Staging deploye (deploye to vps but staging image )
 
-name: ScaleX-commerce to Staging Deploy 
+name: ScaleX-commerce to Staging Deploy
 # 1.pull image 
 # 2.Deploy to vps
 # 3.Add new tag staging after deploy is successfull
