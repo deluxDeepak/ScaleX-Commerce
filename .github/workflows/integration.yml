@@ -5,6 +5,8 @@ name: ScaleX-commerce Integration on Staging VPS
 on:
   workflow_run:
     workflows: ["ScaleX-commerce to Staging Deploy"]
+    branches:
+      - staging
     types:
       - completed
 
