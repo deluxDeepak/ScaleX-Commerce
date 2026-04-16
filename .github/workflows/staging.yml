@@ -1,0 +1,70 @@
+# Staging deploye (deploye to vps but staging image )
+
+name: ScaleX-commerce to Staging Deploy 
+# 1.pull image 
+# 2.Deploy to vps
+# 3.Add new tag staging after deploy is successfull
+# Change tag to docker hub 
+# Push with new tag:
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  Deploy-toVps:
+    name: Deploy to Ec2
+    runs-on: ubuntu-latest
+
+    # 1. Login to Dockerhub
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      # 1.Pull the image 
+      - name: Pull Dev image By SHA
+        run: |
+          docker pull deluxdeepak/scalex-backend:${{ github.sha }}
+
+      # 2.Tag the image 
+      - name: Tag staging image 
+        run: |
+          docker tag deluxdeepak/scalex-backend:${{ github.sha }} deluxdeepak/scalex-backend:staging
+      # 3.Push the stagged image 
+      - name: Push Staging image
+        run: |
+          docker push deluxdeepak/scalex-backend:staging
+
+      # Deploy to vps 
+      - name: Deploy via SSH to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+           # 1.login with credential 
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # 1.pull the Front-end image with tag
+          # 2. pull backend image with tag 
+          # 3.compose file should persent on vps 
+          script: |
+            cd app
+            docker compose pull
+            docker compose up -d
+
+      # Wait for the app
+      - name: Wait for app
+        run: sleep 15
+      # Check the health of the app
+      - name: Health check
+        run: curl -f http://your-vps-ip/api/health
+        
+      # Deployment completion message 
+      - name: Completion message 
+        run: echo Deployed to VPS sucessful😊✅
+
+        
+  
