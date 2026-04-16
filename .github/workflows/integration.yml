@@ -1,12 +1,14 @@
-name: ScaleX-commerce Integration on Staging VPS
+# ============Overkill the project ===========
 
+name: ScaleX-commerce Integration on Staging VPS
 # Runs only after the staging deploy workflow finishes successfully.
 # This checks the live staging VPS, not the local CI environment.
+
+# - ye default main branch pe hi run hoga 
+# So make this run on stagging same file 
 on:
   workflow_run:
     workflows: ["ScaleX-commerce to Staging Deploy"]
-    branches:
-      - staging
     types:
       - completed
 

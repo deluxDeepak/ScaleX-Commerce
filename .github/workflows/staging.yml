@@ -87,5 +87,37 @@ jobs:
       - name: Completion message 
         run: echo Deployed to VPS sucessful😊✅
 
-        
+  integration:
+    runs-on: ubuntu-latest
+    environment: Staging_secret
+
+    env:
+      # Set this secret to your staging VPS base URL, for example:
+      # https://staging.your-domain.com or http://YOUR_VPS_IP:4000
+      BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+
+    steps:
+      - name: Check out deployed commit
+        uses: actions/checkout@v6
+
+      # 2.Setup environment  
+      - name: Setup Environment
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      # 3.Install root deps 
+      - name: Install deps
+        run: npm ci
+
+      - name: Wait for staging VPS to be ready
+        run: |
+          until curl -fsS "$BASE_URL/api/health"; do
+            echo "Waiting for staging VPS..."
+            sleep 5
+          done
+
+      - name: Run integration test
+        run: npm run test:integration
   
