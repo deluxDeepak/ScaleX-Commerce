@@ -12,6 +12,7 @@ jobs:
   integration:
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success'
+    environment: Staging_secret
 
     env:
       # Set this secret to your staging VPS base URL, for example:
