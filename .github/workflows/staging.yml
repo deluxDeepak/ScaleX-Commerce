@@ -14,7 +14,7 @@ on:
 
 jobs:
   Deploy-toVps:
-    name: Deploy to Ec2
+    name: Deploy to Ec2 Staging
     runs-on: ubuntu-latest
 
     env:
