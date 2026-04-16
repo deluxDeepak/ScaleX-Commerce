@@ -4,16 +4,15 @@
 # test
 # lint
 
-name: Backend ci
+name: ScaleX-commerce Backend-Ci 
 
-# on:
-#   push:
-#     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]
+on:
+  push:
+    branches: [ dev ]
+  
 
-on: 
-  workflow_call:
+# on: 
+#   workflow_call:
     
 
 jobs:
@@ -21,6 +20,7 @@ jobs:
     # Project settings 
     name: Backend CI interation
     runs-on: ubuntu-latest
+    
     env:
       NODE_ENV: test
     # Steps in the job 

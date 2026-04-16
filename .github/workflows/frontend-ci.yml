@@ -1,15 +1,12 @@
 name: Frontend CI 
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - dev
 
-on: 
-  workflow_call:
+# on: 
+#   workflow_call:
     
 
 jobs:

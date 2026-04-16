@@ -1,0 +1,68 @@
+name: ScaleX-commerce Integration-Test
+
+# Integration runs on dev branch 
+# - fast execution and merge 
+on:
+  push:
+    branches:
+      - dev 
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1.Code checkout Take (Download the whole repo)
+      - name: Check out Code 
+        uses: actions/checkout@v6
+      # 2.Setup environment  
+      - name: Setup Environment
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+      # 3.Install root deps 
+      - name: Install deps
+        run: npm ci
+
+      # Docker is already install in the machine 
+      - name: Check docker version
+        run: docker --version
+      - name: Check docker Compose version 
+        run: docker compose version
+
+      # 4.Env injecting in the repo file (Suppose )
+      - name: Create .env.docker
+        run: |
+          mkdir -p Backend
+          echo "NODE_ENV=test" >> Backend/.env.docker
+          echo "PORT=4000" >> Backend/.env.docker
+          echo "CLIENT_URL=http://localhost:5173" >> Backend/.env.docker
+          echo "MONGO_URL=mongodb://mongo:27017" >> Backend/.env.docker
+          echo "REDISH_URL=redis://redis:6379" >> Backend/.env.docker
+          echo "MINIO_ENDPOINT=http://minio:9000" >> Backend/.env.docker
+          echo "MINIO_ACCESS=minioadmin" >> Backend/.env.docker
+          echo "MINIO_SECRET=minioadmin" >> Backend/.env.docker
+          echo "STORAGE_BUCKET=devbucket" >> Backend/.env.docker
+          echo "FILE_BASE_URL=http://minio:9000/devbucket" >> Backend/.env.docker
+          echo "JWT_ACCESS_SECRET=testsecret" >> Backend/.env.docker
+          echo "JWT_REFRESH_SECRET=testsecret" >> Backend/.env.docker
+
+      # 5.Start the service 
+      - name: Start docker services 
+        run: docker compose -f docker-compose.integration.yml up -d --build
+
+      
+      # 6.Run actual test 
+      - name: Run integration test 
+        run: npm run test:integration
+
+      # stop the service 
+      - name: Stop services 
+        if: always()
+        run: docker compose down
+
+
+
+
+
