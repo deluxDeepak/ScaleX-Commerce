@@ -20,6 +20,7 @@ jobs:
 
     env:
       IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
+      FRONTEND_IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend
       STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
       SOURCE_TAG: dev
 
@@ -36,16 +37,23 @@ jobs:
         run: |
           docker pull $IMAGE_REPO:$SOURCE_TAG
 
+      - name: Pull frontend image by stable tag
+        run: |
+          docker pull $FRONTEND_IMAGE_REPO:$SOURCE_TAG
+
       # 2.Tag the image 
       - name: Tag staging image 
         run: |
           docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:staging
           docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:latest
+          docker tag $FRONTEND_IMAGE_REPO:$SOURCE_TAG $FRONTEND_IMAGE_REPO:staging
+          docker tag $FRONTEND_IMAGE_REPO:$SOURCE_TAG $FRONTEND_IMAGE_REPO:latest
           
       # 3.Push the stagged image 
       - name: Push Staging image
         run: |
           docker push $IMAGE_REPO:staging
+          docker push $FRONTEND_IMAGE_REPO:staging
 
       # Deploy to vps 
       - name: Deploy via SSH to VPS
