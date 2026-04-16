@@ -16,6 +16,7 @@ jobs:
   Deploy-toVps:
     name: Deploy to Ec2 Staging
     runs-on: ubuntu-latest
+    environment: Staging_secret
 
     env:
       IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
