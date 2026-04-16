@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@playwright/test": "^1.58.2",
+    "cross-env": "^10.1.0",
     "husky": "^9.1.7",
     "jest": "^30.3.0"
   },
@@ -9,9 +10,12 @@
     "test": "npm run test:backend && npm run test:frontend && npm run test:e2e",
     "test:backend": "npm --prefix Backend test",
     "test:frontend": "npm --prefix Front-end test",
-    "test:integration": "jest tests/integration",
+    "test:integration": "cross-env NODE_ENV=test  jest tests/integration",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }

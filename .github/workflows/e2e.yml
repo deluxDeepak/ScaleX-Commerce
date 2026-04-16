@@ -1,9 +1,20 @@
+# - this will runs on real url  after deployment done 
+# dev->build image(push)->staging deploy->e2e test->change the tag of the image (like :stagign )-> production
+
 name: ScaleX-commerce e2e-Tets
 
 on:
   push:
     branches:
       - staging
+  workflow_run:
+    workflows: ["ScaleX-commerce to Staging Deploy"]
+    types:
+      - completed
+# on:
+#   push:
+#     branches:
+#       - staging
 
 jobs:
   e2e:

@@ -1,0 +1,83 @@
+# Staging deploye (deploye to vps but staging image )
+
+name: ScaleX-commerce to Staging Deploy 
+# 1.pull image 
+# 2.Deploy to vps
+# 3.Add new tag staging after deploy is successfull
+# Change tag to docker hub 
+# Push with new tag:
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  Deploy-toVps:
+    name: Deploy to Ec2
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
+      STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+
+    # 1. Login to Dockerhub
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      # 1.Pull the image 
+      - name: Pull Dev image By SHA
+        run: |
+          docker pull $IMAGE_REPO:${{ github.sha }}
+
+      # 2.Tag the image 
+      - name: Tag staging image 
+        run: |
+          docker tag $IMAGE_REPO:${{ github.sha }} $IMAGE_REPO:staging
+      # 3.Push the stagged image 
+      - name: Push Staging image
+        run: |
+          docker push $IMAGE_REPO:staging
+
+      # Deploy to vps 
+      - name: Deploy via SSH to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+           # 1.login with credential 
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # 1.pull the Front-end image with tag
+          # 2. pull backend image with tag 
+          # 3.compose file should persent on vps 
+          script: |
+            cd app
+            docker compose pull
+            docker compose up -d
+
+      # Wait for the app
+      - name: Wait for app
+        run: sleep 15
+      # Check the health of the app
+      - name: Health check
+        run: |
+          if [ -z "$STAGING_BASE_URL" ]; then
+            echo "STAGING_BASE_URL secret is not set"
+            exit 1
+          fi
+
+          until curl -fsS "$STAGING_BASE_URL/api/health"; do
+            echo "Waiting for staging health endpoint..."
+            sleep 5
+          done
+        
+      # Deployment completion message 
+      - name: Completion message 
+        run: echo Deployed to VPS sucessful😊✅
+
+        
+  
