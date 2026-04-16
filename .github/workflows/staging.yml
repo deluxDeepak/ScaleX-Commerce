@@ -69,11 +69,7 @@ jobs:
       # Check the health of the app
       - name: Health check
         run: |
-          if [ -z "$STAGING_BASE_URL" ]; then
-            echo "STAGING_BASE_URL secret is not set"
-            exit 1
-          fi
-
+        
           until curl -fsS "$STAGING_BASE_URL/api/health"; do
             echo "Waiting for staging health endpoint..."
             sleep 5
