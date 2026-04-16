@@ -20,6 +20,7 @@ jobs:
     env:
       IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
       STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+      SOURCE_TAG: dev
 
     # 1. Login to Dockerhub
     steps:
@@ -30,14 +31,16 @@ jobs:
           password: ${{secrets.DOCKER_PASSWORD}}
 
       # 1.Pull the image 
-      - name: Pull Dev image By SHA
+      - name: Pull backend image by stable tag
         run: |
-          docker pull $IMAGE_REPO:${{ github.sha }}
+          docker pull $IMAGE_REPO:$SOURCE_TAG
 
       # 2.Tag the image 
       - name: Tag staging image 
         run: |
-          docker tag $IMAGE_REPO:${{ github.sha }} $IMAGE_REPO:staging
+          docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:staging
+          docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:latest
+          
       # 3.Push the stagged image 
       - name: Push Staging image
         run: |
