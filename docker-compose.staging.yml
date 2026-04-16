@@ -12,13 +12,11 @@
 # - secure env handling
 # - optimized performance
 
-# Compose se pull hoga but locally jo rehega wahi run hote rehega new image nahi ayega 
-
-# This is used in Production Deployment
+# This is used in Staging deploy 
 services:
 
   nginx:
-    image: deluxdeepak/scalex-frontend:prod
+    image: deluxdeepak/scalex-frontend:staging
     ports:
       - "80:80"
     depends_on:
@@ -28,34 +26,13 @@ services:
       - nginx_cache:/var/cache/nginx
 
   backend:
-    image: deluxdeepak/scalex-backend:prod
+    image: deluxdeepak/scalex-backend:staging
     depends_on:
       - mongo
       - redis
       - minio
     restart: always
     env_file: .env
-
-
-    # Injecting direct env in production 
-    # environment:
-    #   NODE_ENV: production
-    #   PORT: ${PORT}
-
-    #   MongoUri: ${MONGO_URL}
-    #   RedisUri: ${REDISH_URL}
-
-    #   # MinIO
-    #   MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-    #   MINIO_ACCESS_KEY: ${MINIO_ACCESS}
-    #   MINIO_SECRET_KEY: ${MINIO_SECRET}
-
-    #   STORAGE_BUCKET:  ${STORAGE_BUCKET}
-    #   FILE_BASE_URL:  ${FILE_BASE_URL}
-
-    #   # Auth
-    #   JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
-    #   JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
 
   mongo:
     image: mongo

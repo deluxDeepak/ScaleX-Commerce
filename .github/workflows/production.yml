@@ -1,0 +1,60 @@
+name: ScaleX-commerce To production
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  # After build and push 
+  Deploy-VPS:
+    name: DeployMent to Ec2
+    runs-on: ubuntu-latest
+    needs: build-Image
+
+    steps:
+      # 1. Login to Dockerhub
+      - name: Login to DockerHub
+        uses: docker/login-action@v4
+        with:
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
+
+      # 1.Pull the image 
+      - name: Pull Dev image By SHA
+        run: |
+          docker pull deluxdeepak/scalex-backend:${{ github.sha }}
+
+      # 2.Tag the image 
+      - name: Tag staging image 
+        run: |
+          docker tag deluxdeepak/scalex-backend:${{ github.sha }} deluxdeepak/scalex-backend:prod
+      # 3.Push the stagged image 
+      - name: Push Staging image
+        run: |
+          docker push deluxdeepak/scalex-backend:prod
+
+      # 4.Deploy to vps 
+      - name: Deploy via SSH 
+        uses: appleboy/ssh-action@v1
+        with:
+          # 1.login with credential 
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+
+          # 2.Run image through scripts 
+          script: |
+            cd app
+            docker compose pull
+            docker compose up -d
+
+      # Deployment completion message 
+      - name: Completion message 
+        run: echo Deployed to VPS sucessful😊✅
+
+
+
+
+        
+  
