@@ -17,6 +17,10 @@ jobs:
     name: Deploy to Ec2
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
+      STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
+
     # 1. Login to Dockerhub
     steps:
       - name: Login to DockerHub
@@ -28,16 +32,16 @@ jobs:
       # 1.Pull the image 
       - name: Pull Dev image By SHA
         run: |
-          docker pull deluxdeepak/scalex-backend:${{ github.sha }}
+          docker pull $IMAGE_REPO:${{ github.sha }}
 
       # 2.Tag the image 
       - name: Tag staging image 
         run: |
-          docker tag deluxdeepak/scalex-backend:${{ github.sha }} deluxdeepak/scalex-backend:staging
+          docker tag $IMAGE_REPO:${{ github.sha }} $IMAGE_REPO:staging
       # 3.Push the stagged image 
       - name: Push Staging image
         run: |
-          docker push deluxdeepak/scalex-backend:staging
+          docker push $IMAGE_REPO:staging
 
       # Deploy to vps 
       - name: Deploy via SSH to VPS
@@ -60,7 +64,16 @@ jobs:
         run: sleep 15
       # Check the health of the app
       - name: Health check
-        run: curl -f http://your-vps-ip/api/health
+        run: |
+          if [ -z "$STAGING_BASE_URL" ]; then
+            echo "STAGING_BASE_URL secret is not set"
+            exit 1
+          fi
+
+          until curl -fsS "$STAGING_BASE_URL/api/health"; do
+            echo "Waiting for staging health endpoint..."
+            sleep 5
+          done
         
       # Deployment completion message 
       - name: Completion message 
