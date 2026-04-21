@@ -51,7 +51,21 @@ services:
       - minio_data:/data
     networks:
       - ScaleX-Commerce
-  
+
+  backend:
+    build: .
+    container_name: ScaleX-commerceBackend
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env.docker.development
+    depends_on:
+      - redis
+      - mongo
+      - minio
+    networks:
+      - ScaleX-Commerce
+      
 volumes:
   minio_data:
   mongo_data:

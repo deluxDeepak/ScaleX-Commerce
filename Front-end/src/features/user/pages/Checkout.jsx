@@ -10,11 +10,8 @@ import AddAddressForm from '../components/AddAddressForm'
 const Checkout = () => {
     const { cartItems } = useCart();
     const { userAddress, deleteAddress } = useAddress();
-    console.log("User address", userAddress);
-
-    // const firstAdress = userAddress?.[0]?._id;
+    
     const [selectedId, setSelectedId] = useState(null);
-
     const [showForm, setShowForm] = useState(false);
 
 

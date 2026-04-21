@@ -108,6 +108,9 @@ To keep the project clean and modular, detailed documentation is separated:
 * 🎨 **Frontend (UI + Client Logic)**
   👉 [Frontend README](./Front-end/README.md)
 
+* 🤝 **Contribution Guide (Simple, Learning-Focused)**
+  👉 [Contributing Guide](./CONTRIBUTING.md)
+
 ---
 
 ## ⚙️ Tech Stack
@@ -135,9 +138,85 @@ To keep the project clean and modular, detailed documentation is separated:
 
 ---
 
-### 2. Quick start with Docker (recommended)
+### 2. Quick Setup
 
-This starts MongoDB, Redis, MinIO, the backend API and Nginx (serving the built frontend).
+```bash
+# 1) Clone and enter project
+git clone <your-repo-url>
+cd Scalex-commerce
+
+# 2) Install root dependencies
+npm install
+
+# 3) Install workspace dependencies
+cd Front-end && npm install
+cd ../Backend && npm install
+cd ..
+```
+
+After setup, choose one of the workflows below.
+
+---
+
+### 3. Fully Local Development
+
+```bash
+# Terminal 1
+cd Backend
+
+# Create local env file
+cp .env.example .env
+# On Windows PowerShell:
+# Copy-Item .env.example .env
+
+# Start API
+npm run dev
+```
+
+Start required dependencies (MongoDB, Redis, MinIO) separately, either with Docker containers or local installs.
+
+Optional: preload sample data.
+
+```bash
+cd Backend
+npm run seed
+```
+
+Seed creates sample:
+- Categories and subcategories
+- Products
+- Reviews
+- Users (including admin and seller)
+
+Health check:
+
+```bash
+curl http://localhost:4000/api/health
+```
+
+---
+
+### 4. Fully Docker-Based Development
+create env for docker development also .env.docker.development
+
+```bash
+# From project root
+docker compose -f Backend/docker-compose.development.yml up -d --build
+```
+
+This starts MongoDB, Redis, MinIO, backend API, and related local dev services.
+
+Check backend health:
+
+```bash
+curl http://localhost:4000/api/health
+```
+
+---
+
+### 5. Hybrid Setup (Backend Local + Services in Docker)
+
+This runs MongoDB, Redis, MinIO, backend API, and Nginx through Docker while keeping your code workflow flexible.
 
 ```bash
 # From project root
@@ -151,7 +230,7 @@ cp Backend/.env.docker.example Backend/.env.docker
 docker-compose up -d --build
 ```
 
-#### Seed sample data (inside Docker backend container)
+Seed sample data (inside Docker backend container):
 
 ```bash
 # From project root, after docker-compose is up
@@ -172,41 +251,7 @@ curl http://localhost/api/health
 
 ---
 
-### 3. Backend development (local, without Docker)
-
-```bash
-cd Backend
-
-# Create local env file
-cp .env.example .env
-# On Windows PowerShell:
-# Copy-Item .env.example .env
-
-npm install
-
-# (Optional) Start dependencies with Docker
-docker run -p 27017:27017 -d mongo
-docker run -p 6379:6379 -d redis
-docker run -p 9000:9000 -p 9001:9001 -d minio/minio server /data
-
-# Seed sample data
-npm run seed
-
-# Start dev server
-npm run dev
-```
-
-Backend runs on: http://localhost:4000
-
-To run backend tests locally:
-
-```bash
-npm test
-```
-
----
-
-### 4. Frontend development (local)
+### 7. Frontend Development (Local)
 
 ```bash
 cd Front-end
@@ -222,7 +267,7 @@ npm run dev
 
 Frontend dev server runs on: http://localhost:5173
 
-To run frontend tests:
+Run frontend tests:
 
 ```bash
 npm test
@@ -230,7 +275,7 @@ npm test
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing from Root
 
 ```bash
 # Full test suite (backend + frontend + e2e)
