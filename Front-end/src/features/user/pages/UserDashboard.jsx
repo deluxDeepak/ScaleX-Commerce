@@ -126,10 +126,7 @@ const EditProfile = () => {
 // ── MAIN COMPONENT ───────────────────────────────────────
 const UserDashboard = () => {
 
-  const { userProfile, loading, error } = useProfile();
-
-  console.log("User from dashboard is ", userProfile)
-  console.log("User error drd is ", error);
+  const { userProfile, } = useProfile();
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -148,7 +145,7 @@ const UserDashboard = () => {
           <div className="relative shrink-0">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600
               flex items-center justify-center text-white text-lg sm:text-xl font-bold tracking-tight select-none shadow-lg">
-              {userProfile?.profileImg ? userProfile?.profileImg : userProfile?.name.slice(0, 2)}
+              <img src={userProfile?.profileImg ? userProfile?.profileImg : userProfile?.name.slice(0, 2)} alt="" />
             </div>
             <span className="absolute bottom-0 right-0 w-3 h-3 sm:w-3.5 sm:h-3.5 bg-green-500
               rounded-full border-2 border-white shadow-sm" />
@@ -175,7 +172,7 @@ const UserDashboard = () => {
             ✏️ <span className="hidden sm:inline">Edit Profile</span><span className="sm:hidden">Edit</span>
           </button>
         </div>
-        {showEdit&&  <EditProfile/>}
+        {showEdit && <EditProfile />}
 
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
