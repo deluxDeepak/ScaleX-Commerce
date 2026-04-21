@@ -108,6 +108,9 @@ To keep the project clean and modular, detailed documentation is separated:
 * 🎨 **Frontend (UI + Client Logic)**
   👉 [Frontend README](./Front-end/README.md)
 
+* 🤝 **Contribution Guide (Simple, Learning-Focused)**
+  👉 [Contributing Guide](./CONTRIBUTING.md)
+
 ---
 
 ## ⚙️ Tech Stack
