@@ -17,8 +17,8 @@ const sidebar = [
 
 const UserSidebar = () => {
     return (
-        <aside className="fixed top-0 left-0 h-screen w-16 lg:w-64 bg-white border-r border-gray-100 z-40 flex flex-col shadow-sm">
-            <nav className="flex flex-col gap-4 lg:gap-1 p-2 lg:p-4 mt-32 lg:mt-20">
+        <aside className="fixed top-0 left-0 h-screen w-64 bg-white border-gray-100 flex flex-col shadow-sm transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+            <nav className="flex flex-col lg:gap-1 lg:p-4  lg:mt-20">
                 {sidebar.map((s) => {
                     const Icon = s.icon;
                     return (

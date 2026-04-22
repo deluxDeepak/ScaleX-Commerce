@@ -16,7 +16,7 @@ const UserLayout = () => {
             <UserSidebar />
 
             {/* Offset content by sidebar width: 64px on mobile, 256px on lg */}
-            <main className="ml-16 lg:ml-64 p-3 sm:p-4 lg:p-6 min-h-screen">
+            <main className="lg:ml-64 p-3 sm:p-4 lg:p-6 min-h-screen">
                 <Outlet />
             </main>
         </div>
