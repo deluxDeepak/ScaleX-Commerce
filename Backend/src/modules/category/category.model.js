@@ -46,10 +46,12 @@ const CategorySchema = new mongoose.Schema(
             default: true,       // admin can disable a category
         },
         // subCategories: [SubCategorySchema],  // embedded inside category
-        subCategories: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "SubCategory"
-        }],  
+        subCategories: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SubCategory",
+            }
+        ],
     },
     { timestamps: true }
 );
