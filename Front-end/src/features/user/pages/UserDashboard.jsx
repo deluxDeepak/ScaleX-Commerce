@@ -11,13 +11,6 @@ const stats = [
   { label: 'Total Spent', value: '₹84k', change: '-₹2k vs last month', up: false, icon: '₹' },
 ]
 
-const naviagate = [
-  { label: '', link: '', icon: '' },
-  { label: '', link: '', icon: '' },
-  { label: '', link: '', icon: '' },
-  { label: '', link: '', icon: '' }
-]
-
 const wishlistItems = [
   { emoji: '👟', name: 'Nike Air Max 270', sub: 'Size: 42 · Black', price: '₹8,499' },
   { emoji: '🎧', name: 'Sony WH-1000XM5', sub: 'Wireless Headphones', price: '₹24,990' },
