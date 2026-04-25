@@ -45,11 +45,11 @@ const ProductDetails = ({ product, reviews }) => {
             <div className="flex items-end gap-4">
                 <div className="flex items-center gap-1 text-gray-900 font-bold text-3xl">
                     <IndianRupee size={22} />
-                    {product.price.toLocaleString('en-IN')}
+                    {product.price?.toLocaleString('en-IN')}
                 </div>
                 <div className="flex line-through items-center gap-1 text-gray-400 font-medium text-lg mb-0.5">
                     <IndianRupee size={16} />
-                    {product.oldPrice.toLocaleString('en-IN')}
+                    {product.oldPrice?.toLocaleString('en-IN')}
                 </div>
                 {product.oldPrice && (
                     <span className="mb-0.5 text-sm font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">

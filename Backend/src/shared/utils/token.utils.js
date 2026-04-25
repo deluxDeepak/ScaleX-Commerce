@@ -20,7 +20,7 @@ const generateAccessToken = (data) => {
         role: data.role,
         name: data.name
     }, config.JWT_ACCESS_SECRET, {
-        expiresIn: "15m",
+        expiresIn: "50m",
     })
 
 

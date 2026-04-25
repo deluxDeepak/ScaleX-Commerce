@@ -1,26 +1,26 @@
-- Seller dashboard 
-    - fetch account 
-    - update account 
-    - delete account 
-    - update its profile 
-    - orders fetch 
-        - completed 
-        - incompleted 
-        - progress 
-    - order accept 
-    - order cancel 
-    - order tracking 
+const { getDashboardData, getSellerProfile, updateSellerProfile, deleteSellerAccount } = require('./seller.controller');
 
-    - Account details 
-    - Total earnings
-    - Products listed by the seller 
-    - Products in stocks and out of stocks
-    - update the status of the prodcts (admin or seller)
+const router = require('express').Router();
 
-    - Add Products
-    - Update Products(Picture ,Description,name ,number of stocks)
-    - delete Products
+/* 
+Seller dashboard ==============
+    - Total earning 
+    - Total Product count
+    - Total orders 
+    - in stock /out of stock 
+
+*/
+
+router.get("/dashboard", getDashboardData);
 
 
 
-- 
+//======== Profile management ===================
+router.get("/profile", getSellerProfile);        // fetch account
+router.patch("/profile", updateSellerProfile);  // update account/profile
+router.delete("/profile", deleteSellerAccount); // delete account
+
+
+// =====Order management in order module  ==========
+
+
