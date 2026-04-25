@@ -1,6 +1,6 @@
 import React, { Suspense, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import SidebarSeller from '../features/seller/components/SidebarSeller'
+import SidebarSeller, { MobileSidebar } from '../features/seller/components/SidebarSeller'
 import SellerHeader from '../features/seller/components/Sellerheader'
 
 const SellerLayout = () => {
@@ -19,23 +19,20 @@ const SellerLayout = () => {
             {/* Body */}
             <div className="flex flex-1 overflow-hidden">
 
-                {/* Sidebar */}
+                {/* Sidebar (desktop only) */}
                 <SidebarSeller isSidebarOpen={isSidebarOpen} />
 
                 {/* Content */}
-                <Suspense
-                    fallback={
-                        <div className="p-6 text-sm text-gray-500">
-                            Loading page...
-                        </div>
-                    }
-                >
-                    <main className="flex-1 overflow-y-auto">
+                <Suspense fallback={<div className="p-6 text-sm text-gray-500">Loading page...</div>}>
+                    <main className="flex-1 overflow-y-auto pb-16">
                         <Outlet />
                     </main>
                 </Suspense>
 
             </div>
+
+            {/* ✅ Mobile Bottom Navigation */}
+            <MobileSidebar />
 
         </div>
     )

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProfile } from '../hooks/user.hook'
+import { Heart } from 'lucide-react'
 
 // ── DATA ────────────────────────────────────────────────
 const stats = [
@@ -29,6 +30,12 @@ const quickLinks = [
   { icon: '💳', label: 'Transactions', bg: '#fdf8ec', link: "admin/support" },
   { icon: '🎧', label: 'Support', bg: '#f0f0fb' },
   { icon: '🔔', label: 'Notifications', bg: '#fdf0ec' },
+]
+const userLinks = [
+  { icon: '🛒', label: 'My Cart', bg: '#fff0eb', link: "/user/cart/product" },
+  { icon: '📍', label: 'Saved Addresses', bg: '#ecf5f0', link: "/user/saveAdress" },
+  { icon: '📍', label: 'Wishlist', bg: '#ecf5f0', link: "/user/wishlist/product" },
+  { icon: '📍', label: 'Orders', bg: '#ecf5f0', link: "/user/orders/product" },
 ]
 
 // ── SUB-COMPONENTS ───────────────────────────────────────
@@ -174,6 +181,11 @@ const UserDashboard = () => {
         </div>
         {showEdit && <EditProfile />}
 
+        {/* Usernavigations in mobile View  */}
+        <div className="flex lg:hidden flex-col gap-1.5 sm:gap-2">
+          {userLinks.map(l => <QuickLink key={l.label} {...l} />)}
+        </div>
+
         {/* ── Stats ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
           {stats.map(s => <StatCard key={s.label} {...s} />)}
@@ -211,7 +223,6 @@ const UserDashboard = () => {
 
           {/* RIGHT: Quick Links + Saved Card */}
           <QuickAction />
-
         </div>
       </div>
     </div>

@@ -19,11 +19,11 @@ const CategoryProvider = ({ children }) => {
                 setError("");
                 const resCategory = await getCategories();
                 setCategory(resCategory);
-                console.log("Categoris is ", resCategory);
+                console.log("Categoris is from ", resCategory);
                 
                 const resSubCategory = await getSubCategories();
+                console.log("Subcategories test",resSubCategory)
                 setSubCategory(resSubCategory);
-                console.log("Subegoris is ", resSubCategory);
 
             } catch (error) {
                 setError(error.message || "Something went wrong wait till");

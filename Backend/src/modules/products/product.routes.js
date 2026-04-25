@@ -27,7 +27,7 @@ router.get("/filter", getProductsFilter);
 router.get("/suggestion", getProductsSuggestion); //header 
 router.get("/:id", getProductById);
 
-
+// Product logic will be here but controller is seller 
 // ===== SELLER =====
 // middleare=seller 
 

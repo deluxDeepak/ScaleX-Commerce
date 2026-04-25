@@ -71,8 +71,9 @@ const getAllSubCategoryByCategoryIdService = async (categoryId) => {
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
         throw new ValidationError("Category must be an Object id ");
     }
-    const category = await findAllSubcategoryByCatId(categoryId);
-    const subcategory = category?.subCategories || []
+    const subcategory = await findAllSubcategoryByCatId(categoryId);
+    console.log("Subcategory are ",subcategory);
+    
     if (!Array.isArray(subcategory) || subcategory.length === 0) {
         return [];
     }

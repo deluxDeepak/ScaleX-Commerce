@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // Snapshot store karte hai direct product store nahi karte hai 
 const OrderItemSchema = new mongoose.Schema({
-    product: {
+    productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
     },
@@ -23,7 +23,7 @@ const OrderSchema = new mongoose.Schema(
         totalPrice: Number,
         status: {
             type: String,
-            enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
+            enum: ["pending", "paid", "shipped", "delivered", "accepted", "cancelled"],
             default: "pending",
         },
 
@@ -47,4 +47,5 @@ const OrderSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("Order", OrderSchema);
+const Order = mongoose.model("Order", OrderSchema);
+module.exports = Order;

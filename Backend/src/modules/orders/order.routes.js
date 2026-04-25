@@ -1,18 +1,69 @@
 const router = require("express").Router();
 
-// ========================Cycle chalta hai ============================
+const authenticate = require("../../middlewares/auth.middleware");
+const checkRole = require("../../middlewares/role.middleware");
+const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, acceptOrder, cancelOrder, updateOrderTracking, getOrdersStatus } = require("./order.controller");
 
-// auth middleware from there we get user 
-// User routes check =======================================
-// router.get("/", auth, getMyOrders);      // current user orders
-// router.post("/", auth, createOrder);    // create order
-// router.get("/:id", auth, getOrderById); // single order
-// router.patch("/:id/cancel", auth, cancelOrder);
+// ================= USER =================
 
-// // Seller Orders ===========================================
-// router.get("/seller", auth, getSellerOrders);
-// router.patch("/:id/ship", auth, shipOrder);
-// router.patch("/:id/deliver", auth, deliverOrder);
+// place order ->Done
+router.post("/", authenticate, createOrder);
+
+
+// get my orders (user) ->Done 
+router.get("/my", authenticate, checkRole("customer"), getMyOrders);
+
+// ================= SELLER =================
+
+// seller orders  -->Done
+router.get(
+  "/seller",
+  authenticate,
+  checkRole("seller"),
+  getSellerOrders
+);
+
+// ================= COMMON =================
+
+// get single order (user + seller) -->Done
+router.get("/:orderId", authenticate, getSingleOrder);
+
+// ================= ACTIONS =================
+
+// seller actions
+router.patch(
+  "/:orderId/accept",
+  authenticate,
+  checkRole("seller"),
+  acceptOrder
+);
+
+router.patch(
+  "/:orderId/cancel",
+  authenticate,
+  cancelOrder // both user + seller (logic inside controller)
+);
+
+router.patch(
+  "/:orderId/track",
+  authenticate,
+  checkRole("seller"),
+  updateOrderTracking
+);
+
+// ============= FILTER ============
+// query based filtering (BEST PRACTICE)
+// - handle different orders like accepted ,processing ,cancelled
+router.get(
+  "/",
+  authenticate,
+  getOrdersStatus // handles ?status=, ?role= etc
+);
+
+
+
+
+
 
 // // admin Orders ============================================
 // router.get("/all", auth, adminGetAllOrders);

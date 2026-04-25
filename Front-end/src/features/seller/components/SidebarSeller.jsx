@@ -3,30 +3,73 @@ import UserProfile from "./UserProfile";
 import { userProfile1 } from "../../../assets";
 import { LayoutDashboard, Package, ShoppingBag, ChevronRight } from "lucide-react";
 
+
+const sidebar = [
+    { name: "Dashboard", link: "/seller/dashboard", icon: LayoutDashboard },
+    { name: "Products", link: "/seller/product", icon: Package },
+    { name: "Orders", link: "/seller/order", icon: ShoppingBag },
+    { name: "Add Products", link: "/seller/addProduct", icon: ShoppingBag },
+];
+
+const user = {
+    id: 1,
+    name: "Deepak",
+    location: "Ghaziabad",
+    isverified: true,
+    image: userProfile1,
+};
+
+/*
+    <NavLink
+        to="/home"
+        className={({ isActive }) =>
+            isActive ? "text-blue-500" : "text-gray-500"
+        }
+    >
+        {({ isActive }) => (
+            <span>{isActive ? "Active Home" : "Home"}</span>
+        )}
+    </NavLink>
+*/
+export const MobileSidebar = () => {
+    return (
+        <aside className="fixed bottom-0 left-0 w-full z-50 pt-3 bg-white border-t border-gray-100 shadow-md lg:hidden">
+            <nav className="flex justify-around items-center py-2">
+                {sidebar.map((s) => {
+                    const Icon = s.icon;
+                    return (
+                        <NavLink
+                            key={s.link}
+                            to={s.link}
+                            className={({ isActive }) =>
+                                `flex flex-col items-center text-[10px] p-2 rounded-xl   ${isActive
+                                    ? "text-blue-600 border-blue-60 bg-gray-100"
+                                    : "text-gray-400 hover:bg-gray-100"
+                                }`
+                            }
+                        >
+                            {({ isActive }) => (
+                                <>
+                                    <Icon size={20} className={isActive ? "text-blue-500" : "text-gray-400 group-hover:text-gray-600"} />
+                                    <span>{s.name}</span>
+                                </>
+                            )}
+                        </NavLink>
+                    );
+                })}
+            </nav>
+        </aside>
+    );
+};
 const SidebarSeller = ({ isSidebarOpen }) => {
 
-    const sidebar = [
-        { name: "Dashboard", link: "/seller/dashboard", icon: LayoutDashboard },
-        { name: "Products",  link: "/seller/product",   icon: Package },
-        { name: "Orders",    link: "/seller/order",     icon: ShoppingBag },
-        { name: "Add Products",    link: "/seller/addProduct",     icon: ShoppingBag },
-    ];
-
-    const user = {
-        id: 1,
-        name: "Deepak",
-        location: "Ghaziabad",
-        isverified: true,
-        image: userProfile1,
-    };
-
     return (
-        <aside className={`flex flex-col min-h-screen sticky top-0 bg-white border-r border-gray-100 shadow-sm overflow-hidden transition-all duration-300 ease-in-out
+        <aside className={`hidden lg:flex flex-col min-h-screen sticky top-0 bg-white border-r border-gray-100 shadow-sm overflow-hidden transition-all duration-300 ease-in-out
             ${isSidebarOpen ? "w-64 md:w-72 opacity-100" : "w-0 opacity-0"}`
         }>
 
             {/* User Profile */}
-            <div className="border-b border-gray-100 min-w-[256px] md:min-w-[288px]">
+            <div className="border-b border-gray-100 md:min-w-[288px]">
                 <UserProfile user={user} />
             </div>
 
@@ -38,11 +81,9 @@ const SidebarSeller = ({ isSidebarOpen }) => {
                         <NavLink
                             key={s.link}
                             to={s.link}
-                            className={({ isActive }) =>
-                                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group border
-                                ${isActive
-                                    ? "bg-blue-50 text-blue-600 border-blue-100"
-                                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-800 border-transparent"
+                            className={({ isActive }) => `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group border ${isActive
+                                ? "bg-blue-50 text-blue-600 border-blue-100"
+                                : "text-gray-500 hover:bg-gray-50 hover:text-gray-800 border-transparent"
                                 }`
                             }
                         >
