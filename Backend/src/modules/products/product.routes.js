@@ -23,6 +23,8 @@ const {
 
 
 // ===== BASIC =====
+// Seller 
+router.get("/my", authenticate, checkRole("seller"), getMyProducts);
 
 router.get("/", getProducts);
 router.get("/filter", getProductsFilter);
@@ -40,6 +42,7 @@ router.post("/",
   upload.multipleImage,
   createProduct
 );
+
 
 
 router.patch(
@@ -65,7 +68,7 @@ router.delete(
   deleteProduct
 );
 
-router.get("/my", authenticate, checkRole("seller"), getMyProducts);
+
 
 
 

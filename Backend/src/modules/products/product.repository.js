@@ -36,6 +36,11 @@ const findProductByid = async (id) => {
     return await Product.findById(id).populate("category subCategory").lean();
 }
 
+// Seller product 
+const findProductBySellerId = async (sellerId) => {
+    return await Product.find({ seller: sellerId }).limit(10).lean()
+}
+
 // All can be done by single api also 
 // All category match return filter baad me 
 const findProductByCategoryId = async (catId) => {
@@ -47,11 +52,6 @@ const findProductBySubCategoryId = async (subId) => {
     return await Product.find({
         subCategory: new mongoose.Types.ObjectId(subId)
     }).lean();
-}
-const findProductBySellerId = async (sellerId) => {
-    return await Product.find(
-        { seller: sellerId }
-    ).lean();
 }
 const updateProductById = async (id, data) => {
     return await Product.findByIdAndUpdate(id, data, { new: true });    //send the new product updated 

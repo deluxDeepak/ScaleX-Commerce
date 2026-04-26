@@ -25,6 +25,10 @@ const productSchema = joi.object({
         "string.empty": "Category is required",
     }),
 
+    subCategory: joi.string().trim().required().messages({
+        "string.empty": "Subcategory is required",
+    }),
+
     brand: joi.string().trim().allow("", null),
 
     stock: joi.number().integer().min(0).default(0).messages({
@@ -41,7 +45,7 @@ const productSchema = joi.object({
 
 // All the fields are optional here 
 const updateProductSchema = productSchema.fork(
-    ["title", "description", "price", "category"],
+    ["title", "description", "price", "category", "subCategory"],
     (field) => field.optional()
 );
 
