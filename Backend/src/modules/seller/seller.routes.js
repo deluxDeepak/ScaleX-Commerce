@@ -1,4 +1,5 @@
-const { getDashboardData, getSellerProfile, updateSellerProfile, deleteSellerAccount } = require('./seller.controller');
+const authenticate = require('../../middlewares/auth.middleware');
+const { getDashboardData, getSellerProfile, updateSellerProfile, deleteSellerAccount, createSellerProfile } = require('./seller.controller');
 
 const router = require('express').Router();
 
@@ -16,11 +17,17 @@ router.get("/dashboard", getDashboardData);
 
 
 //======== Profile management ===================
-router.get("/profile", getSellerProfile);        // fetch account
-router.patch("/profile", updateSellerProfile);  // update account/profile
-router.delete("/profile", deleteSellerAccount); // delete account
+router.post("/profile", authenticate, createSellerProfile);    // user become seller -->done
+
+router.get("/profile", authenticate, getSellerProfile);        // fetch account -->done
+
+router.patch("/profile", authenticate, updateSellerProfile);  // update account/profile
+
+router.delete("/profile", authenticate, deleteSellerAccount); // delete account
 
 
 // =====Order management in order module  ==========
+
+module.exports = router;
 
 

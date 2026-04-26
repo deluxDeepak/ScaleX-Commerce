@@ -1,6 +1,6 @@
 const joi = require("joi");
 
-// Create a schema
+// Create a Body schema
 const productSchema = joi.object({
     title: joi.string().trim().min(2).max(120).required().messages({
         "string.base": "Title must be a string",
@@ -39,23 +39,76 @@ const productSchema = joi.object({
     isActive: joi.boolean().default(true),
 });
 
-// Create middleware (Make generic for resue the middleware )
-// const validateProduct = (req, res, next) => {
-//     const { error, value } = productSchema.validate(req.body, {
-//         abortEarly: false,
-//         stripUnknown: true,
-//     });
+// All the fields are optional here 
+const updateProductSchema = productSchema.fork(
+    ["title", "description", "price", "category"],
+    (field) => field.optional()
+);
 
-//     if (error) {
-//         return res.status(400).json({
-//             message: "Validation error",
-//             errors: error.details.map((d) => d.message),
-//         });
-//     }
+// Create a params Schema 
+const productParamsSchema = joi.object({
+    productId: joi
+        .string()
+        .length(24) // MongoDB ObjectId 
+        .hex()
+        .required()
+        .messages({
+            "string.length": "Invalid product ID",
+            "any.required": "Product ID is required",
+        }),
+})
 
-//     req.body = value;
-//     next();
-// };
+// Create a query schema -->get products 
+const productQuerySchema = joi.object({
+    category: joi.string().trim(),
+    page: joi.number().integer().min(1).default(1),
+    limit: joi.number().integer().min(1).max(100).default(10),
+    sort: joi.string().valid("price_asc", "price_desc", "newest"),
+    minPrice: joi.number().min(0),
+    maxPrice: joi.number().min(0),
+});
 
-module.exports = productSchema
+
+
+// Updated all fileds optional bana dega 
+/*
+    schema.describe() -->Returns schema internal struture
+    {
+        "type": "object",
+        "keys": {
+            "title": {
+            "type": "string",
+            "flags": { "presence": "required" }
+            },
+            "price": {
+            "type": "number"
+            }
+        }
+    }
+
+    schema.describe().keys -->Return the feilds
+    {
+        title: {...},
+        description: {...},
+        price: {...},
+        category: {...}
+    }
+
+
+    Object.keys(bodySchema.describe().keys)--->convert objects into array
+    ["title", "description", "price", "category", "stock", ...]
+
+*/
+const updateProductSchemaAllFields = productSchema.fork(
+    Object.keys(productSchema.describe().keys),
+    (field) => field.optional()
+);
+
+module.exports = {
+    productSchema,
+    updateProductSchema,
+    productParamsSchema,
+    productQuerySchema,
+    updateProductSchemaAllFields
+}
 

@@ -4,7 +4,7 @@ const upload = require("../../core/upload/upload.middleware");
 const authenticate = require("../../middlewares/auth.middleware");
 const checkRole = require("../../middlewares/role.middleware");
 const validate = require("../../middlewares/validate.middleware");
-const productSchema = require("./product.validator");
+const { productSchema, updateProductSchema, productParamsSchema, } = require("./product.validator");
 // const checkProductOwner = require("./product.middleware");
 
 const {
@@ -34,7 +34,11 @@ router.get("/:id", getProductById);
 // middleare=seller 
 
 router.post("/",
-  authenticate, checkRole(["seller"]), validate(productSchema), upload.multipleImage, createProduct
+  authenticate,
+  checkRole(["seller"]),
+  validate(productSchema, "body"),
+  upload.multipleImage,
+  createProduct
 );
 
 
@@ -42,6 +46,8 @@ router.patch(
   "/:id",
   authenticate,
   checkRole("seller"),
+  validate(productParamsSchema, "params"),
+  validate(updateProductSchema, "body"),
   // checkProductOwner,
   // images
   // features
@@ -54,6 +60,7 @@ router.delete(
   "/:id",
   authenticate,
   checkRole("seller"),
+  validate(productParamsSchema, "params"),
   // checkProductOwner,
   deleteProduct
 );
