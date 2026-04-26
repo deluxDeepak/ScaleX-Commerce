@@ -21,6 +21,7 @@ const createOrderService = async (items, userId, address, paymentMethod) => {
             product: product._id,
             name: product.name,
             price: product.price,
+            seller: product.seller,
             qty: item.qty,
             image: product.image,
         };
@@ -52,6 +53,27 @@ const getMyOrdersService = async (userId) => {
 
     const orders = await orderRepo.findMyOrders(userId);
     return orders || []
+}
+
+const getSellerOrdersService = async (sellerId, status) => {
+    if (!sellerId) {
+        throw new ValidationError("Seller id is required");
+    }
+    // 1.Find the Order by seller id store in document
+    const orders = await orderRepo.findOrderBySellerID(sellerId, status);
+    console.log("Orders get by the seller", orders);
+    /*
+        Seller 1 and seller 2 included 
+        items: [
+            { productId: A, seller: seller1 },
+            { productId: B, seller: seller2 }
+        ]
+    */
+
+    if (!orders || orders.length === 0) {
+        return [];
+    }
+    return orders || [];
 }
 
 const getSingleOrderService = async (orderId, userId) => {
@@ -188,6 +210,7 @@ const getOrdersStatusService = async (userId, role, status) => {
 module.exports = {
     createOrderService,
     getMyOrdersService,
+    getSellerOrdersService,
     getSingleOrderService,
     acceptOrderService,
     cancelOrderService,

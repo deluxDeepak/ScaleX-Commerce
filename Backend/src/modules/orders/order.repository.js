@@ -15,6 +15,31 @@ const findOrders = async (query) => {
 
 }
 
+const findOrderBySellerID = async (sellerId, status) => {
+    const query = { "items.seller": sellerId };
+
+    if (status) {
+        query.status = status;
+    }
+
+    return Order.find(query);
+}
+
+const findSellerOrdersByProductIds = async (productIds, status) => {
+    const query = {
+        $or: [
+            { "items.productId": { $in: productIds } },
+            { "items.product": { $in: productIds } },
+        ],
+    };
+
+    if (status) {
+        query.status = status;
+    }
+
+    return Order.find(query);
+}
+
 
 
 const findOrderById = async (orderId) => {
@@ -35,6 +60,8 @@ module.exports = {
     findOrderById,
     findOneOrder,
     updateOrderById,
-    findOrders
+    findOrders,
+    findSellerOrdersByProductIds,
+    findOrderBySellerID,
 
 }
