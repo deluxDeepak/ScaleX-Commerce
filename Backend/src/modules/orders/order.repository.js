@@ -23,8 +23,8 @@ const findOrders = async (query) => {
 const findOrderBySellerID = async (sellerId, status) => {
     const query = { "items.seller": sellerId };
 
-    if (status) {
-        query.status = status;
+    if (typeof status === "string" && status.trim() !== "") {
+        query.status = { $eq: status.trim() };
     }
 
     return Order.find(query);
@@ -38,8 +38,8 @@ const findSellerOrdersByProductIds = async (productIds, status) => {
         ],
     };
 
-    if (status) {
-        query.status = status;
+    if (typeof status === "string" && status.trim() !== "") {
+        query.status = { $eq: status.trim() };
     }
 
     return Order.find(query);
