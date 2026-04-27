@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const logger = require("../../core/logger/logger");
 const DatabaseError = require("../../shared/errors/DatabaseError");
 const ValidationError = require("../../shared/errors/ValidationError");
-const { findAllProduct, findProductByid, createProduct, updateProductById, deleteProductById, updateProductImg, deleteProductImg, findProductBySellerId, findFilterProduct, findProductSuggestion } = require("./product.repository");
+const { findAllProduct, findProductByid, createProduct, updateProductById, deleteProductById, updateProductImg, deleteProductImg, findProductBySellerId, findFilterProduct, findProductSuggestion, updateStock } = require("./product.repository");
+const { NotfoundError } = require("../../shared/errors");
 
 const getAllProductsService = async (params) => {
 
@@ -162,6 +163,21 @@ const createProductService = async (data, urls = []) => {
     }
 }
 
+// Usign transation in mongodb 
+const reduceStockService = async (productId, qty,type, session) => {
+    const product = await findProductByid(productId);
+    if (!product) {
+        throw new NotfoundError("Product not found");
+    }
+
+    if (product.stock < qty) {
+        throw new ValidationError("Product is out of Stock")
+    }
+
+    const result = await updateStock(productId, type, qty, session);
+    return result;
+}
+
 const updateProductService = async (id, data) => {
     // verify the data 
 
@@ -294,6 +310,7 @@ module.exports = {
     createProductService,
     updateProductService,
     deleteProductService,
+    reduceStockService,
 
     // Image 
     addProductImageService,

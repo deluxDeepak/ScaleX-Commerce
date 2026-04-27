@@ -7,6 +7,8 @@ const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, acceptOrder, 
 // ================= USER =================
 
 // place order ->Done
+// Service to Service call to reduce the stock 
+// product service call to reduce the stock 
 router.post("/", authenticate, createOrder);
 
 

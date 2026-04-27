@@ -1,7 +1,12 @@
 const Order = require("./order.model")
 
-const createOrder = async (data) => {
-    return Order.create(data);
+// Single object (NO session) 
+// Transactions internally MongoDB ke insertMany pattern pe based hote hain
+// create([data])  ---> array  ---> bulk / transaction safe
+// Internally treated as bulk insert 
+const createOrder = async (data, session) => {
+    const [order] = await Order.create([data], { session });
+    return order;
 }
 
 const findMyOrders = async (userId) => {

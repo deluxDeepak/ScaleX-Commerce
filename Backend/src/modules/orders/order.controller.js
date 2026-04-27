@@ -8,7 +8,7 @@ const createOrder = async (req, res) => {
     const { items, address, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
-        res.status(400).json({ success: false, message: "No items in order " })
+        return res.status(400).json({ success: false, message: "No items in order " })
     }
 
     try {
