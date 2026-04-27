@@ -97,7 +97,7 @@ const updateUserRefreshToken = async (userId, refreshToken) => {
 const updateUserPasswordToken = async (email, resetToken, resetTokenExpiry) => {
 
     return await User.findOneAndUpdate(
-        { email },
+        { email: { $eq: email } },
         { $set: { passwordResetToken: resetToken, passwordResetExpiry: resetTokenExpiry } },
         { new: true }
 
