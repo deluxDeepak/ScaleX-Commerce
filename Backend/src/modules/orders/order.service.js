@@ -1,48 +1,81 @@
-const { DatabaseError, ValidationError, NotfoundError, AuthError } = require("../../shared/errors");
-const { findProductByid } = require("../products/product.repository")
+const { default: mongoose } = require("mongoose");
+const logger = require("../../core/logger/logger");
+const { ValidationError, NotfoundError, AuthError } = require("../../shared/errors");
+const { reduceStockService } = require("../products/product.service");
 const orderRepo = require("./order.repository");
 
 
-const createOrderService = async (items, userId, address, paymentMethod) => {
-    // ======Create snapShot =======
-    // Fetch the product and create sanpshot 
+const isTransactionUnsupportedError = (error) => {
+    return (
+        error?.code === 20
+        || error?.codeName === "IllegalOperation"
+        || error?.errorResponse?.code === 20
+        || error?.errorResponse?.codeName === "IllegalOperation"
+    );
+};
 
+const buildOrder = async (items, userId, address, paymentMethod, session = null) => {
     const orderItems = [];
     let totalPrice = 0;
-    for (let item of items) {
-        // 1.Check if the product is persent or not 
-        const product = await findProductByid(item.productId);
-        if (!product) {
-            throw new DatabaseError("Product is not persent");
-        }
 
-        // Create a sanpshot 
+    for (const item of items) {
+        const updatedProduct = await reduceStockService(item.productId, item.qty, "decrease", session);
+
+        logger.info({ updatedProduct }, "Product stock reduced ");
+
         const orderItem = {
-            product: product._id,
-            name: product.name,
-            price: product.price,
+            product: updatedProduct._id,
+            name: updatedProduct.name,
+            price: updatedProduct.price,
+            seller: updatedProduct.seller,
             qty: item.qty,
-            image: product.image,
+            image: updatedProduct.image,
         };
 
-        totalPrice += product.price * item.qty
-
-
+        totalPrice += updatedProduct.price * item.qty;
         orderItems.push(orderItem);
     }
 
-    // Now create the order 
     const orderSummary = {
         user: userId,
         items: orderItems,
         totalPrice,
         address,
         paymentMethod,
+    };
+
+    return orderRepo.createOrder(orderSummary, session);
+};
+
+
+// ====Using session ===========
+const createOrderService = async (items, userId, address, paymentMethod) => {
+    let session;
+    try {
+        session = await mongoose.startSession();
+        session.startTransaction();
+
+        const order = await buildOrder(items, userId, address, paymentMethod, session);
+        await session.commitTransaction();
+        return order;
+    } catch (error) {
+        if (session && session.inTransaction()) {
+            await session.abortTransaction();
+        }
+
+        // Standalone Mongo does not support transactions; retry without session.
+        if (isTransactionUnsupportedError(error)) {
+            logger.warn({ error }, "Transactions unsupported, retrying order creation without transaction");
+            return buildOrder(items, userId, address, paymentMethod);
+        }
+
+        throw error;
+    } finally {
+        if (session) {
+            session.endSession();
+        }
+
     }
-
-    const order = await orderRepo.createOrder(orderSummary);
-
-    return order;
 }
 
 const getMyOrdersService = async (userId) => {
@@ -52,6 +85,27 @@ const getMyOrdersService = async (userId) => {
 
     const orders = await orderRepo.findMyOrders(userId);
     return orders || []
+}
+
+const getSellerOrdersService = async (sellerId, status) => {
+    if (!sellerId) {
+        throw new ValidationError("Seller id is required");
+    }
+    // 1.Find the Order by seller id store in document
+    const orders = await orderRepo.findOrderBySellerID(sellerId, status);
+    console.log("Orders get by the seller", orders);
+    /*
+        Seller 1 and seller 2 included 
+        items: [
+            { productId: A, seller: seller1 },
+            { productId: B, seller: seller2 }
+        ]
+    */
+
+    if (!orders || orders.length === 0) {
+        return [];
+    }
+    return orders || [];
 }
 
 const getSingleOrderService = async (orderId, userId) => {
@@ -188,6 +242,7 @@ const getOrdersStatusService = async (userId, role, status) => {
 module.exports = {
     createOrderService,
     getMyOrdersService,
+    getSellerOrdersService,
     getSingleOrderService,
     acceptOrderService,
     cancelOrderService,

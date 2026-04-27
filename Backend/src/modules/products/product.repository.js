@@ -36,6 +36,11 @@ const findProductByid = async (id) => {
     return await Product.findById(id).populate("category subCategory").lean();
 }
 
+// Seller product 
+const findProductBySellerId = async (sellerId) => {
+    return await Product.find({ seller: sellerId }).limit(10).lean()
+}
+
 // All can be done by single api also 
 // All category match return filter baad me 
 const findProductByCategoryId = async (catId) => {
@@ -48,15 +53,39 @@ const findProductBySubCategoryId = async (subId) => {
         subCategory: new mongoose.Types.ObjectId(subId)
     }).lean();
 }
-const findProductBySellerId = async (sellerId) => {
-    return await Product.find(
-        { seller: sellerId }
-    ).lean();
-}
 const updateProductById = async (id, data) => {
     return await Product.findByIdAndUpdate(id, data, { new: true });    //send the new product updated 
 
 }
+
+// product.service.js
+const updateStock = async (productId, type = "decrese", qty, session) => {
+    if (type === "decrease") {
+        const updated = await Product.findOneAndUpdate({
+            _id: productId,
+            //for two user in one time important
+            stock: { $gte: qty }    
+        },
+            { $inc: { stock: -qty } },
+            { returnDocument: "after", session }
+        );
+
+        if (!updated) {
+            throw new Error("Insufficient stock");
+        }
+
+        return updated;
+    }
+
+    // increase case
+    return Product.findByIdAndUpdate(
+        productId,
+        { $inc: { stock: qty } },
+        { new: true, session }
+    );
+
+}
+
 const deleteProductById = async (id) => {
     return await Product.findByIdAndDelete(id);
 
@@ -101,6 +130,7 @@ module.exports = {
     findProductBySellerId,
     createProduct,
     updateProductById,
+    updateStock,
     deleteProductById,
 
     // Images 

@@ -6,6 +6,10 @@ const OrderItemSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
     },
+    seller:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
+    },
     name: String,   //history --new nahi (seller change the price and different)
     price: Number,  //history --new nahi 
     qty: Number,    //history --new nahi

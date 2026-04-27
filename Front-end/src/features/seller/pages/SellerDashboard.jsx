@@ -1,160 +1,190 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../../../components/ui/Button"
+import Button from "../../../components/ui/Button";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products"
+import { products } from "../data/products";
 
+// ===================== DATA =====================
 const stats = [
-  { label: 'Total Revenue', value: '$24,530', change: '+12.4%', up: true, icon: '₹' },
-  { label: 'Orders Today', value: '38', change: '+5 today', up: true, icon: '📦' },
-  { label: 'Active Listings', value: '124', change: '-2 this week', up: false, icon: '🏷️' },
-  { label: 'Avg. Rating', value: '4.6', change: '+0.2', up: true, icon: '⭐' },
-]
+  { label: "Total Revenue", value: "$24,530", change: "+12.4%", up: true, icon: "₹" },
+  { label: "Orders Today", value: "38", change: "+5 today", up: true, icon: "📦" },
+  { label: "Active Listings", value: "124", change: "-2 this week", up: false, icon: "🏷️" },
+  { label: "Avg. Rating", value: "4.6", change: "+0.2", up: true, icon: "⭐" },
+];
 
 const recentProducts = products.filter((p) => p.section === "Trending");
 
+// ===================== HEADER =====================
+const SellerHeader = () => {
+  const navigate = useNavigate();
+
+  return (
+    <header className="sticky top-0 z-10 bg-white border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div>
+          <h1 className="text-base sm:text-lg font-semibold text-gray-900">
+            Dashboard
+          </h1>
+          <p className="text-[11px] sm:text-xs text-gray-400">
+            Last 30 days
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            onClick={() => navigate("/seller/addProduct")}
+            className="text-xs sm:text-sm bg-gray-900 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-800"
+          >
+            + Add
+          </Button>
+
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-medium">
+            R
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ===================== STAT CARD =====================
 const StatCard = ({ label, value, change, up, icon }) => (
-  <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-2 hover:border-gray-200 transition-colors">
+  <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col justify-between min-h-[110px]">
     <div className="flex items-center justify-between">
-      <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">{label}</span>
-      <span className="text-base">{icon}</span>
+      <span className="text-[10px] sm:text-xs text-gray-400 uppercase">
+        {label}
+      </span>
+      <span>{icon}</span>
     </div>
-    <p className="text-3xl font-bold text-gray-900 tracking-tight m-0">{value}</p>
-    <span className={`text-xs font-semibold self-start px-2 py-1 rounded-lg ${up ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
+
+    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{value}</h2>
+
+    <span
+      className={`text-[10px] sm:text-xs px-2 py-1 rounded-md w-fit ${
+        up ? "bg-green-50 text-green-600" : "bg-red-50 text-red-500"
+      }`}
+    >
       {change}
     </span>
   </div>
 );
 
+// ===================== QUICK ACTION =====================
 const QuickActionCard = ({ icon, label, description, onClick, accent }) => (
   <button
     onClick={onClick}
-    className={`w-full text-left bg-white border border-gray-100 rounded-2xl p-4 flex items-start gap-3 hover:border-gray-200 hover:shadow-sm transition-all group`}
+    className="w-full bg-white border border-gray-200 rounded-xl p-4 flex gap-3 hover:shadow-sm transition"
   >
-    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 ${accent}`}>
+    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${accent}`}>
       {icon}
     </div>
-    <div>
-      <p className="text-sm font-semibold text-gray-800 m-0 group-hover:text-gray-900">{label}</p>
-      <p className="text-xs text-gray-400 mt-0.5 m-0">{description}</p>
+
+    <div className="text-left">
+      <p className="text-sm font-medium text-gray-800">{label}</p>
+      <p className="text-xs text-gray-400">{description}</p>
     </div>
   </button>
 );
 
+// ===================== MAIN =====================
 const SellerDashboard = () => {
   const navigate = useNavigate();
 
-  const handlenavigate = () => {
-    navigate("/seller/addProduct");
-  }
-
   const quickActions = [
     {
-      icon: '➕',
-      label: 'Add New Product',
-      description: 'List a new item to your store',
-      onClick: handlenavigate,
-      accent: 'bg-gray-900 text-white',
+      icon: "➕",
+      label: "Add Product",
+      description: "List a new item",
+      onClick: () => navigate("/seller/addProduct"),
+      accent: "bg-gray-900 text-white",
     },
     {
-      icon: '🚀',
-      label: 'Run a Campaign',
-      description: 'Boost visibility of your products',
-      onClick: () => { },
-      accent: 'bg-orange-50',
+      icon: "🚀",
+      label: "Campaign",
+      description: "Boost sales",
+      onClick: () => {},
+      accent: "bg-orange-50",
     },
     {
-      icon: '🎧',
-      label: 'Get Support',
-      description: 'Talk to our seller support team',
-      onClick: () => { },
-      accent: 'bg-blue-50',
+      icon: "🎧",
+      label: "Support",
+      description: "Get help",
+      onClick: () => {},
+      accent: "bg-blue-50",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-bold text-gray-900 tracking-tight m-0">
-            Performance Dashboard
-          </h1>
-          <p className="text-xs text-gray-400 mt-0.5">Last 30 days · Updated just now</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={handlenavigate}
-            className="text-sm bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors font-medium"
-          >
-            + Add Product
-          </Button>
-          <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-semibold text-gray-500">
-            R
-          </div>
-        </div>
-      </header>
+      <SellerHeader />
 
-      <main className="max-w-6xl mx-auto py-8 px-4">
+      <main className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
 
-        {/* Stats */}
-        <section className="mb-8">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">Overview</p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {stats.map((s) => <StatCard key={s.label} {...s} />)}
+        {/* ================= STATS ================= */}
+        <section className="mb-6">
+          <h3 className="text-xs font-semibold text-gray-400 mb-3 uppercase">
+            Overview
+          </h3>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {stats.map((s) => (
+              <StatCard key={s.label} {...s} />
+            ))}
           </div>
         </section>
 
-        {/* Main Content */}
-        <div className="flex gap-6 items-start">
+        {/* ================= LAYOUT ================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Trending Products */}
-          <section className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-4">
+          {/* PRODUCTS */}
+          <section className="lg:col-span-2">
+            <div className="flex justify-between items-center mb-4">
               <div>
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest m-0">
+                <h3 className="text-sm font-semibold text-gray-800">
                   Trending Products
-                </p>
-                <p className="text-xs text-gray-400 mt-1 m-0">
-                  {recentProducts.length} listings · sorted by popularity
+                </h3>
+                <p className="text-xs text-gray-400">
+                  {recentProducts.length} items
                 </p>
               </div>
-              <Button className="text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors">
+
+              <Button className="text-xs border px-3 py-1.5 rounded-md">
                 View all
               </Button>
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 lg:gap-4">
               {recentProducts.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  product={item}
-                  className="rounded-xl"
-                />
+                <ProductCard key={item.id} product={item} />
               ))}
             </div>
           </section>
 
-          {/* Quick Actions */}
-          <aside className="w-64 shrink-0">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">
-              Quick Actions
-            </p>
-            <div className="flex flex-col gap-3">
-              {quickActions.map((action) => (
-                <QuickActionCard key={action.label} {...action} />
-              ))}
+          {/* SIDEBAR */}
+          <aside className="space-y-4">
+
+            <div>
+              <h3 className="text-xs font-semibold text-gray-400 mb-3 uppercase">
+                Quick Actions
+              </h3>
+
+              <div className="space-y-3">
+                {quickActions.map((action) => (
+                  <QuickActionCard key={action.label} {...action} />
+                ))}
+              </div>
             </div>
 
-            {/* Tip Banner */}
-            <div className="mt-4 bg-gray-900 rounded-2xl p-4">
-              <p className="text-xs font-semibold text-white m-0">💡 Seller Tip</p>
-              <p className="text-xs text-gray-400 mt-1 m-0 leading-relaxed">
-                Products with 3+ images get <span className="text-white font-semibold">40% more clicks</span> than single-image listings.
+            {/* TIP */}
+            <div className="bg-gray-900 rounded-xl p-4">
+              <p className="text-xs text-white font-semibold">💡 Tip</p>
+              <p className="text-xs text-gray-300 mt-1">
+                Add 3+ images to increase clicks by{" "}
+                <span className="text-white font-medium">40%</span>
               </p>
             </div>
-          </aside>
 
+          </aside>
         </div>
       </main>
     </div>

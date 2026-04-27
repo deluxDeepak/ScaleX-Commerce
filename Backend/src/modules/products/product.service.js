@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const logger = require("../../core/logger/logger");
 const DatabaseError = require("../../shared/errors/DatabaseError");
 const ValidationError = require("../../shared/errors/ValidationError");
-const { findAllProduct, findProductByid, createProduct, updateProductById, deleteProductById, updateProductImg, deleteProductImg, findProductBySellerId, findFilterProduct, findProductSuggestion } = require("./product.repository");
+const { findAllProduct, findProductByid, createProduct, updateProductById, deleteProductById, updateProductImg, deleteProductImg, findProductBySellerId, findFilterProduct, findProductSuggestion, updateStock } = require("./product.repository");
+const { NotfoundError } = require("../../shared/errors");
 
 const getAllProductsService = async (params) => {
 
@@ -73,12 +74,12 @@ const getProductsSuggestionService = async (keyword) => {
 
 };
 
-const getProductByIdService = async (id) => {
-    if (!id) {
-        throw new ValidationError("Product id is required");
+const getProductByIdService = async (productId) => {
+    if (!productId) {
+        throw new ValidationError("Product productId is required");
     }
 
-    const product = await findProductByid(id);
+    const product = await findProductByid(productId);
     if (!product) {
         throw new DatabaseError("Product not found || not persent");
     }
@@ -86,6 +87,8 @@ const getProductByIdService = async (id) => {
 
 
 }
+
+// Get product by sellerId
 const getMyProductsService = async (sellerId) => {
     if (!sellerId) {
         throw new ValidationError("Seller id is required");
@@ -158,6 +161,21 @@ const createProductService = async (data, urls = []) => {
         throw new DatabaseError("Failed to create products in database");
 
     }
+}
+
+// Usign transation in mongodb 
+const reduceStockService = async (productId, qty,type, session) => {
+    const product = await findProductByid(productId);
+    if (!product) {
+        throw new NotfoundError("Product not found");
+    }
+
+    if (product.stock < qty) {
+        throw new ValidationError("Product is out of Stock")
+    }
+
+    const result = await updateStock(productId, type, qty, session);
+    return result;
 }
 
 const updateProductService = async (id, data) => {
@@ -292,6 +310,7 @@ module.exports = {
     createProductService,
     updateProductService,
     deleteProductService,
+    reduceStockService,
 
     // Image 
     addProductImageService,

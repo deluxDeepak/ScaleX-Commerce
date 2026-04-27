@@ -15,6 +15,10 @@ const updateUser = async (id, data) => {
     return await User.findByIdAndUpdate(id, data, { new: true });
 }
 
+const updateUserRoleById = async (userId, role = "customer") => {
+    return await User.findByIdAndUpdate(userId, { role: role }, { new: true })
+}
+
 const updateUserPassword = async (id, newPassword) => {
     return await User.findByIdAndUpdate(
         id,
@@ -174,6 +178,7 @@ module.exports = {
     findAllUser,
     findUserById,
     updateUser,
+    updateUserRoleById,
     deleteUser,
 
 

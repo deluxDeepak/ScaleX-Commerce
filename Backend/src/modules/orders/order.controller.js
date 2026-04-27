@@ -1,5 +1,5 @@
 const logger = require("../../core/logger/logger");
-const { createOrderService, getMyOrdersService, getSingleOrderService, acceptOrderService, cancelOrderService, getOrdersStatusService } = require("./order.service");
+const { createOrderService, getMyOrdersService, getSellerOrdersService, getSingleOrderService, acceptOrderService, cancelOrderService, getOrdersStatusService } = require("./order.service");
 
 const createOrder = async (req, res) => {
     const userId = req.user.id;
@@ -8,7 +8,7 @@ const createOrder = async (req, res) => {
     const { items, address, paymentMethod } = req.body;
 
     if (!items || items.length === 0) {
-        res.status(400).json({ success: false, message: "No items in order " })
+        return res.status(400).json({ success: false, message: "No items in order " })
     }
 
     try {
@@ -36,12 +36,12 @@ const getMyOrders = async (req, res) => {
     try {
         const userOrders = await getMyOrdersService(userId);
         if (userOrders.length === 0) {
-            res.status(201).json({
+            return res.status(200).json({
                 message: "Order card is empty | No order till date",
                 success: true
             })
         }
-        res.status(201).json({
+        return res.status(200).json({
             message: "Order fetch Successfully",
             success: true,
             orders: userOrders
@@ -60,20 +60,22 @@ const getMyOrders = async (req, res) => {
 // Only seller can be changed 
 const getSellerOrders = async (req, res) => {
 
-    const userId = req.user.id;
+    const sellerId = req.user.id;
+    console.log("Sellerid is",sellerId)
+    const { status } = req.query;
 
     try {
-        const userOrders = await getMyOrdersService(userId);
-        if (userOrders.length === 0) {
-            res.status(201).json({
+        const sellerOrders = await getSellerOrdersService(sellerId, status);
+        if (sellerOrders.length === 0) {
+            return res.status(200).json({
                 message: "Order card is empty | No order till date",
                 success: true
             })
         }
-        res.status(201).json({
+        return res.status(200).json({
             message: "Order fetch Successfully",
             success: true,
-            orders: userOrders
+            orders: sellerOrders
         })
 
     } catch (error) {

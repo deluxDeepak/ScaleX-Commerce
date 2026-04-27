@@ -24,7 +24,16 @@ const authenticate = async (req, res, next) => {
 
     const decodeUser = await verifyToken(token);
     logger.info({ decodeUser }, "Decode data:");
-    req.user = decodeUser;
+
+    const normalizedUserId = decodeUser?.id || decodeUser?._id || decodeUser?.userId || decodeUser?.sub;
+    if (!normalizedUserId) {
+        throw new AuthError("Invalid token payload: user id missing");
+    }
+
+    req.user = {
+        ...decodeUser,
+        id: normalizedUserId,
+    };
 
     next();
 

@@ -2,7 +2,7 @@ const logger = require("../../core/logger/logger");
 const { uploadObjectService, deleteObjectService } = require("../../core/storage/storage.services");
 const { generateKey, getKeyFromUrl } = require("../../shared/utils/genKeys.utils");
 const generateSlug = require("../../shared/utils/genSlug");
-const { getAllProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService, addProductImageService, deleteProductImageService, getFilterProductsService, getProductsSuggestionService } = require("./product.service");
+const { getAllProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService, addProductImageService, deleteProductImageService, getFilterProductsService, getProductsSuggestionService, getMyProductsService } = require("./product.service");
 
 // yehan se filter bhi lagaye hai (Normal )
 const getProducts = async (req, res) => {
@@ -98,9 +98,10 @@ const getProductById = async (req, res) => {
 // Seller products (Products added by the seller )
 const getMyProducts = async (req, res) => {
     const sellerId = req.user.id
-    console.log("Seller id is ", sellerId);
+    console.log("Seller id is ",sellerId);
+    // 69eadd87f0d31f9018aa8a14
     try {
-        const products = await getProductByIdService(sellerId);
+        const products = await getMyProductsService(sellerId);
         res.status(200).json({
             success: true,
             products: products,

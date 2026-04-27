@@ -1,7 +1,12 @@
 const Order = require("./order.model")
 
-const createOrder = async (data) => {
-    return Order.create(data);
+// Single object (NO session) 
+// Transactions internally MongoDB ke insertMany pattern pe based hote hain
+// create([data])  ---> array  ---> bulk / transaction safe
+// Internally treated as bulk insert 
+const createOrder = async (data, session) => {
+    const [order] = await Order.create([data], { session });
+    return order;
 }
 
 const findMyOrders = async (userId) => {
@@ -13,6 +18,31 @@ const findMyOrders = async (userId) => {
 const findOrders = async (query) => {
     return Order.find(query);
 
+}
+
+const findOrderBySellerID = async (sellerId, status) => {
+    const query = { "items.seller": sellerId };
+
+    if (typeof status === "string" && status.trim() !== "") {
+        query.status = { $eq: status.trim() };
+    }
+
+    return Order.find(query);
+}
+
+const findSellerOrdersByProductIds = async (productIds, status) => {
+    const query = {
+        $or: [
+            { "items.productId": { $in: productIds } },
+            { "items.product": { $in: productIds } },
+        ],
+    };
+
+    if (typeof status === "string" && status.trim() !== "") {
+        query.status = { $eq: status.trim() };
+    }
+
+    return Order.find(query);
 }
 
 
@@ -35,6 +65,8 @@ module.exports = {
     findOrderById,
     findOneOrder,
     updateOrderById,
-    findOrders
+    findOrders,
+    findSellerOrdersByProductIds,
+    findOrderBySellerID,
 
 }
