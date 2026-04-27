@@ -10,17 +10,18 @@ const ProductCard = ({ product, className = "" }) => {
   return (
     <div
       className={`w-full flex flex-col sm:flex-row rounded-xl overflow-hidden
-      border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow
+      border border-gray-100 bg-white shadow-sm hover:shadow-md transition
       ${className}`}
     >
 
       {/* Image */}
-      <div className="relative p-2 bg-gray-50 sm:w-48 sm:shrink-0">
+      <div className="relative w-full sm:w-40 bg-gray-50 flex items-center justify-center p-2">
         <img
           src={product.images[0]}
           alt={product.title}
-          className="w-full h-20  object-cover"
+          className="w-full h-32 sm:h-28 object-cover rounded-md"
         />
+
         {discount && (
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded">
             -{discount}%
@@ -29,41 +30,82 @@ const ProductCard = ({ product, className = "" }) => {
       </div>
 
       {/* Info */}
-      <div className="flex flex-col sm:flex-row justify-between flex-1 p-3 gap-3">
+      <div className="flex flex-col justify-between flex-1 p-3 gap-3">
 
-        {/* Left: category, title, order id */}
-        <div className="flex flex-col gap-1">
-          <p className="text-xs font-semibold text-center bg-gray-200 px-2 py-0.5 rounded-md text-black uppercase tracking-wide w-fit">
-            {product.subCategory}
-          </p>
-          <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-snug">
-            {product.title}
-          </h3>
-          <p className="text-xs text-gray-300 font-mono">
-            #{product.id.toString().padStart(6, '0')}
-          </p>
+        {/* Top Section */}
+        <div className="flex justify-between">
+          <div className='flex flex-col gap-1'>
+            <p className="text-[10px] bg-gray-200 px-2 py-0.5 rounded w-fit uppercase tracking-wide">
+              {product.subCategory}
+            </p>
+
+            <h3 className="text-sm sm:text-base font-semibold text-gray-800 leading-snug line-clamp-2">
+              {product.title}
+            </h3>
+
+            <p className="text-[10px] text-gray-400 font-mono">
+              #{product?._id?.toString().padStart(6, '0')}
+            </p>
+          </div>
+
+          {/*Number of stock :-  If stock is greater than 5 show in green and else show in red  */}
+          <div className="flex flex-col lg:flex items-center gap-2">
+
+            {/* Stock Count */}
+            <span className="text:xs lg:text-md font-medium lg:font-semibold text-gray-700">
+              Stock: {product.stock}
+            </span>
+
+            {/* Status Badge */}
+            <span
+              className={`text-xs font-semibold px-2 py-1 rounded-full
+                  ${product.stock === 0
+                  ? "bg-red-100 text-red-600"
+                  : product.stock < 5
+                    ? "bg-yellow-100 text-yellow-600"
+                    : "bg-green-100 text-green-600"
+                }`}
+            >
+              {product.stock === 0
+                ? "Out of Stock"
+                : product.stock < 5
+                  ? "Low Stock"
+                  : "In Stock"}
+            </span>
+
+          </div>
+
+
         </div>
 
+        {/* Bottom Section */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
 
-
-        {/* Right: price + actions */}
-        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-between gap-2 sm:shrink-0">
+          {/* Price */}
           <div className="flex items-center gap-2">
-            <span className="text-base font-bold text-gray-900">${product.price}</span>
+            <span className="text-base font-bold text-gray-900">
+              ₹{product.price}
+            </span>
             {product.oldPrice && (
-              <span className="text-xs text-gray-300 line-through">${product.oldPrice}</span>
+              <span className="text-xs text-gray-400 line-through">
+                ₹{product.oldPrice}
+              </span>
             )}
           </div>
+
+          {/* Actions */}
           <div className="flex gap-2">
-            <Button className="bg-gray-100 text-red-500 text-xs px-2 py-0.5">
-              <Delete />
-              Remove
+            <Button className="flex items-center gap-1 bg-gray-100 text-red-500 text-xs px-3 py-1 rounded-md">
+              <Delete size={14} />
+              <span className="hidden sm:inline">Remove</span>
             </Button>
-            <Button className="bg-gray-100 text-red-500 text-xs px-2 py-0.5">
-              <Edit />
-              Edit
+
+            <Button className="flex items-center gap-1 bg-gray-100 text-blue-500 text-xs px-3 py-1 rounded-md">
+              <Edit size={14} />
+              <span className="hidden sm:inline">Edit</span>
             </Button>
           </div>
+
         </div>
 
       </div>

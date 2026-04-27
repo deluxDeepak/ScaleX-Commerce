@@ -153,7 +153,7 @@ const SellerDashboard = () => {
               </Button>
             </div>
 
-            <div className="space-y-3">
+            <div className="flex flex-col gap-2 lg:gap-4">
               {recentProducts.map((item) => (
                 <ProductCard key={item.id} product={item} />
               ))}

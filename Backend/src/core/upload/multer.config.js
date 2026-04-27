@@ -4,6 +4,16 @@ const multer = require("multer");
 // Returns a StorageEngine implementation configured to store files in memory as Buffer objects.
 const storage = multer.memoryStorage();
 
+const createFileTypeError = (file) => {
+    const error = new Error(
+        `Only image files are allowed. Received "${file?.mimetype || "unknown"}" for field "${file?.fieldname || "unknown"}".`
+    );
+    error.statusCode = 400;
+    error.code = "INVALID_FILE_TYPE";
+    error.isOperational = true;
+    return error;
+};
+
 const upload = multer({
     storage,
     limits: {
@@ -11,21 +21,11 @@ const upload = multer({
     },
 
     fileFilter: (req, file, cb) => {
-        // const allowedFileTypes = ["image/"];
+        const mimeType = file?.mimetype || "";
+        const isImage = /^image\/[\w.+-]+$/i.test(mimeType);
 
-        // if (!allowedFileTypes.includes(file.mimetype)) {
-        //     return cb(new Error("Only images are allowed"), false);
-        // }
-
-        // const allowedTypes = [
-        //     "image/png",
-        //     "image/jpeg",
-        //     "image/webp"
-        // ];
-
-        if (!file.mimetype.startsWith("image/")) {
-            return cb(new Error("Only images are allowed"), false);
-
+        if (!isImage) {
+            return cb(createFileTypeError(file), false);
         }
 
         cb(null, true);

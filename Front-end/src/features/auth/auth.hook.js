@@ -39,8 +39,7 @@ export const useAuthAction = () => {
             localStorage.setItem("token", user.accessToken);
             // 2.Immediately set user in context so ProtectedRoutes doesn't redirect
             setUser(user.user);
-
-            return user;
+            return user.user;
 
         } catch (error) {
             setLoginError(error.message);

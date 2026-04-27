@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { createProductApi, getMyProductAPi, registerSellerApi } from "./seller.api";
 
 // future validation route 

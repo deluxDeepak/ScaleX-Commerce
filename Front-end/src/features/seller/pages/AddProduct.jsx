@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import Button from "../../../components/ui/Button";
-import { createProductService } from "../seller.service";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { useCategory } from "../../../context/useCategory";
 import useSubCategory from "../../../core/hooks/useSubCategory";
+import { useAddProduct } from "../seller.hook";
+
 
 
 // ---------- Product Gallery ----------
@@ -122,31 +123,28 @@ const GeneralInfo = ({ handleChange, form }) => (
 // ---------- Price / Inventory ----------
 
 const inputFeildPrice = [
-  { name: "price", label: "Price", placeholder: "Product price" },
-  { name: "stock", label: "Stock", placeholder: "Enter product in Stock" },
+  { name: "price", type: "number", label: "Price", placeholder: "Product price" },
+  { name: "stock", type: "text", label: "Stock", placeholder: "Enter product in Stock" },
 ];
 
 // const category = ["Mens wear", "Women wear", "Electronic"];
 // const subCategory = ["Mens wear", "Women wear", "Electronic"];
 
-const PriceInventry = ({ handleChange, form, categories }) => {
+const PriceInventry = ({ handleChange, form, categories, setform }) => {
   // 1.Select the category first 
-  // 2.Then select the subCategory 
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const { subCategory } = useSubCategory(selectedCategory);
+  const { subCategory } = useSubCategory(form.category);
   console.log("Subcategory from component is ", subCategory);
 
   const handleCategoryChange = (e) => {
-    handleChange(e);  //form update 
-    setSelectedCategory(e.target.value);  //sub category fetch 
+    const value = e.target.value
 
     // 3.oncategory change subCategory reset hona chiye 
-    handleChange({
-      subCategory: {
-        name: "subCategory",
-        value: ""
-      }
-    })
+    setform((prev) => ({
+      ...prev,
+      category: value,
+      subCategory: ""
+    }));
+
   }
   //id ke sath fetch karna parega hook bana sakte hai 
   // const { subCategory } = useCategory(); --- ye pura categories lake dega 
@@ -160,7 +158,7 @@ const PriceInventry = ({ handleChange, form, categories }) => {
 
       <div className="grid md:grid-cols-2 gap-4">
 
-        {inputFeildPrice.map(({ name, label, placeholder }) => (
+        {inputFeildPrice.map(({ name, label, placeholder, type = "text" }) => (
           <div key={name} className="flex flex-col gap-1">
 
             <label className="text-sm font-medium">
@@ -168,7 +166,7 @@ const PriceInventry = ({ handleChange, form, categories }) => {
             </label>
 
             <input
-              type="text"
+              type={type}
               name={name}
               value={form[name]}
               placeholder={placeholder}
@@ -189,7 +187,7 @@ const PriceInventry = ({ handleChange, form, categories }) => {
           <select
             className="border rounded-lg px-3 py-2"
             name="category"
-            value={form.category}
+            value={form.category}   //selected cat 
             onChange={handleCategoryChange}
 
           >
@@ -198,6 +196,7 @@ const PriceInventry = ({ handleChange, form, categories }) => {
               Select category
             </option>
 
+            {/* Drop down  */}
             {categories?.map((c) => (
               <option key={c._id} value={c._id}>
                 {c.name}
@@ -226,7 +225,7 @@ const PriceInventry = ({ handleChange, form, categories }) => {
               Select subcategory
             </option>
 
-            {subCategory.map((c) => (
+            {subCategory?.map((c) => (
               <option key={c._id} value={c._id}>
                 {c.name}
               </option>
@@ -248,91 +247,17 @@ const PriceInventry = ({ handleChange, form, categories }) => {
 
 const AddProduct = () => {
 
-  // Intial state hai 
-  const state = {
-    // General info 
-    title: "",
-    description: "",
-    features: "",
-    // Price inventry 
-    price: "",
-    stock: "",
-    images: [], //Array of string save string here,
-    category: "",
-    subCategory: "",
+  const {
+    setImageFiles,
+    handleChange,
+    setForm,
+    form,
+    error,
+    message,
+    handleSubmit
+  } = useAddProduct()
 
-
-  }
-
-  // Category 
-  const { category, } = useCategory();
-  console.log("Category is from component ", category);
-  const priceCat = category?.slice(1);
-  console.log("category are ", priceCat);
-
-
-  const [form, setForm] = useState(state);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-
-    console.log("Category is ", form.category)
-    console.log("subCategory is ", form.subCategory)
-  }
-
-  const [message, setMessage] = useState("");
-  const [imageFiles, setImageFiles] = useState([]);
-
-  // Handling api---------------------
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-
-      setError("");
-      setLoading(true);
-
-      // Form data bana ke fir api call karenge 
-      const formData = new FormData();
-      formData.append("title", form.title);
-      formData.append("description", form.description);
-      formData.append("features", form.features);
-      formData.append("price", form.price);
-      formData.append("stock", form.stock);
-      formData.append("category", form.category) //cat id dena hai 
-      formData.append("subCategory", form.subCategory) //cat id dena hai 
-
-      // FormData array accept nahi karta
-      // const images = [];
-      // if (imageFiles && imageFiles.length > 0) {
-      //   for (let image of imageFiles) {
-      //     images.push(image);
-      //   }
-      // }
-      // formData.append("images", images); //formdata me array nahi dal sakte hai 
-
-      if (imageFiles && imageFiles.length > 0) {
-        for (let image of imageFiles) {
-          formData.append("images", image);
-        }
-      }
-
-      const res = await createProductService(formData);
-      console.log("Product is ", res);
-
-      setMessage("Product added to store Successfully ✅");
-
-    } catch (error) {
-      setError(error.message || "Something went wrong ");
-
-    } finally {
-      setLoading(false);
-    }
-
-  }
+  const { category } = useCategory();
 
   return (
 
@@ -345,7 +270,8 @@ const AddProduct = () => {
       <PriceInventry
         handleChange={handleChange}
         form={form}
-        categories={priceCat}
+        categories={category}
+        setform={setForm}
       // subCategory={subCategory}
       />
 

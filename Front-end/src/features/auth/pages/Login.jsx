@@ -218,14 +218,21 @@ const Login = () => {
   async function onLogin(e) {
     e.preventDefault();
 
-    // Clear flied 
-    const ok = await login(form);  //api call ke await lagana parega 
+    // Role based login ----------
+    const res = await login(form);  //api call ke await lagana parega 
     setForm({
       password: "",
       email: ""
     });
-    if (!ok) return;   //Error happen 
-    navigate("/");
+    console.log("response of loggedin user", res);
+    if (res.role === "seller") {
+      navigate("/seller/dashboard");
+    }
+    else {
+      navigate("/");
+    }
+
+    if (!res) return;   //Error happen 
 
   }
 
