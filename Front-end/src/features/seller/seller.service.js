@@ -1,4 +1,4 @@
-import { createProductApi, getMyProductAPi, registerSellerApi } from "./seller.api";
+import { acceptOrderApi, cancelOrderApi, createProductApi, getMyProductAPi, getSellerOrderApi, registerSellerApi } from "./seller.api";
 
 // future validation route 
 export const registerSellerService = async (data) => {
@@ -30,3 +30,36 @@ export const getMyProductService = async () => {
     }
 
 }
+
+
+export const getSellerOrderService = async () => {
+    try {
+        const res = await getSellerOrderApi();
+        return res.data;
+    } catch (error) {
+        throw new Error("Error in Order Service", error);
+
+    }
+
+}
+
+export const acceptOrderService = async (productId) => {
+    try {
+        const res = await acceptOrderApi(productId);
+        return res.data;
+    } catch (error) {
+        throw new Error("Error in Accept Order Service", error);
+
+    }
+}
+
+export const cancelOrderService = async (productId) => {
+    try {
+        const res = await cancelOrderApi(productId);
+        return res.data;
+    } catch (error) {
+        throw new Error("Error in Cancel Order Service", error);
+
+    }
+}
+

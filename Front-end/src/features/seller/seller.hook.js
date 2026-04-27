@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createProductService, getMyProductService } from "./seller.service";
+import { acceptOrderService, cancelOrderService, createProductService, getMyProductService, getSellerOrderService } from "./seller.service";
 import { useEffect } from "react";
 
 export const useAddProduct = () => {
@@ -105,11 +105,115 @@ export const useSellerProducts = () => {
     useEffect(() => {
         fetchProduct()
     }, [])
-    
+
     return {
         fetchProduct,
         loading,
         error,
         sellerProduct,
     }
+}
+
+
+
+
+export const useSellerOrder = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [sellerOrders, setSellerOrders] = useState([]);
+
+    const fetchOrder = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const result = await getSellerOrderService();
+            setSellerOrders(result.orders);
+
+        } catch (error) {
+            setError(error.message || "Error in fetching the Seller Order")
+
+        } finally {
+            setLoading(true);
+        }
+    }
+
+    useEffect(() => {
+        fetchOrder();
+    }, [])
+
+    return {
+        loading,
+        error,
+        sellerOrders
+    }
+
+}
+
+/*
+    Accept order 
+    cancel order 
+    update tracking
+*/
+export const useSellerAction = () => {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+    
+    const [acceptResult, setAcceptResult] = useState([]);
+    const [cancelResult, setCancelResult] = useState([]);
+
+    const acceptOrder = async (productId) => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const result = await acceptOrderService(productId);
+            console.log("Result accepeted her ", result);
+            setAcceptResult(result.result);
+            setMessage({
+                type: "success",
+                text: "Order accepted. You can now prepare it for shipment.",
+            });
+
+        } catch (error) {
+            setError(error.message || "Error in fetching the Seller Order")
+
+        } finally {
+            setLoading(true);
+        }
+    }
+
+
+    const cancelOrder = async (productId) => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const result = await cancelOrderService(productId);
+            setCancelResult(result.result);
+            setMessage({
+                type: "error",
+                text: "Order cancelled successfully.",
+            });
+
+        } catch (error) {
+            setError(error.message || "Error in fetching the Seller Order")
+
+        } finally {
+            setLoading(true);
+        }
+    }
+
+
+    return {
+        loading,
+        error,
+        acceptResult,
+        cancelResult,
+        message,
+        acceptOrder,
+        cancelOrder
+    }
+
 }
