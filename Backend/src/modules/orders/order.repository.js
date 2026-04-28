@@ -55,9 +55,21 @@ const findOneOrder = async (orderId, userId) => {
     return Order.findOne({ user: userId, _id: orderId })
 }
 
-const updateOrderById = async (orderId, data) => {
-    return Order.findByIdAndUpdate(orderId, data, { new: true });
+// This will change the update in direct mongoDb document 
+const updateOrderById = async (orderId, data, session = null) => {
+    return Order.findByIdAndUpdate(orderId, data, { new: true, session });
 }
+
+// persist modified order 
+/*
+    - document memory me aata hai
+    - tum changes karte ho
+    - mongoose track karta hai kya change hua
+    - sirf modified fields update hoti hain
+*/
+const saveOrder = async (order, session = null) => {
+    return order.save({ session });
+};
 
 module.exports = {
     createOrder,
@@ -65,6 +77,7 @@ module.exports = {
     findOrderById,
     findOneOrder,
     updateOrderById,
+    saveOrder,
     findOrders,
     findSellerOrdersByProductIds,
     findOrderBySellerID,

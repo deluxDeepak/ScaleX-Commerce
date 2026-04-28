@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const logger = require("../../core/logger/logger");
-const { ValidationError, NotfoundError, AuthError } = require("../../shared/errors");
+const { ValidationError, NotfoundError, AuthError, DatabaseError } = require("../../shared/errors");
 const { reduceStockService } = require("../products/product.service");
 const orderRepo = require("./order.repository");
 
@@ -18,13 +18,14 @@ const buildOrder = async (items, userId, address, paymentMethod, session = null)
     const orderItems = [];
     let totalPrice = 0;
 
+    // 1.Create order Items (Snapshot )
     for (const item of items) {
         const updatedProduct = await reduceStockService(item.productId, item.qty, "decrease", session);
 
         logger.info({ updatedProduct }, "Product stock reduced ");
 
         const orderItem = {
-            product: updatedProduct._id,
+            productId: updatedProduct._id,
             name: updatedProduct.name,
             price: updatedProduct.price,
             seller: updatedProduct.seller,
@@ -36,15 +37,73 @@ const buildOrder = async (items, userId, address, paymentMethod, session = null)
         orderItems.push(orderItem);
     }
 
+    // 2.Create order wihout shipment 
     const orderSummary = {
         user: userId,
         items: orderItems,
+        status: "created",   //default also 
         totalPrice,
         address,
         paymentMethod,
     };
+    const order = await orderRepo.createOrder(orderSummary, session);
+    if (!order) {
+        throw new DatabaseError("Order not created ")
+    }
+    // Create karne ke baad milega orderitems id 
 
-    return orderRepo.createOrder(orderSummary, session);
+    // 3.Seller wise grouping -->shipment 
+    const shipmentsMap = {}
+    order.items.forEach((item) => {
+        const sellerId = item.seller?.toString();
+        // sellerId = "abc123"
+
+        if (!shipmentsMap[sellerId]) {
+            shipmentsMap[sellerId] = []
+            /*
+                {
+                    "abc123": []
+                }
+            */
+        }
+
+        shipmentsMap[sellerId].push(item._id);
+        /*
+            {
+                "abc123": ["order_id_1","order_id_2"]
+            }
+        */
+    });
+
+    // 4. Creating shipment after order 
+    // Build the shipment object from shipmentmap
+    const shipments = Object.keys(shipmentsMap).map((sellerId) => ({
+        seller: sellerId,
+        orderItems: shipmentsMap[sellerId],
+        status: "pending",
+        statusHistory: [
+            {
+                status: "pending",
+                timestamp: new Date()
+            }
+
+        ]
+    }));
+
+    // 5. Estimated Delivery
+    const estimatedDelivery = new Date();
+    estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
+
+    // 6.Update order 
+    const shipmentUpdate = {
+        shipments: shipments,
+        estimatedDelivery: estimatedDelivery
+
+    }
+
+    const finalOrder = await orderRepo.updateOrderById(order._id, shipmentUpdate, session);
+
+    return finalOrder;
 };
 
 
@@ -125,39 +184,90 @@ const getSingleOrderService = async (orderId, userId) => {
     return order;
 };
 
-// Future multiple seller 
-const acceptOrderService = async (sellerId, orderId) => {
-    if (!sellerId) {
-        throw new ValidationError("SellerId is not present");
-    }
 
-    if (!orderId) {
-        throw new ValidationError("OrderId is not given");
-    }
+const generateTrackingOrder = () => {
+    return "TRK_id" + Date.now() + Math.floor(Math.random() * 1000);
+}
+
+// Future multiple seller 
+/*
+    What not done yet (don't generate tracking id)
+    - courier assign nahi hua
+    - parcel ready nahi
+    - pickup nahi hua
+
+    Delivery-related status = Shipment level
+    Order-level status = overall summary
+*/
+
+const updateOrderService = async (sellerId, orderId, status) => {
+    if (!sellerId) throw new ValidationError("SellerId is not present");
+    if (!orderId) throw new ValidationError("OrderId is not given");
 
     // 1. Fetch order
     const order = await orderRepo.findOrderById(orderId);
+    if (!order) throw new NotfoundError("Order not found");
 
-    if (!order) {
-        throw new NotfoundError("Order not found");
+    // 2. Find seller shipment
+    const shipment = order.shipments.find(
+        (s) => s.seller.toString() === sellerId.toString()
+    );
+
+    if (!shipment) {
+        throw new AuthError("You cannot update this shipment");
     }
 
-    // 2. Check seller ownership (VERY IMPORTANT)
-    // if (order.sellerId.toString() !== sellerId.toString()) {
-    //     throw new AuthorizationError("You are not allowed to access this order");
-    // }
+    // OPTIONAL: status transition validation 
+    const validTransitions = {
+        pending: ["accepted"],
+        accepted: ["packed"],
+        packed: ["shipped"],
+        shipped: ["out_for_delivery"],
+        out_for_delivery: ["delivered"],
+    };
 
-    // 3. Check status
-    if (order.status !== "pending") {
-        throw new ValidationError("Order already processed");
+    if (shipment.status !== status) {
+        if (!validTransitions[shipment.status]?.includes(status)) {
+            throw new ValidationError(
+                `Invalid status transition from ${shipment.status} to ${status}`
+            );
+        }
     }
 
-    // 4. Update status
-    const updatedOrder = await orderRepo.updateOrderById(orderId, {
-        status: "accepted",
+    // 3. Update shipment
+    shipment.status = status;
+
+    shipment.statusHistory.push({
+        status,
+        timestamp: new Date()
     });
-    console.log("Updated order ", updatedOrder);
 
+    // 4. Tracking logic
+    if (status === "shipped" && !shipment.trackingId) {
+        shipment.trackingId = generateTrackingOrder();
+        shipment.courier = "Delhivery";
+    }
+
+    // 5. Derive order status from shipment status not manually update 
+    /*
+        Order.status = summary of all shipments + payment state
+    */
+
+    /*  
+        - created ->default
+        - paid ->two case 1.COD and ONLINE
+    */
+    // derive only completion here
+    const shipmentStatuses = order.shipments.map(s => s.status);
+
+    if (shipmentStatuses.every(s => s === "delivered")) {
+        order.status = "completed";
+    } else {
+        order.status = "processing"
+    }
+
+    // 6. Save full document 
+    const updatedOrder = await orderRepo.saveOrder(order);
     return updatedOrder;
 };
 
@@ -244,7 +354,7 @@ module.exports = {
     getMyOrdersService,
     getSellerOrdersService,
     getSingleOrderService,
-    acceptOrderService,
+    updateOrderService,
     cancelOrderService,
     getOrdersStatusService
 }

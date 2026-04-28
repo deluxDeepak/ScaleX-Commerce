@@ -1,5 +1,5 @@
 const logger = require("../../core/logger/logger");
-const { createOrderService, getMyOrdersService, getSellerOrdersService, getSingleOrderService, acceptOrderService, cancelOrderService, getOrdersStatusService } = require("./order.service");
+const { createOrderService, getMyOrdersService, getSellerOrdersService, getSingleOrderService, updateOrderService, cancelOrderService, getOrdersStatusService } = require("./order.service");
 
 const createOrder = async (req, res) => {
     const userId = req.user.id;
@@ -61,7 +61,7 @@ const getMyOrders = async (req, res) => {
 const getSellerOrders = async (req, res) => {
 
     const sellerId = req.user.id;
-    console.log("Sellerid is",sellerId)
+    console.log("Sellerid is", sellerId)
     const { status } = req.query;
 
     try {
@@ -113,12 +113,13 @@ const getSingleOrder = async (req, res) => {
 }
 
 // Change the status of tracking 
-const acceptOrder = async (req, res) => {
+const updateOrderStatus = async (req, res) => {
     const sellerId = req.user.id;
     const orderId = req.params.orderId;
+    const { status } = req.body;
 
     try {
-        const result = await acceptOrderService(sellerId, orderId)
+        const result = await updateOrderService(sellerId, orderId,status)
         console.log("Result is ", result);
         res.status(201).json({
             message: "Order accepted and shipped",
@@ -193,7 +194,7 @@ module.exports = {
     getOrdersStatus,
     updateOrderTracking,
     cancelOrder,
-    acceptOrder,
+    updateOrderStatus,
     getSingleOrder,
     getSellerOrders,
     getMyOrders

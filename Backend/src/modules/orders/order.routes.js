@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const authenticate = require("../../middlewares/auth.middleware");
 const checkRole = require("../../middlewares/role.middleware");
-const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, acceptOrder, cancelOrder, updateOrderTracking, getOrdersStatus } = require("./order.controller");
+const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, cancelOrder, updateOrderStatus, getOrdersStatus } = require("./order.controller");
 
 // ================= USER =================
 
@@ -32,13 +32,29 @@ router.get("/:orderId", authenticate, getSingleOrder);
 
 // ================= ACTIONS =================
 
-// seller actions
+/*seller actions
+- shipment status order status 
+  - "pending",
+  - "accepted",
+  - "packed",
+  - "shipped",
+  - "out_for_delivery",
+  - "delivered"
+*/
+
 router.patch(
-  "/:orderId/accept",
+  "/:orderId/status",
   authenticate,
   checkRole("seller"),
-  acceptOrder
+  updateOrderStatus
 );
+
+// router.patch(
+//   "/:orderId/track",
+//   authenticate,
+//   checkRole("seller"),
+//   updateOrderTracking
+// );
 
 router.patch(
   "/:orderId/cancel",
@@ -46,12 +62,7 @@ router.patch(
   cancelOrder // both user + seller (logic inside controller)
 );
 
-router.patch(
-  "/:orderId/track",
-  authenticate,
-  checkRole("seller"),
-  updateOrderTracking
-);
+
 
 // ============= FILTER ============
 // query based filtering (BEST PRACTICE)
