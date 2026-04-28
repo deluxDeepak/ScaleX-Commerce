@@ -21,6 +21,54 @@ This project goes beyond a basic CRUD backend. It demonstrates how real‑world 
 * 🛡️ Rate limiting & advanced Node.js security (global + per‑API limits)
 
 ---
+
+## 🧠 Business Logic Highlights
+
+The system simulates real-world e-commerce behavior with the following core logic see more details login here **[View Detailed Business logic](./Backend/readme.md)**
+
+### 🛍️ Product Management
+
+- Sellers manage products with inventory tracking
+- Products are categorized and controlled via activation status
+
+### 🛒 Cart & Checkout
+
+- Cart items are validated against stock before checkout
+- Prices are recalculated during checkout to avoid stale data
+
+### 📦 Order Processing
+
+- Orders are created using transactional logic
+- Stock is updated atomically to prevent race conditions
+- Orders are split per seller
+
+### 🔄 Order Lifecycle
+
+- Order states: Pending → Confirmed → Shipped → Delivered
+- Sellers update tracking; users can monitor status
+- Cancellation allowed before shipment
+
+### 💰 Revenue Model
+
+- Platform applies commission on each order
+- Seller earnings are calculated after deduction
+
+### 📢 Seller Promotion
+
+- Sellers can promote products via ads
+- Sponsored products appear higher in search results
+
+### 🔐 Access Control
+
+- Role-based system for Buyer, Seller, and Admin
+
+### ⚡ System Optimizations
+
+- Redis caching for performance
+- Rate limiting for security
+
+---
+
 ## 🚀 Core Features
 
 A complete breakdown of user flows, seller workflows, and system-level capabilities is documented separately for better readability.

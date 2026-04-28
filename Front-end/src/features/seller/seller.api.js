@@ -17,12 +17,17 @@ export const getMyProductAPi = async () => {
 
 }
 
-export const getSellerOrderApi = async () => {
-    return await api.get("/order/seller")
-}
+// Get all orders of seller 
+export const getSellerOrderApi = (status = null) => {
+    const url = status
+        ? `/order/seller?status=${status}`
+        : `/order/seller`;
 
-export const acceptOrderApi = async (productId) => {
-    return await api.patch(`/order/${productId}/accept`)
+    return api.get(url);
+};
+
+export const acceptOrderApi = async (productId, status) => {
+    return await api.patch(`/order/${productId}/status`, { status })
 }
 
 export const cancelOrderApi = async (productId) => {

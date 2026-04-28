@@ -20,14 +20,8 @@ const findOrders = async (query) => {
 
 }
 
-const findOrderBySellerID = async (sellerId, status) => {
-    const query = { "items.seller": sellerId };
-
-    if (typeof status === "string" && status.trim() !== "") {
-        query.status = { $eq: status.trim() };
-    }
-
-    return Order.find(query);
+const findOrderBySellerID = async (sellerId) => {
+    return Order.find({ "items.seller": sellerId }).limit(10);
 }
 
 const findSellerOrdersByProductIds = async (productIds, status) => {

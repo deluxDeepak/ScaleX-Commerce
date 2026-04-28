@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { acceptOrderService, cancelOrderService, createProductService, getMyProductService, getSellerOrderService } from "./seller.service";
 import { useEffect } from "react";
+import { useCallback } from "react";
 
 export const useAddProduct = () => {
 
@@ -98,7 +99,7 @@ export const useSellerProducts = () => {
             setError(error.message || "Error in fetching the Seller Product")
 
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     }
 
@@ -115,40 +116,55 @@ export const useSellerProducts = () => {
 }
 
 
-
-
-export const useSellerOrder = () => {
+export const useSellerOrder = (status = null) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [sellerOrders, setSellerOrders] = useState([]);
 
-    const fetchOrder = async () => {
+    // Generic fetch function (DRY)
+    const fetchOrders = useCallback(async (status = null) => {
         try {
             setLoading(true);
             setError("");
 
-            const result = await getSellerOrderService();
-            setSellerOrders(result.orders);
+            let result;
 
-        } catch (error) {
-            setError(error.message || "Error in fetching the Seller Order")
+            if (status) {
+                const validStatus = ["pending", "processing", "completed"];
 
+                if (!validStatus.includes(status)) {
+                    throw new Error("Invalid status");
+                }
+
+                result = await getSellerOrderService(status);
+            } else {
+                result = await getSellerOrderService();
+            }
+
+            setSellerOrders(result?.orders || []);
+
+        } catch (err) {
+            setError(err.message || "Error in fetching seller orders");
         } finally {
-            setLoading(true);
+            setLoading(false); // ✅ correct
         }
-    }
+    }, []);
 
+    // Fetch when `status` changes
     useEffect(() => {
-        fetchOrder();
-    }, [])
+        fetchOrders(status);
+    }, [fetchOrders, status]);
 
     return {
         loading,
         error,
-        sellerOrders
-    }
-
-}
+        sellerOrders,
+        // convenience refetch that uses the current status
+        refetch: () => fetchOrders(status),
+        // raw fetch in case callers want to pass a different status
+        fetchOrders,
+    };
+};
 
 /*
     Accept order 
@@ -159,7 +175,7 @@ export const useSellerAction = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
-    
+
     const [acceptResult, setAcceptResult] = useState([]);
     const [cancelResult, setCancelResult] = useState([]);
 
@@ -168,7 +184,7 @@ export const useSellerAction = () => {
             setLoading(true);
             setError("");
 
-            const result = await acceptOrderService(productId);
+            const result = await acceptOrderService(productId, "accepted");
             console.log("Result accepeted her ", result);
             setAcceptResult(result.result);
             setMessage({
@@ -180,7 +196,7 @@ export const useSellerAction = () => {
             setError(error.message || "Error in fetching the Seller Order")
 
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     }
 
@@ -201,7 +217,7 @@ export const useSellerAction = () => {
             setError(error.message || "Error in fetching the Seller Order")
 
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     }
 

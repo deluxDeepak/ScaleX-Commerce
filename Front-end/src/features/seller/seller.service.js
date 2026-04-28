@@ -31,21 +31,21 @@ export const getMyProductService = async () => {
 
 }
 
-
-export const getSellerOrderService = async () => {
+// Get all orders of seller
+export const getSellerOrderService = async (status = null) => {
     try {
-        const res = await getSellerOrderApi();
+        const res = await getSellerOrderApi(status);
         return res.data;
     } catch (error) {
-        throw new Error("Error in Order Service", error);
-
+        throw new Error(
+            error?.response?.data?.message || "Error in Order Service"
+        );
     }
+};
 
-}
-
-export const acceptOrderService = async (productId) => {
+export const acceptOrderService = async (productId, status = "accepted") => {
     try {
-        const res = await acceptOrderApi(productId);
+        const res = await acceptOrderApi(productId, status);
         return res.data;
     } catch (error) {
         throw new Error("Error in Accept Order Service", error);

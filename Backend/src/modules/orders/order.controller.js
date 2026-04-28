@@ -61,7 +61,6 @@ const getMyOrders = async (req, res) => {
 const getSellerOrders = async (req, res) => {
 
     const sellerId = req.user.id;
-    console.log("Sellerid is", sellerId)
     const { status } = req.query;
 
     try {

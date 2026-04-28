@@ -137,6 +137,9 @@ const createOrderService = async (items, userId, address, paymentMethod) => {
     }
 }
 
+
+
+
 const getMyOrdersService = async (userId) => {
     if (!userId) {
         throw new ValidationError("User is required ");
@@ -146,25 +149,60 @@ const getMyOrdersService = async (userId) => {
     return orders || []
 }
 
+// Derie Order service 
+const deriveOrderStatus = (order, sellerId) => {
+    const sellerShipments = order.shipments.filter(
+        s => String(s.seller) === String(sellerId)
+    );
+
+    console.log("Shipment orders", sellerShipments);
+
+    const statuses = sellerShipments.map(s => s.status);
+
+    if (statuses.every(s => s === "delivered" || s === "cancelled")) {
+        return "completed";
+    }
+
+    if (statuses.some(s => ["accepted", "packed", "shipped", "out_for_delivery"].includes(s))) {
+        return "processing";
+    }
+
+    return "pending";
+};
+
+/*
+    only three order Status added now 
+    completed
+    processing
+    pending
+
+*/
 const getSellerOrdersService = async (sellerId, status) => {
     if (!sellerId) {
         throw new ValidationError("Seller id is required");
     }
-    // 1.Find the Order by seller id store in document
-    const orders = await orderRepo.findOrderBySellerID(sellerId, status);
-    console.log("Orders get by the seller", orders);
-    /*
-        Seller 1 and seller 2 included 
-        items: [
-            { productId: A, seller: seller1 },
-            { productId: B, seller: seller2 }
-        ]
-    */
+    // Fetch all orders containing this seller's items.
+    // Seller-specific status is derived from shipments below.
+    const orders = await orderRepo.findOrderBySellerID(sellerId);
 
-    if (!orders || orders.length === 0) {
-        return [];
+    if (!orders || orders.length === 0) return [];
+
+    const enrichedOrders = orders.map(order => {
+        const derivedStatus = deriveOrderStatus(order, sellerId);
+
+        return {
+            ...order.toObject(),
+            sellerStatus: derivedStatus
+        }
+    });
+
+    if (status) {
+        const filtered = enrichedOrders.filter((o) => o.sellerStatus === status);
+        return filtered || [];
     }
-    return orders || [];
+
+    return enrichedOrders || [];
+
 }
 
 const getSingleOrderService = async (orderId, userId) => {

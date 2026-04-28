@@ -54,6 +54,9 @@ This project focuses on building a **scalable and observable backend system** wi
 
 ---
 
+## Buisness logic detailed part 
+
+
 ## 🧪 Testing & Performance
 
 ### 🔹 1. Backend (Local Testing)
