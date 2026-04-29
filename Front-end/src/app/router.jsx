@@ -9,6 +9,7 @@ import sellerRoutes from "../features/seller/routes";
 import userRoutes from "../features/user/routes";
 import authRoutes from "../features/auth/route";
 import reviewRoutes from "../features/review/routes";
+import introductionRoutes from "../features/introScalex/route"
 
 const testFunction = () => (
     <div>
@@ -24,5 +25,6 @@ export const router = createBrowserRouter([
     sellerRoutes,
     userRoutes,
     authRoutes,
+    introductionRoutes,
     { path: "/test", Component: testFunction },
 ]);

@@ -6,15 +6,58 @@ const OrderItemSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
     },
-    seller:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     name: String,   //history --new nahi (seller change the price and different)
     price: Number,  //history --new nahi 
     qty: Number,    //history --new nahi
     image: String,  //history --new nahi 
 });
+
+const ShipmentSchema = new mongoose.Schema({
+
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    orderItems: [
+        {
+            type: mongoose.Schema.Types.ObjectId
+        }
+    ],
+    trackingId: String,      // courier tracking number
+    courier: String,        // e.g., Delhivery, BlueDart
+
+    // "pending" → "accepted" → "packed" → "shipped" → "out_for_delivery" → "delivered"
+    status: {
+        type: String,
+        enum: [
+            "pending",
+            "accepted",
+            "packed",
+            "shipped",
+            "out_for_delivery",
+            "delivered"
+        ],
+        default: "pending"
+    },
+
+    // Push current status 
+    statusHistory: [
+        {
+            status: String,
+            timestamp: {
+                type: Date,
+                default: Date.now()
+            }
+
+        }
+
+    ],
+})
 
 const OrderSchema = new mongoose.Schema(
     {
@@ -23,13 +66,23 @@ const OrderSchema = new mongoose.Schema(
             ref: "User",
             required: true,
         },
-        items: [OrderItemSchema],
+        items: [OrderItemSchema],    //Snapshot of the order 
+        shipments: [ShipmentSchema],    //tracking layer of the order
+
         totalPrice: Number,
         status: {
             type: String,
-            enum: ["pending", "paid", "shipped", "delivered", "accepted", "cancelled"],
-            default: "pending",
+            enum: [
+                "created",     // order placed
+                "paid",        // payment done
+                "cancelled",    // Order cancel
+                "completed",   // all shipments delivered
+                "processing"
+            ],
+            default: "created",
         },
+
+
 
         // Order me address snapshot ke liye store karte hain, user wale address se link nahi rakhte.
         // Order karke agr user adress change kar le to problem hoga 
@@ -43,10 +96,25 @@ const OrderSchema = new mongoose.Schema(
             pincode: String,
         },
 
+        // What is the Payment method ?.
         paymentMethod: {
             type: String,
             enum: ["COD", "ONLINE"],
         },
+
+        // Payment is done or not 
+        paymentStatus: {
+            type: String,
+            enum: ["pending", "paid", "failed", "refunded"],
+            default: "pending"
+        },
+        
+        // After payment is done 
+        paymentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Payment"
+        },
+        estimatedDelivery: Date
     },
     { timestamps: true }
 );
