@@ -96,11 +96,24 @@ const OrderSchema = new mongoose.Schema(
             pincode: String,
         },
 
+        // What is the Payment method ?.
         paymentMethod: {
             type: String,
             enum: ["COD", "ONLINE"],
         },
 
+        // Payment is done or not 
+        paymentStatus: {
+            type: String,
+            enum: ["pending", "paid", "failed", "refunded"],
+            default: "pending"
+        },
+        
+        // After payment is done 
+        paymentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Payment"
+        },
         estimatedDelivery: Date
     },
     { timestamps: true }

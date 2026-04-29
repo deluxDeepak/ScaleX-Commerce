@@ -11,6 +11,7 @@ const sellerRoutes = require("../modules/seller/seller.routes")
 const reviewRoutes = require("../modules/reviewRating/review.routes");
 const monitoringRoutes = require("./monitoring.route");
 const orderRoutes = require("../modules/orders/order.routes");
+const paymentRoutes = require("../modules/payments/payment.routes");
 
 // All module route export here 
 
@@ -24,6 +25,7 @@ router.use("/review", reviewRoutes);
 router.use("/cart", cartRoutes);
 
 router.use("/order", orderRoutes);
+router.use("/payment", paymentRoutes);
 
 
 // Health route bhi yehi export kar do 

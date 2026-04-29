@@ -50,6 +50,11 @@ const config = {
 
     RESET_PASSWORD_LINK: process.env.RESET_PASSWORD_LINK,
 
+
+    // Payment 
+    RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
+    RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
+
     // Monitoring 
     SENTRY_DSN: process.env.SENTRY_DSN,
 }
