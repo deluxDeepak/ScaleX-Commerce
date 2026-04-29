@@ -6,6 +6,14 @@ const paymentRepo = require("./payment.repository")
 
 const createRazorpayOrderService = async (orderId) => {
 
+    // Guard: Razorpay not initialized (e.g., in test environment)
+    if (!razorpayInstance) {
+        throw new PaymentError(
+            "Razorpay service is not configured. Check credentials and environment.",
+            503
+        );
+    }
+
     if (!orderId) {
         throw new ValidationError("Order id is required")
     }
