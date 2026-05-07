@@ -1,8 +1,9 @@
+const config = require("../../core/config/env.config");
 const razorpayInstance = require("../../core/config/razorpay.config");
 const { ValidationError, NotfoundError, PaymentError } = require("../../shared/errors")
 const orderRepo = require('../orders/order.repository')
 const paymentRepo = require("./payment.repository")
-
+const crypto = require("crypto");
 
 const createRazorpayOrderService = async (orderId) => {
 
@@ -31,7 +32,7 @@ const createRazorpayOrderService = async (orderId) => {
 
 
     // 3.Fetch the total amount 
-    const amount = order.totalPrice;
+    const amount = Math.round(order.totalPrice * 100);
 
     // Razorpay expects amount in paise
     const options = {
@@ -151,6 +152,58 @@ const createRazorpayOrderService = async (orderId) => {
 
 }
 
+const exptedSignature = (body) => {
+    return crypto.createHmac("sha256", config.RAZORPAY_KEY_SECRET)
+        .update(body.toString())
+        .digest("hex");
+
+}
+
+
+const verifyRazorpayPaymentService = async (response) => {
+    const { razorpay_payment_id, razorpay_signature, razorpay_order_id } = response;
+    if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
+        throw new ValidationError("Razorpay reponse is not persent ");
+    }
+
+    console.log("Response ", response);
+
+    // Generate a signature 
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const signatureExpected = exptedSignature(body);
+
+    // Compare the signature 
+    const isMatch = signatureExpected === razorpay_signature;
+    if (!isMatch) {
+        throw new ValidationError("Payment verification failed ");
+    }
+
+    // after verify Payment update payment model
+    const resPayment = await paymentRepo.findOneUpdate(
+        razorpay_order_id,
+        {
+            razorpayPaymentId: razorpay_payment_id,
+            razorpaySignature: razorpay_signature,
+            status: "captured"
+        }
+    );
+
+    if (!resPayment) {
+        throw new NotfoundError("Payment record not found for this Razorpay order");
+    }
+
+    // Order model update payment is done
+    await orderRepo.updateOrderById(resPayment.orderId,
+        {
+            paymentStatus: "paid",
+            status: "processing"
+        });
+
+    return resPayment;
+
+}
+
 module.exports = {
     createRazorpayOrderService,
+    verifyRazorpayPaymentService
 }

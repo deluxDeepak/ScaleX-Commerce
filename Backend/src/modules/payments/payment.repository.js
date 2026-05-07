@@ -6,6 +6,10 @@ const createPayment = (data) => {
     return Payment.create(data);
 }
 
+const findOneUpdate = (razorpayOrderId, data) => {
+    return Payment.findOneAndUpdate({ razorpayOrderId: razorpayOrderId }, data, { new: true });
+}
+
 const createPaymentLog = (data) => {
     return PaymentLog.create(data)
 }
@@ -13,4 +17,5 @@ const createPaymentLog = (data) => {
 module.exports = {
     createPayment,
     createPaymentLog,
+    findOneUpdate,
 }

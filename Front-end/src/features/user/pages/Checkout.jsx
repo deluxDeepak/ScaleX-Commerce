@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MapPin, Plus, CheckCircle, Home, Briefcase, LocateFixed, Pencil, Trash2 } from 'lucide-react'
 import { useCart } from '../../../context/CartContext'
 import OrderSummary from '../../store/components/OrderSummary'
@@ -6,19 +6,26 @@ import Button from '../../store/components/Button'
 import { useAddress } from '../hooks/useAdress'
 import SavedAdress from '../components/SavedAddress'
 import AddAddressForm from '../components/AddAddressForm'
+import RazorpayButton from '../../payment/components/RazorpayButton'
 
 const Checkout = () => {
-    const { cartItems } = useCart();
+    const { cartItems, clearCart } = useCart();
     const { userAddress, deleteAddress } = useAddress();
-    
+
     const [selectedId, setSelectedId] = useState(null);
     const [showForm, setShowForm] = useState(false);
 
+    useEffect(() => {
+        if (!selectedId && userAddress?.length > 0) {
+            setSelectedId(userAddress[0]._id);
+        }
+    }, [selectedId, userAddress]);
 
-    const selectedAddress = userAddress.find((a) => a._id === selectedId);
+
+    const selectedAddress = userAddress?.find((a) => a._id === selectedId);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <div className="min-h-screen bg-linear-to-b from-gray-50 to-white">
 
 
             <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
@@ -57,7 +64,7 @@ const Checkout = () => {
                 </div>
 
                 {/* Order summary (right side )======== */}
-                <div className="self-start w-full lg:w-96 xl:w-[400px]">
+                <div className="self-start w-full lg:w-96 xl:w-100">
                     <div className="sticky top-20 sm:top-24 flex flex-col gap-3 sm:gap-4">
 
                         {selectedAddress && (
@@ -73,11 +80,15 @@ const Checkout = () => {
                         )}
 
                         <OrderSummary cartItems={cartItems} />
-                        <Button
-                            className="w-full py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl sm:rounded-2xl text-sm sm:text-base transition active:scale-95 shadow-lg"
+                        <RazorpayButton
+                            cartItems={cartItems}
+                            address={selectedAddress}
+                            onSuccess={async () => {
+                                await clearCart();
+                            }}
                         >
-                            Proceed to Payment
-                        </Button>
+                            Pay Now
+                        </RazorpayButton>
 
                         <p className="text-center text-xs text-gray-400 flex items-center justify-center gap-1.5">
                             🔒 100% secure & encrypted checkout
