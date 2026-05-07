@@ -108,7 +108,7 @@ const OrderSchema = new mongoose.Schema(
             enum: ["pending", "paid", "failed", "refunded"],
             default: "pending"
         },
-        
+
         // After payment is done 
         paymentId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -118,6 +118,12 @@ const OrderSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+OrderSchema.index({
+    "shipments.seller": 1,
+    "shipments.status": 1,
+    createdAt: -1
+});
 
 const Order = mongoose.model("Order", OrderSchema);
 module.exports = Order;

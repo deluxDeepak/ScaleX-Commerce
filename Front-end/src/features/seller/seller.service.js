@@ -32,9 +32,9 @@ export const getMyProductService = async () => {
 }
 
 // Get all orders of seller
-export const getSellerOrderService = async (status = null) => {
+export const getSellerOrderService = async (status = null, page = 1, limit = 10) => {
     try {
-        const res = await getSellerOrderApi(status);
+        const res = await getSellerOrderApi(status, page, limit);
         return res.data;
     } catch (error) {
         throw new Error(

@@ -150,25 +150,34 @@ const getMyOrdersService = async (userId) => {
 }
 
 // Derie Order service 
+/*
 const deriveOrderStatus = (order, sellerId) => {
-    const sellerShipments = order.shipments.filter(
+
+    const shipment = order.shipments.find(
         s => String(s.seller) === String(sellerId)
     );
 
-    console.log("Shipment orders", sellerShipments);
-
-    const statuses = sellerShipments.map(s => s.status);
-
-    if (statuses.every(s => s === "delivered" || s === "cancelled")) {
-        return "completed";
+    if (!shipment) {
+        return "pending";
     }
 
-    if (statuses.some(s => ["accepted", "packed", "shipped", "out_for_delivery"].includes(s))) {
-        return "processing";
-    }
+    switch (shipment.status) {
 
-    return "pending";
+        case "accepted":
+        case "packed":
+        case "shipped":
+        case "out_for_delivery":
+            return "processing";
+
+        case "delivered":
+            return "completed";
+
+        default:
+            return "pending";
+    }
 };
+
+*/
 
 /*
     only three order Status added now 
@@ -177,31 +186,23 @@ const deriveOrderStatus = (order, sellerId) => {
     pending
 
 */
-const getSellerOrdersService = async (sellerId, status) => {
+
+const getSellerOrdersService = async (sellerId, status, page, limit) => {
     if (!sellerId) {
         throw new ValidationError("Seller id is required");
     }
     // Fetch all orders containing this seller's items.
     // Seller-specific status is derived from shipments below.
-    const orders = await orderRepo.findOrderBySellerID(sellerId);
+    const { orders, totalOrder, totalPages } = await orderRepo.findOrderBySellerID(sellerId, status, page, limit);
 
     if (!orders || orders.length === 0) return [];
 
-    const enrichedOrders = orders.map(order => {
-        const derivedStatus = deriveOrderStatus(order, sellerId);
-
-        return {
-            ...order.toObject(),
-            sellerStatus: derivedStatus
-        }
-    });
-
-    if (status) {
-        const filtered = enrichedOrders.filter((o) => o.sellerStatus === status);
-        return filtered || [];
+    return {
+        orders,
+        totalOrder,
+        totalPages
     }
 
-    return enrichedOrders || [];
 
 }
 
