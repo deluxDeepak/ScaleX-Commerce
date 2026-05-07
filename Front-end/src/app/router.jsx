@@ -2,7 +2,6 @@ import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
 
-import RazorpayButton from "../features/payment/components/RazorpayButton";
 import storeRoutes from "../features/store/routes";
 import productRoutes from "../features/product/routes";
 import sellerRoutes from "../features/seller/routes";
@@ -13,8 +12,7 @@ import introductionRoutes from "../features/introScalex/route"
 
 const testFunction = () => (
     <div>
-        This is testing button
-        <RazorpayButton />
+        Payment checkout lives on the user checkout page now.
     </div>
 );
 
