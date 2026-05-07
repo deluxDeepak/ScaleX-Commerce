@@ -116,51 +116,57 @@ export const useSellerProducts = () => {
 }
 
 
-export const useSellerOrder = (status = null) => {
+export const useSellerOrder = (status = null, page = 1, limit = 10) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [sellerOrders, setSellerOrders] = useState([]);
+    const [totalPage, setTotalPage] = useState(null);
+    const [totalOrder, setTotalOrder] = useState(null);
 
     // Generic fetch function (DRY)
-    const fetchOrders = useCallback(async (status = null) => {
+    const fetchOrders = useCallback(async (statusParam = null, pageParam = page, limitParam = limit) => {
         try {
             setLoading(true);
             setError("");
 
             let result;
 
-            if (status) {
+            if (statusParam) {
                 const validStatus = ["pending", "processing", "completed"];
 
-                if (!validStatus.includes(status)) {
+                if (!validStatus.includes(statusParam)) {
                     throw new Error("Invalid status");
                 }
 
-                result = await getSellerOrderService(status);
+                result = await getSellerOrderService(statusParam, pageParam, limitParam);
             } else {
-                result = await getSellerOrderService();
+                result = await getSellerOrderService(null, pageParam, limitParam);
             }
 
-            setSellerOrders(result?.orders || []);
+            setSellerOrders(result?.data?.orders || []);
+            setTotalPage(result?.data?.totalPages);
+            setTotalOrder(result?.data?.totalOrder);
 
         } catch (err) {
             setError(err.message || "Error in fetching seller orders");
         } finally {
             setLoading(false); // ✅ correct
         }
-    }, []);
+    }, [page, limit]);
 
-    // Fetch when `status` changes
+    // Fetch when `status`, `page` or `limit` changes
     useEffect(() => {
-        fetchOrders(status);
-    }, [fetchOrders, status]);
+        fetchOrders(status, page, limit);
+    }, [fetchOrders, status, page, limit]);
 
     return {
         loading,
         error,
         sellerOrders,
+        totalPage,
+        totalOrder,
         // convenience refetch that uses the current status
-        refetch: () => fetchOrders(status),
+        refetch: () => fetchOrders(status, page, limit),
         // raw fetch in case callers want to pass a different status
         fetchOrders,
     };

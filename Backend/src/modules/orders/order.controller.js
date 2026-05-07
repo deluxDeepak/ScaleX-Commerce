@@ -61,11 +61,11 @@ const getMyOrders = async (req, res) => {
 const getSellerOrders = async (req, res) => {
 
     const sellerId = req.user.id;
-    const { status } = req.query;
+    const { status, page, limit } = req.query;
 
     try {
-        const sellerOrders = await getSellerOrdersService(sellerId, status);
-        if (sellerOrders.length === 0) {
+        const result = await getSellerOrdersService(sellerId, status, page, limit);
+        if (result.orders.length === 0) {
             return res.status(200).json({
                 message: "Order card is empty | No order till date",
                 success: true
@@ -74,7 +74,7 @@ const getSellerOrders = async (req, res) => {
         return res.status(200).json({
             message: "Order fetch Successfully",
             success: true,
-            orders: sellerOrders
+            data: result
         })
 
     } catch (error) {
@@ -118,7 +118,7 @@ const updateOrderStatus = async (req, res) => {
     const { status } = req.body;
 
     try {
-        const result = await updateOrderService(sellerId, orderId,status)
+        const result = await updateOrderService(sellerId, orderId, status)
         console.log("Result is ", result);
         res.status(201).json({
             message: "Order accepted and shipped",

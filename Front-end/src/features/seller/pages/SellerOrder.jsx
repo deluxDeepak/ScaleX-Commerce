@@ -1,6 +1,7 @@
 import { CheckCircle, Info, X, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useSellerAction, useSellerOrder } from "../seller.hook"
+import Pagination from "../../../components/Pagination";
 const TABS = ["All", "Pending", "Processing", "Completed"];
 
 const STATUS_MAP = {
@@ -140,18 +141,30 @@ const ProductOrder = ({ order, status }) => {
 
 const SellerOrder = () => {
   const [activeTab, setActiveTab] = useState("All");
-  console.log("Active tab at starting", activeTab)
+
+
+
+
+  // Selected page 
+  const [selectedPage, setSelectedPage] = useState(1);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setSelectedPage(1);
+  }
+
+
 
   const backendStatus = activeTab === "All" ? null : STATUS_MAP[activeTab];
   console.log("Backend status", backendStatus);
 
-  const { sellerOrders, loading, error, } =
-    useSellerOrder(backendStatus);
+  const { sellerOrders, totalPage, loading, error, } =
+    useSellerOrder(backendStatus, selectedPage);
 
 
   return (
     <div className="bg-[#f5f4f1] min-h-screen p-4 flex flex-col gap-4">
-      <HeaderOrders active={activeTab} onChange={setActiveTab} />
+      <HeaderOrders active={activeTab} onChange={handleTabChange} />
 
       {/* Loading */}
       {loading && (
@@ -167,15 +180,24 @@ const SellerOrder = () => {
         </div>
       )}
 
-      {/* Orders */}
-      {!loading &&
-        sellerOrders.map((order) => (
-          <ProductOrder
-            key={order._id}
-            order={order}
-            status={activeTab}
+      {/* Orders if orders is greater than 10 then give the page option  */}
+      {!loading && sellerOrders.map((order) => (
+        <ProductOrder
+          key={order._id}
+          order={order}
+          status={activeTab}
+        />
+      ))}
+
+      {
+        totalPage > 1 && (
+          <Pagination
+            totalPage={totalPage}
+            selectedPage={selectedPage}
+            setSelectedPage={setSelectedPage}
           />
-        ))}
+        )
+      }
 
       {/* Empty */}
       {!loading && sellerOrders.length === 0 && (

@@ -18,10 +18,15 @@ export const getMyProductAPi = async () => {
 }
 
 // Get all orders of seller 
-export const getSellerOrderApi = (status = null) => {
-    const url = status
-        ? `/order/seller?status=${status}`
-        : `/order/seller`;
+export const getSellerOrderApi = (status = null, page = 1, limit = 10) => {
+    // Use url search params 
+    const params = new URLSearchParams();
+    if (status !== null && status !== undefined && String(status).trim() !== "") params.append("status", status);
+    if (page !== null && page !== undefined) params.append("page", page);
+    if (limit !== null && limit !== undefined) params.append("limit", limit);
+
+    const query = params.toString();
+    const url = query ? `/order/seller?${query}` : `/order/seller`;
 
     return api.get(url);
 };

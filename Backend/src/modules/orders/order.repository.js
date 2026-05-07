@@ -20,8 +20,47 @@ const findOrders = async (query) => {
 
 }
 
-const findOrderBySellerID = async (sellerId) => {
-    return Order.find({ "items.seller": sellerId }).limit(10);
+const findOrderBySellerID = async (sellerId, status = null, page = 1, limit = 10) => {
+    const skip = (page - 1) * limit;
+
+    const shipmentStatusMap = {
+        pending: ["pending"],
+        processing: [
+            "accepted",
+            "packed",
+            "shipped",
+            "out_for_delivery"
+        ],
+        completed: ["delivered"]
+    };
+
+    const query = {
+        shipments: {
+            $elemMatch: {
+                seller: sellerId
+            }
+        }
+    };
+
+    if (status && shipmentStatusMap[status]) {
+        query.shipments.$elemMatch.status = {
+            $in: shipmentStatusMap[status]
+        };
+    }
+
+    const orders = await Order.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const totalOrder = await Order.countDocuments(query);
+
+    return {
+        orders,
+        totalOrder,
+        page,
+        totalPages: Math.ceil(totalOrder / limit)
+    };
 }
 
 const findSellerOrdersByProductIds = async (productIds, status) => {
