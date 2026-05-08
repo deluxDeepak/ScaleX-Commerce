@@ -31,7 +31,6 @@ const AddReview = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log("name and value is ", { name, value });
 
         setReview({
             ...review,
@@ -45,7 +44,6 @@ const AddReview = () => {
     const fileRef = useRef();
 
     const user = useParams();
-    console.log("Id of the products is from addreview section", user);
     // console.log("Productid id ", user.productId);
 
     /*
@@ -86,7 +84,7 @@ const AddReview = () => {
             const res = await createReviewsService(user.productId, formData);
             console.log("response is ", res);
 
-            setMessage("Review submitted Successfully ✅");
+            setMessage(res.message || "Review submitted Successfully ✅");
 
             setTimeout(() => {
                 navigate(-1)

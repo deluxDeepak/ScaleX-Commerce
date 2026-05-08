@@ -26,6 +26,19 @@ const uploadObjectService = async ({ key, body, contentType }) => {
     };
 };
 
+const getUploadUrl = async ({ key, body, contentType }) => {
+    const command = new PutObjectCommand({
+        Bucket: config.STORAGE_BUCKET,
+        Key: key,
+        Body: body,
+        ContentType: contentType
+    });
+
+    //send data to store 
+    const url = await getSignedUrl(storageClient, command, { expiresIn: 300 })
+    return url
+};
+
 const deleteObjectService = async (key) => {
     const command = new DeleteObjectCommand({
         Bucket: config.STORAGE_BUCKET,
@@ -45,8 +58,7 @@ const getObjectSignedUrl = async (key, expiresIn = 3600) => {
     });
 
     const signedUrl = await getSignedUrl(
-        storageClient,
-        command,
+        storageClient, command,
         { expiresIn }
     );
 
@@ -69,5 +81,6 @@ Use like this in module
 module.exports = {
     uploadObjectService,
     deleteObjectService,
-    getObjectSignedUrl
+    getObjectSignedUrl,
+    getUploadUrl
 };
