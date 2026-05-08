@@ -65,6 +65,10 @@ jobs:
           context: ./Front-end
           file: ./Front-end/Dockerfile.prod
           push: true
+          build-args: |
+            VITE_BASE_URL=${{ secrets.VITE_BASE_URL }}
+            VITE_RAZORPAY_KEY_ID=${{ secrets.VITE_RAZORPAY_KEY_ID }}
+            
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:dev
             ${{ secrets.DOCKER_USERNAME }}/scalex-frontend:${{ github.sha }}

@@ -1,19 +1,17 @@
-name: "Hellow E-E-commerce"
+name: "Hello E-Commerce"
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ dev, staging]
 
 jobs:
   hellowEcommerce-Project:
-    # Job settings and variable 
+    # Job settings and variables
     name: CI Pipeline - E-Commerce Application
     # runs-on: ubutntu-latest
     runs-on: ubuntu-latest
     env:
-      VARIABLE: E-Commerce Project
+      PROJECT_NAME: "E-Commerce Project"
     
     # Steps in the job 
     steps:
