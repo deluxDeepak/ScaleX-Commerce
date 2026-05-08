@@ -16,11 +16,16 @@ jobs:
   Deploy-toVps:
     name: Deploy to Ec2 Staging
     runs-on: ubuntu-latest
+    # Take from Github 
     environment: Staging_secret
 
+    # Dev branch pushed the devlopment image 
+    # Use that image to test the stable version 
     env:
-      IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
+      BACKEND_IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-backend
       FRONTEND_IMAGE_REPO: ${{ secrets.DOCKER_USERNAME }}/scalex-frontend
+
+      # https://staging.your-domain.com or http://YOUR_VPS_IP:4000
       STAGING_BASE_URL: ${{ secrets.STAGING_BASE_URL }}
       SOURCE_TAG: dev
 
@@ -35,7 +40,7 @@ jobs:
       # 1.Pull the image 
       - name: Pull backend image by stable tag
         run: |
-          docker pull $IMAGE_REPO:$SOURCE_TAG
+          docker pull $BACKEND_IMAGE_REPO:$SOURCE_TAG
 
       - name: Pull frontend image by stable tag
         run: |
@@ -44,15 +49,15 @@ jobs:
       # 2.Tag the image 
       - name: Tag staging image 
         run: |
-          docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:staging
-          docker tag $IMAGE_REPO:$SOURCE_TAG $IMAGE_REPO:latest
+          docker tag $BACKEND_IMAGE_REPO:$SOURCE_TAG $BACKEND_IMAGE_REPO:staging
+          docker tag $BACKEND_IMAGE_REPO:$SOURCE_TAG $BACKEND_IMAGE_REPO:latest
           docker tag $FRONTEND_IMAGE_REPO:$SOURCE_TAG $FRONTEND_IMAGE_REPO:staging
           docker tag $FRONTEND_IMAGE_REPO:$SOURCE_TAG $FRONTEND_IMAGE_REPO:latest
           
       # 3.Push the stagged image 
       - name: Push Staging image
         run: |
-          docker push $IMAGE_REPO:staging
+          docker push $BACKEND_IMAGE_REPO:staging
           docker push $FRONTEND_IMAGE_REPO:staging
 
       # Deploy to vps 
@@ -64,7 +69,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           # 1.pull the Front-end image with tag
-          # 2. pull backend image with tag 
+          # 2. pull backend image with tag (staging)
           # 3.compose file should persent on vps 
           script: |
             cd app
@@ -87,8 +92,11 @@ jobs:
       - name: Completion message 
         run: echo Deployed to VPS sucessful😊✅
 
+
+  # Backend should be running at that time 
   integration:
     runs-on: ubuntu-latest
+    # Take from Github 
     environment: Staging_secret
     needs: ["Deploy-toVps"]
     if: ${{ needs.Deploy-toVps.result == 'success' }}
@@ -123,6 +131,7 @@ jobs:
       - name: Run integration test
         run: npm run test:integration
   
+  # Backend + Front-end should be running at same time 
   e2e:
     runs-on: ubuntu-latest
     needs: ["integration"]

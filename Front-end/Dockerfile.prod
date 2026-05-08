@@ -7,6 +7,16 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
+
+# Build arguments
+ARG VITE_BASE_URL
+ARG VITE_RAZORPAY_KEY_ID
+
+# Inject into environment
+ENV VITE_BASE_URL=$VITE_BASE_URL
+ENV VITE_RAZORPAY_KEY_ID=$VITE_RAZORPAY_KEY_ID
+
+
 RUN npm run build
 
 
