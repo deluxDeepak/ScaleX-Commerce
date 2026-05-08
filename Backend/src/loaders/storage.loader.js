@@ -15,7 +15,6 @@ const initStorage = async () => {
 
         const hasStorageConfig = Boolean(
             config.STORAGE_ACCESS &&
-            config.STORAGE_ENDPOINT &&
             config.STORAGE_SECRET &&
             config.STORAGE_BUCKET
         );
