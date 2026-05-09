@@ -22,9 +22,17 @@ const upload = multer({
 
     fileFilter: (req, file, cb) => {
         const mimeType = file?.mimetype || "";
-        const isImage = /^image\/[\w.+-]+$/i.test(mimeType);
+        const allowedMimeTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            "image/gif",
+            "image/avif"
+        ];
+        const isAllowed = allowedMimeTypes.includes(mimeType);
+        // const isImage = /^image\/[\w.+-]+$/i.test(mimeType);
 
-        if (!isImage) {
+        if (!isAllowed) {
             return cb(createFileTypeError(file), false);
         }
 

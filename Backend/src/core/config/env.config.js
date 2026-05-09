@@ -40,6 +40,7 @@ const config = {
     STORAGE_ENDPOINT: process.env.MINIO_ENDPOINT || process.env.S3_ENDPOINT,
     STORAGE_ACCESS: process.env.MINIO_ACCESS || process.env.S3_ACCESS,
     STORAGE_SECRET: process.env.MINIO_SECRET || process.env.S3_SECRET,
+    STORAGE_REGION:process.env.S3_REGION || "us-east-1",
 
     STORAGE_BUCKET: process.env.STORAGE_BUCKET,
     FILE_BASE_URL: process.env.FILE_BASE_URL,
