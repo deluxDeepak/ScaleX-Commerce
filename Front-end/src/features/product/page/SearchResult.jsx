@@ -49,8 +49,8 @@ const FilterOption = ({ products, query }) => {
                     onChange={handleChange}
                 >
                     <option value="">Relevance</option>
-                    <option value="-price">Price: Low to High</option>
-                    <option value="price">Price: High to Low</option>
+                    <option value="-price">Price: High to Low</option>
+                    <option value="price">Price: Low to High</option>
                     <option value="newProduct">Newest</option>
                 </select>
             </div>
