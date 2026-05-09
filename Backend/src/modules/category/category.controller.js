@@ -14,13 +14,18 @@ const getAllCategory = async (req, res) => {
         });
 
     } catch (error) {
-        logger.error({ error }, "Error in fetching category")
-        res.status(404).json({
+        logger.error(
+            {
+                message: error.message,
+                stack: error.stack
+            },
+            "Error in fetching category"
+        );
+
+        return res.status(error.statusCode || 500).json({
             success: false,
             message: error.message || "Error in fetching category"
         });
-
-
     }
 }
 const getProductByCatId = async (req, res) => {
@@ -37,7 +42,7 @@ const getProductByCatId = async (req, res) => {
 
     } catch (error) {
         logger.error({ error }, "Error in fetching Product by category")
-        res.status(404).json({
+        res.status(error.statusCode || 500).json({
             success: false,
             message: error.message || "Error in fetching Product by category"
         });
@@ -83,7 +88,7 @@ const getAllSubCategory = async (req, res) => {
 
     } catch (error) {
         logger.error({ error }, "Error in fetching subCategory")
-        res.status(404).json({
+        res.status(error.statusCode || 500).json({
             success: false,
             message: error.message || "Error in fetching subCategory"
         });

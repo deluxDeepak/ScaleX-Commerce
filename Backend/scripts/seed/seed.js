@@ -1,8 +1,13 @@
+// Ensure seed runs with production env unless explicitly overridden
+process.env.NODE_ENV = process.env.NODE_ENV || "production";
 const path = require("path");
 const dotenv = require("dotenv");
 
-// Load Backend/.env when seeding from repo root.
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+// Load the project-root env file that corresponds to NODE_ENV (e.g. .env.production)
+const envFile = path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`);
+dotenv.config({ path: envFile });
+console.log("Seeding using env file:", envFile);
+
 
 
 const connectMongoDb = require("../../src/core/db/mongo.db");

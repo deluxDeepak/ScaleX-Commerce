@@ -51,8 +51,6 @@ const getProducts = async () => {
         select: "name slug icon"   // optimize response
     });
 
-    
-    console.log("Categories are ", categories);
     const seller = await User.findOne({ role: "seller" });
 
     const sellerId = seller._id;

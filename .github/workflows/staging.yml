@@ -87,10 +87,19 @@ jobs:
             echo "Waiting for staging health endpoint..."
             sleep 5
           done
+
+      # Backend name comes from the service name 
+      - name: Seed initial data
+        run: |
+          cd app
+          docker compose exec backend npm run seed 
         
       # Deployment completion message 
       - name: Completion message 
         run: echo Deployed to VPS sucessful😊✅
+  
+  
+
 
 
   # Backend should be running at that time 

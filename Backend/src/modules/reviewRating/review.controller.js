@@ -36,14 +36,12 @@ const createReview = async (req, res) => {
         if (files && files.length > 0) {
             for (let file of files) {
 
-                const key = generateKey("profile", file.originalname);
-                console.log("Key generated is ", key);
+                const key = generateKey("reviews", file.originalname);
                 const uploadRes = await uploadObjectService({
                     key: key,
                     body: file.buffer,
                     contentType: file.mimetype
                 });
-                console.log("Response key and url are ", uploadRes.key);
 
                 urls.push(uploadRes.url);
 
@@ -63,9 +61,9 @@ const createReview = async (req, res) => {
         });
     } catch (error) {
         logger.error({ error }, "Error in creating Review")
-        res.status(400).json({
+        res.status(error.statusCode || 400).json({
             success: false,
-            message: error.message
+            message: error.message || "Error in creating Review"
         });
 
     }
@@ -84,9 +82,9 @@ const getProductReviews = async (req, res) => {
 
     } catch (error) {
         logger.error({ error }, "Error in fetching Review")
-        res.status(400).json({
+        res.status(error.statusCode || 400).json({
             success: false,
-            message: error.message
+            message: error.message || "Error in fetching Review"
         });
 
     }
@@ -104,9 +102,9 @@ const getMyReviews = async (req, res) => {
         });
     } catch (error) {
         logger.error({ error }, "Error in fetching user reviews");
-        res.status(400).json({
+        res.status(error.statusCode || 400).json({
             success: false,
-            message: error.message,
+            message: error.message || "Error in fetching user reviews",
         });
     }
 };
@@ -124,9 +122,9 @@ const updateReview = async (req, res) => {
 
     } catch (error) {
         logger.error({ error }, "Error in Updating Review")
-        res.status(400).json({
+        res.status(error.statusCode || 400).json({
             success: false,
-            message: error.message
+            message: error.message || "Error in Updating Review"
         });
 
     }
@@ -144,9 +142,9 @@ const deleteReview = async (req, res) => {
 
     } catch (error) {
         logger.error({ error }, "Error in deleting Review")
-        res.status(400).json({
+        res.status(error.statusCode || 400).json({
             success: false,
-            message: error.message
+            message: error.message || "Error in deleting Review"
         });
 
     }
@@ -191,7 +189,7 @@ const updateReviewImage = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 400).json({
             success: false,
             message: error.message || "File is not Provided"
 
@@ -224,7 +222,7 @@ const deleteReviewImage = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode || 400).json({
             success: false,
             message: error.message || "File is not Delted"
 

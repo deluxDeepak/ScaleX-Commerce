@@ -11,7 +11,8 @@
     "test:coverage": "jest --runInBand --detectOpenHandles --coverage",
     "build": "node --check src/server.js",
     "lint": "eslint .",
-    "seed": "node scripts/seed/seed.js",
+    "seed:dev": "cross-env NODE_ENV=development node scripts/seed/seed.js",
+    "seed:prod": "cross-env NODE_ENV=production node scripts/seed/seed.js",
     "prepare": "husky"
   },
   "keywords": [],
@@ -20,6 +21,7 @@
   "type": "commonjs",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1008.0",
+    "@aws-sdk/s3-request-presigner": "^3.1045.0",
     "@sentry/node": "^10.44.0",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
