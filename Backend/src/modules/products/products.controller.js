@@ -2,7 +2,7 @@ const logger = require("../../core/logger/logger");
 const { uploadObjectService, deleteObjectService } = require("../../core/storage/storage.services");
 const { generateKey, getKeyFromUrl } = require("../../shared/utils/genKeys.utils");
 const generateSlug = require("../../shared/utils/genSlug");
-const { getAllProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService, addProductImageService, deleteProductImageService, getFilterProductsService, getProductsSuggestionService, getMyProductsService } = require("./product.service");
+const { getAllProductsService, getProductByIdService, createProductService, updateProductService, deleteProductService, addProductImageService, deleteProductImageService, getFilterProductsService, getProductsSuggestionService, getMyProductsService, adminUpdateProductService } = require("./product.service");
 
 // yehan se filter bhi lagaye hai (Normal )
 const getProducts = async (req, res) => {
@@ -98,7 +98,7 @@ const getProductById = async (req, res) => {
 // Seller products (Products added by the seller )
 const getMyProducts = async (req, res) => {
     const sellerId = req.user.id
-    console.log("Seller id is ",sellerId);
+    console.log("Seller id is ", sellerId);
     // 69eadd87f0d31f9018aa8a14
     try {
         const products = await getMyProductsService(sellerId);
@@ -179,6 +179,34 @@ const updateProduct = async (req, res) => {
         res.status(200).json({
             success: true,
             products: result,
+            message: "Product Updated Successfully"
+        });
+
+
+    } catch (error) {
+        logger.error({ error }, "Error in Updating product")
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+}
+
+const adminUpdateProduct = async (req, res) => {
+
+    //   category
+    //   section
+    //   approval status
+    //   featured product
+    //   visibility
+    const data = req.body;
+    try {
+        const result = await adminUpdateProductService(req.params.id, data);
+        res.status(200).json({
+            success: true,
+            data: result,
             message: "Product Updated Successfully"
         });
 
@@ -321,6 +349,7 @@ module.exports = {
     getMyProducts,
     createProduct,
     updateProduct,
+    adminUpdateProduct,
     deleteProduct,
 
     // Images 
