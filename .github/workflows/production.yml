@@ -68,11 +68,8 @@ jobs:
             cd app
             docker compose pull
             docker compose up -d
-       # Backend name comes from the service name 
-      - name: Seed initial data
-        run: |
-          cd app
-          docker compose exec backend npm run seed 
+            docker compose exec backend npm run seed 
+          
 
       - name: Wait for app to start 
         run: sleep 15

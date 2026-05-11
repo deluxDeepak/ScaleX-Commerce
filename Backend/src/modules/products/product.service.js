@@ -164,7 +164,7 @@ const createProductService = async (data, urls = []) => {
 }
 
 // Usign transation in mongodb 
-const reduceStockService = async (productId, qty,type, session) => {
+const reduceStockService = async (productId, qty, type, session) => {
     const product = await findProductByid(productId);
     if (!product) {
         throw new NotfoundError("Product not found");
@@ -225,6 +225,72 @@ const updateProductService = async (id, data) => {
 
     }
 }
+
+const adminUpdateProductService = async (id, data) => {
+    if (!id) {
+        throw new ValidationError("Product id is required");
+    }
+
+    if (!data || Object.keys(data).length === 0) {
+        throw new ValidationError("Update data is required");
+    }
+
+    try {
+        // Only admin-controlled fields is allowed
+        const allowedFields = [
+            "section",
+            "category",
+            "featured",
+            "isActive",
+            "tags"
+        ];
+
+        const filteredData = {};
+
+        for (const key of allowedFields) {
+            if (data[key] !== undefined) {
+                filteredData[key] = data[key];
+            }
+        }
+
+        if (Object.keys(filteredData).length === 0) {
+            throw new ValidationError(
+                "No valid admin fields provided for update"
+            );
+        }
+
+        const updatedProduct = await updateProductById(id, filteredData);
+
+        if (!updatedProduct) {
+            throw new DatabaseError("Product not found");
+        }
+
+        logger.info(
+            {
+                productId: id,
+                updatedFields: Object.keys(filteredData),
+            },
+            "Product updated successfully by admin"
+        );
+
+        return updatedProduct;
+
+    } catch (error) {
+        logger.error(
+            {
+                error: error.message,
+                stack: error.stack,
+                productId: id,
+                payload: data,
+            },
+            "Error while updating product"
+        );
+
+        throw error;
+    }
+};
+
+
 
 const deleteProductService = async (id) => {
     if (!id) {
@@ -309,6 +375,7 @@ module.exports = {
     getMyProductsService,
     createProductService,
     updateProductService,
+    adminUpdateProductService,
     deleteProductService,
     reduceStockService,
 

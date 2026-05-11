@@ -18,7 +18,8 @@ const {
   updateProductImage,
   getMyProducts,
   getProductsFilter,
-  getProductsSuggestion
+  getProductsSuggestion,
+  adminUpdateProduct
 } = require("./products.controller");
 
 
@@ -48,7 +49,7 @@ router.post("/",
 router.patch(
   "/:id",
   authenticate,
-  checkRole("seller"),
+  checkRole(["seller"]),
   validate(productParamsSchema, "params"),
   validate(updateProductSchema, "body"),
   // checkProductOwner,
@@ -62,7 +63,7 @@ router.patch(
 router.delete(
   "/:id",
   authenticate,
-  checkRole("seller"),
+  checkRole(["seller"]),
   validate(productParamsSchema, "params"),
   // checkProductOwner,
   deleteProduct
@@ -76,15 +77,25 @@ router.delete(
 // ===== ADMIN =====
 // middleware ==admin 
 
-router.get(
-  "/admin/products",
-  authenticate,
-  checkRole("admin"),
-  () => { }
-);
-
+// Admin update
+/*
+  Only Admin can update:
+  category
+  section
+  approval status
+  featured product
+  visibility
+*/
 router.patch(
-  "/admin/products/:id",
+  "/admin/:id",
+  authenticate,
+  checkRole(["admin"]),
+  adminUpdateProduct
+); //done
+
+
+router.get(
+  "/admin",
   authenticate,
   checkRole("admin"),
   () => { }
