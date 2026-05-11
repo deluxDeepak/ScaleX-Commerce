@@ -1,5 +1,6 @@
 const router = require("express").Router();
 
+const { apiLimiter, adminLimiter } = require("../../core/security/ratelimit");
 const authenticate = require("../../middlewares/auth.middleware");
 const checkRole = require("../../middlewares/role.middleware");
 const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, cancelOrder, updateOrderStatus, getOrdersStatus } = require("./order.controller");
@@ -9,17 +10,18 @@ const { createOrder, getMyOrders, getSellerOrders, getSingleOrder, cancelOrder, 
 // place order ->Done
 // Service to Service call to reduce the stock 
 // product service call to reduce the stock 
-router.post("/", authenticate, createOrder);
+router.post("/",apiLimiter, authenticate, createOrder);
 
 
 // get my orders (user) ->Done 
-router.get("/my", authenticate, checkRole("customer"), getMyOrders);
+router.get("/my",apiLimiter, authenticate, checkRole("customer"), getMyOrders);
 
 // ================= SELLER =================
 
 // seller orders  -->Done
 router.get(
   "/seller",
+  adminLimiter,
   authenticate,
   checkRole("seller"),
   getSellerOrders
@@ -28,7 +30,7 @@ router.get(
 // ================= COMMON =================
 
 // get single order (user + seller) -->Done
-router.get("/:orderId", authenticate, getSingleOrder);
+router.get("/:orderId",apiLimiter, authenticate, getSingleOrder);
 
 // ================= ACTIONS =================
 
@@ -44,6 +46,7 @@ router.get("/:orderId", authenticate, getSingleOrder);
 
 router.patch(
   "/:orderId/status",
+  adminLimiter,
   authenticate,
   checkRole("seller"),
   updateOrderStatus
@@ -58,6 +61,7 @@ router.patch(
 
 router.patch(
   "/:orderId/cancel",
+  adminLimiter,
   authenticate,
   cancelOrder // both user + seller (logic inside controller)
 );
@@ -69,6 +73,7 @@ router.patch(
 // - handle different orders like accepted ,processing ,cancelled
 router.get(
   "/",
+  apiLimiter,
   authenticate,
   getOrdersStatus // handles ?status=, ?role= etc
 );

@@ -6,7 +6,7 @@ const getAllSection = async (req, res) => {
         const section = await getAllSectionService();
         res.status(200).json({
             success: true,
-            sections: section,
+            data: section,
             message: "Sections feteched successfully"
         });
     } catch (error) {
@@ -25,7 +25,7 @@ const createSection = async (req, res) => {
         const section = await createSectionService(data);
         res.status(200).json({
             success: true,
-            section: section,
+            data: section,
             message: "Section created Successfully"
         });
     } catch (error) {
@@ -44,7 +44,7 @@ const updateSection = async (req, res) => {
         const section = await updateSectionService(sectionId, data);
         res.status(200).json({
             success: true,
-            section: section,
+            data: section,
             message: "Section updated Successfully"
         });
     } catch (error) {
@@ -62,7 +62,7 @@ const deleteSection = async (req, res) => {
         const section = await deleteSectionService(sectionId);
         res.status(200).json({
             success: true,
-            section: section,
+            data: section,
             message: "Section delted Successfully"
         });
     } catch (error) {
