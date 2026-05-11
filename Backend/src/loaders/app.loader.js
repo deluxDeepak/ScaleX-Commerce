@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const morgan = require("morgan");       //http loger 
+const { globalLimiter } = require("../core/security/ratelimit");
 // const pinoHttp = require("pino-http")     //http loger
 // const httpLogger = require("../middlewares/httpLogger");
 // const { httpLogger } = require("../middlewares/httpLogger");
@@ -13,11 +14,10 @@ const morgan = require("morgan");       //http loger
 
 
 const loadApp = (app) => {
-
-
+    
     // Security on top 
     app.use(helmet());
-    // app.use(globalLimiter);   //for testing of kar lete hai 
+    app.use(globalLimiter);   //for testing of kar lete hai 
 
     // CORS
     app.use(cors({

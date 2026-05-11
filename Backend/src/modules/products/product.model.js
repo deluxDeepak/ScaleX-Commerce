@@ -29,34 +29,31 @@ const ProductSchema = new mongoose.Schema(
     },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId, // points to subdoc inside Category
-      ref:"SubCategory",
+      ref: "SubCategory",
       required: true,
     },
 
-    // Temp remove 
-    // section: {
-    //   type: mongoose.Schema.Types.ObjectId, // optional — "Trending", "Featured" etc
-    //   ref: "Section",
-    // },
+    // "trending",
+    // "newArrival",
+    // "featured",
+    // "topDiscounted",
+    // "flashSale", 
+    section: {
+      type: mongoose.Schema.Types.ObjectId, // optional — "Trending", "Featured" etc
+      ref: "Section",
+    },
 
-    sections: [
-      {
-        type: String,
-        enum: [
-          "trending",
-          "newArrival",
-          "featured",
-          "topDiscounted",
-          "flashSale",
-        ],
-      },
-    ],
+    tags: [{
+      type: String,
+      lowercase: true,
+      trim: true,
+    }],
 
     // ─── Pricing ──────────────────────────────────
     price: {
       type: Number,
       required: true,
-      index:true,
+      index: true,
       min: 0,
     },
     oldPrice: {
@@ -76,13 +73,13 @@ const ProductSchema = new mongoose.Schema(
     rating: {
       type: Number,
       default: 0,
-      index:true,
+      index: true,
       min: 0,
       max: 5,
     },
     totalReviews: {
       type: Number,
-      index:true,
+      index: true,
       default: 0,
     },
 
@@ -108,16 +105,16 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Creating index in db 
+// Creating text index in db 
 ProductSchema.index({
-  title:"text",
-  description:"text",
+  title: "text",
+  description: "text",
+  tags: "text"
 
 });
 
-ProductSchema.index({
-  price:""
-})
+// Ascending descending index in db 
+// ProductSchema.index({ price: 1 })
 
 const Product = mongoose.model("Product", ProductSchema);
 module.exports = Product;

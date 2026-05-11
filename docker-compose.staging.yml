@@ -32,7 +32,7 @@ services:
       - redis
       - minio
     restart: always
-    env_file: .env
+    env_file: .env.staging
 
   mongo:
     image: mongo
@@ -52,7 +52,7 @@ services:
     restart: always
     volumes:
       - minio_data:/data
-    env_file: .env
+    env_file: .env.staging
 
 volumes:
   mongo_data:

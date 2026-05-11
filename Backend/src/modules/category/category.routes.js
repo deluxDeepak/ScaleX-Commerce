@@ -1,5 +1,6 @@
 const { getAllCategory, createCategory, deleteCategory, updateCategoryList, getAllSubCategory, getAllSubCategoryByCategoryId, getProductByCatId, getProductByCatIDSubcategory } = require("./category.controller");
-const upload = require("../../core/upload/upload.middleware")
+const upload = require("../../core/upload/upload.middleware");
+const { uploadLimiter } = require("../../core/security/ratelimit");
 
 const router = require("express").Router();
 
@@ -8,7 +9,7 @@ router.get("/sub", getAllSubCategory);
 // Particular category ka subcateory 
 router.get("/:id/sub", getAllSubCategoryByCategoryId);
 router.get("/", getAllCategory);
-router.post("/", upload.singleImage, createCategory);
+router.post("/",uploadLimiter, upload.singleImage, createCategory);
 router.delete("/:id", deleteCategory);
 router.patch("/:id", updateCategoryList);
 
