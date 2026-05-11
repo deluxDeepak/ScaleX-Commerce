@@ -40,6 +40,10 @@ jobs:
 
       - name: Build Frontend Bundle
         run: npm run build --if-present
+        
+      - name: Copy dist to server
+        run: |
+          scp -r dist/* ubuntu@{{secrets.SERVER_IP}}:/var/www/scalex/
 
   Build-FrontendImg:
     name: Build and Push to Dockerhub
