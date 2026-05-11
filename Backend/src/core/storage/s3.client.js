@@ -10,7 +10,9 @@ const storageClient = new S3Client({
     credentials: {
         accessKeyId: config.STORAGE_ACCESS,
         secretAccessKey: config.STORAGE_SECRET
-    }
+    },
+
+    forcePathStyle:true
 })
 if (config.NODE_ENV === "production") {
     logger.info("Storage S3 client initialized")

@@ -3,21 +3,13 @@ const { RedisStore } = require("rate-limit-redis");
 const { getRedis } = require("../db/redis.db");
 
 const isTestEnv = process.env.NODE_ENV === "test";
-
-// const redis = getRedis();   
-//yehan hum redis call nahi connect karne ka try kar rehe hai 
-// getRedis pehle call ho gaya
-// connectRedis baad me hua
-// → redis undefined
-
-
 /*
     =====limiting types 
-    =>login limiter
+    =>login limiter/auth limiter -done
     =>otp limiter
-    =>admin limiter
+    =>admin limiter --done
     =>route limiter
-    =>global limiter
+    =>global limiter  --done
 */
 
 const createStore = (prefix) => {
@@ -34,13 +26,12 @@ const createStore = (prefix) => {
     });
 };
 
+// Used at server at app starting 
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,   //15min
-    max: 100,
+    max: 300,
     standardHeaders: true,
     legacyHeaders: false,
-
-    // yehan bhi store use karo (nahi to default me memory use karega )
     store: createStore("rl:global:"),
 
 });
@@ -49,15 +40,6 @@ const globalLimiter = rateLimit({
 // ->email
 // ->route wise 
 
-
-// ye default ip pe rate limit lagata hai 
-const apiLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000,   //1min
-    max: 5,
-
-    store: createStore("rl:api:"),
-
-})
 
 /*
     apiLimiter kaha use karna chahiye
@@ -69,9 +51,64 @@ const apiLimiter = rateLimit({
     public API
     spam possible
 */
+const apiLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,   
+    max: 100,
+    message: {
+        success: false,
+        message: "Too many API requests, please try again later."
+    },
+
+    store: createStore("rl:api:"),
+
+})
+
+const authLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 10,
+
+    standardHeaders: true,
+    legacyHeaders: false,
+
+    // Only failure login count 
+    skipSuccessfulRequests: true,
+
+    message: {
+        success: false,
+        message: "Too many login attempts"
+    },
+
+    store: createStore("rl:auth:")
+});
+
+const adminLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 30,
+    message: {
+        success: false,
+        message: "Too many admin requests, please try again later."
+    },
+    store: createStore("rl:admin")
+});
+
+const uploadLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 20,
+    message: {
+        success: false,
+        message: "Too many uploads, please try again later."
+    },
+    store: createStore("rl:upload")
+});
+
+
+
 module.exports = {
     globalLimiter,
-    apiLimiter
+    apiLimiter,
+    authLimiter,
+    adminLimiter,
+    uploadLimiter
 }
 
 

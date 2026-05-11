@@ -1,4 +1,5 @@
 const { ValidationError, DatabaseError, NotfoundError } = require("../../shared/errors");
+const generateSlug = require("../../shared/utils/genSlug");
 const sectionRepo = require("./section.repository");
 
 const getAllSectionService = async () => {
@@ -14,10 +15,14 @@ const createSectionService = async (data) => {
         throw new ValidationError("Data is required to create the section ");
     }
     if (!data.name) {
-        throw new ValidationError("Name of Section is reuqired");
+        throw new ValidationError("Name of Section is required");
     };
+
+    const slug = generateSlug(data?.name);
+    data.slug = slug;
+
     const section = await sectionRepo.createSection(data);
-    if (section) {
+    if (!section) {
         throw new DatabaseError("Section is not created ");
     }
 
@@ -30,6 +35,10 @@ const updateSectionService = async (sectionId, data) => {
     if (!data.name) {
         throw new ValidationError("Name of Section is reuqired");
     };
+
+    const slug = generateSlug(data?.name);
+    data.slug = slug;
+
     const section = await sectionRepo.updateSection(sectionId, data);
     if (!section) {
         throw new NotfoundError("Sectin not found ");
@@ -38,7 +47,7 @@ const updateSectionService = async (sectionId, data) => {
     return section;
 }
 const deleteSectionService = async (sectionId) => {
-    if ( !sectionId) {
+    if (!sectionId) {
         throw new ValidationError("section is required to delte the section ");
     }
     const section = await sectionRepo.delteSection(sectionId);
