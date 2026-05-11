@@ -63,7 +63,7 @@ module.exports = defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'npm start --prefix Backend',
+      command: 'npm run staging --prefix Backend',
       port: 4000,
       reuseExistingServer: !process.env.CI,
     }
