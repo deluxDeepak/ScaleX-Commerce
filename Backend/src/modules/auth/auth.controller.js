@@ -228,10 +228,10 @@ const forgotPassword = async (req, res) => {
     // const userId=req.user.id
     console.log("Email is ", email);
 
-    if (!email) {
+    if (typeof email !== "string" || !email.trim()) {
         return res.status(400).json({
             success: false,
-            message: "Email is required",
+            message: "Valid email is required",
         });
     }
 
