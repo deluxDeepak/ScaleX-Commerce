@@ -14,25 +14,12 @@
 
 # This is used in Staging deploy 
 services:
-
-  nginx:
-    image: deluxdeepak/scalex-frontend:staging
-    ports:
-      - "80:80"
-    depends_on:
-      - backend
-    restart: always
-    volumes:
-      - nginx_cache:/var/cache/nginx
-
   backend:
     image: deluxdeepak/scalex-backend:staging
-    depends_on:
-      - mongo
-      - redis
-      - minio
     restart: always
     env_file: .env.staging
+    ports:
+      - "127.0.0.1:4000:4000"
 
   mongo:
     image: mongo

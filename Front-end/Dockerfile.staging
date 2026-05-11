@@ -17,5 +17,5 @@ ENV VITE_BASE_URL=$VITE_BASE_URL
 ENV VITE_RAZORPAY_KEY_ID=$VITE_RAZORPAY_KEY_ID
 
 
-RUN npm run build:production
+RUN npm run build:staging
 
