@@ -19,16 +19,3 @@ ENV VITE_RAZORPAY_KEY_ID=$VITE_RAZORPAY_KEY_ID
 
 RUN npm run build
 
-
-# ==========Production stage =========
-# Copy the index file from build to html of nginix  
-# - dit build inside the wroking directory 
-FROM nginx:alpine
-
-# 2.Configuration ko bhi fronend ke sath hi add kar do 
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# 3.Serve the static file through nginx 
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
