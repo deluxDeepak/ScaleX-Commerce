@@ -13,6 +13,7 @@ jobs:
   Front-endChecks:
     name: Frontend CI checks
     runs-on: ubuntu-latest
+    environment: Staging_secret
 
     defaults:
       run:
@@ -41,9 +42,19 @@ jobs:
       - name: Build Frontend Bundle
         run: npm run build --if-present
         
-      - name: Copy dist to server
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      
+      - name: Add known hosts
         run: |
-            scp -r dist/* ubuntu@${{ secrets.SERVER_IP }}:/var/www/scalex/
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      
+      - name: Copy dist
+        run: |
+          scp -r dist/* ubuntu@${{ secrets.SERVER_IP }}:/var/www/scalex/
 
   Build-FrontendImg:
     name: Build and Push to Dockerhub
