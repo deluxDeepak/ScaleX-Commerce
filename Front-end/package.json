@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
-    "build": "vite build",
+    "build:staging": "vite build --mode staging",
+    "build:production": "vite build --mode production",
     "preview": "vite preview",
     "test:dev": "vitest",
     "test": "vitest run",

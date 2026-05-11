@@ -39,8 +39,12 @@ jobs:
       - name: Run tests
         run: npm run test --if-present
 
+
       - name: Build Frontend Bundle
-        run: npm run build --if-present
+        run: npm run build:staging --if-present
+        env:
+          VITE_BASE_URL: /api
+          VITE_RAZORPAY_KEY_ID: rzp_test_RWNiyGSZRGBfds
         
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
