@@ -7,7 +7,7 @@ const createPayment = (data) => {
 }
 
 const findOneUpdate = (razorpayOrderId, data) => {
-    return Payment.findOneAndUpdate({ razorpayOrderId: razorpayOrderId }, data, { new: true });
+    return Payment.findOneAndUpdate({ razorpayOrderId: { $eq: razorpayOrderId } }, data, { new: true });
 }
 
 const createPaymentLog = (data) => {

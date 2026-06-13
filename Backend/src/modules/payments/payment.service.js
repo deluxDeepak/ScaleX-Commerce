@@ -166,6 +166,17 @@ const verifyRazorpayPaymentService = async (response) => {
         throw new ValidationError("Razorpay reponse is not persent ");
     }
 
+    if (
+        typeof razorpay_payment_id !== "string" ||
+        typeof razorpay_order_id !== "string" ||
+        typeof razorpay_signature !== "string" ||
+        !razorpay_payment_id.trim() ||
+        !razorpay_order_id.trim() ||
+        !razorpay_signature.trim()
+    ) {
+        throw new ValidationError("Invalid Razorpay response payload");
+    }
+
     console.log("Response ", response);
 
     // Generate a signature 
